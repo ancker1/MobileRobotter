@@ -5,135 +5,136 @@
 #include "DTMF.h"
 #include <iostream>
 
-int NUM_SECONDS = 5;
+/*
+* sine.c
+*
+* Demonstrates real-time audio output (sine wave)
+*/
+
+double PI = 3.14159265358979323846264338327950288;
+double FREQUENCY = 1477;
+double LOW_FREQUENCY = 852;
 int SAMPLE_RATE = 44100;
-int FRAMES_PER_BUFFER = 64;
+const int TABLE_SIZE = 44100;
+double NUM_SECONDS = 0.4;
+int FRAMES_PER_BUFFER = 256;
 
-/*
-#ifndef M_PI
-#define M_PI(3.14159265)
-#endif
-*/
-double M_PI = 3.14159265;
-
-const int TABLE_SIZE = 200;
-typedef struct
-{
+typedef struct _testData {
 	float sine[TABLE_SIZE];
-	int left_phase;
-	int right_phase;
-	char message[20];
-}
-paTestData;
+	int phase;
+} TestData;
 
-/* This routine will be called by the PortAudio engine when audio is needed.
-** It may called at interrupt level on some machines so don't do anything
-** that could mess up the system like calling malloc() or free().
-*/
-static int patestCallback(const void *inputBuffer, void *outputBuffer,
-	unsigned long framesPerBuffer,
+
+/* callback function prototype */
+static int paCallback(const void *inputBuffer,
+	void *outputBuffer, unsigned long framesPerBuffer,
 	const PaStreamCallbackTimeInfo* timeInfo,
-	PaStreamCallbackFlags statusFlags,
-	void *userData)
-{
-	paTestData *data = (paTestData*)userData;
-	float *out = (float*)outputBuffer;
-	unsigned long i;
-
-	(void)timeInfo; /* Prevent unused variable warnings. */
-	(void)statusFlags;
-	(void)inputBuffer;
-
-	for (i = 0; i<framesPerBuffer; i++)
-	{
-		*out++ = data->sine[data->left_phase];  /* left */
-		*out++ = data->sine[data->right_phase];  /* right */
-		data->left_phase += 1;
-		if (data->left_phase >= TABLE_SIZE) data->left_phase -= TABLE_SIZE;
-		data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
-		if (data->right_phase >= TABLE_SIZE) data->right_phase -= TABLE_SIZE;
-	}
-
-	return paContinue;
-}
-
-/*
-* This routine is called by portaudio when playback is done.
-*/
-static void StreamFinished(void* userData)
-{
-	paTestData *data = (paTestData *)userData;
-	printf("Stream Completed: %s\n", data->message);
-}
-
-/*******************************************************************/
-int main(void);
+	PaStreamCallbackFlags statusFlags, void *userData);
 int main(void)
 {
-	PaStreamParameters outputParameters;
+
+	/* user data */
+	TestData data;
+
 	PaStream *stream;
+	PaStreamParameters outputParameters;
 	PaError err;
-	paTestData data;
+
 	int i;
+	double t;
 
-	printf("PortAudio Test: output sine wave. SR = %d, BufSize = %d\n", SAMPLE_RATE, FRAMES_PER_BUFFER);
-
-	/* initialise sinusoidal wavetable */
-	for (i = 0; i<TABLE_SIZE; i++)
-	{
-		data.sine[i] = (float)sin(((double)i / (double)TABLE_SIZE) * M_PI * 2.);
+	/* Generate table with sine values at given frequency */
+	for (i = 0; i < TABLE_SIZE; i++) {
+		t = (double)i / (double)SAMPLE_RATE;
+		data.sine[i] = (0.5 * sin(2 * PI * FREQUENCY * t) + 0.5 * sin(2* PI * LOW_FREQUENCY * t));
 	}
-	data.left_phase = data.right_phase = 0;
 
-	err = Pa_Initialize();
-	if (err != paNoError) goto error;
+	/* Initialize user data */
+	data.phase = 0;
 
-	outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
-	if (outputParameters.device == paNoDevice) {
-		fprintf(stderr, "Error: No default output device.\n");
-		goto error;
+	/* Initialize PortAudio */
+	Pa_Initialize();
 
-	}
-	outputParameters.channelCount = 2;       /* stereo output */
-	outputParameters.sampleFormat = paFloat32; /* 32 bit floating point output */
-	outputParameters.suggestedLatency = Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
+	/* Set output stream parameters */
+	outputParameters.device = Pa_GetDefaultOutputDevice();
+	outputParameters.channelCount = 2;
+	outputParameters.sampleFormat = paFloat32;
+	outputParameters.suggestedLatency =
+	Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
 	outputParameters.hostApiSpecificStreamInfo = NULL;
 
-	err = Pa_OpenStream(
-		&stream,
-		NULL, /* no input */
+	/* Open audio stream */
+	err = Pa_OpenStream(&stream, NULL /* no input */,
 		&outputParameters,
-		SAMPLE_RATE,
-		FRAMES_PER_BUFFER,
-		paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-		patestCallback,
-		&data);
-	if (err != paNoError) goto error;
+		SAMPLE_RATE, FRAMES_PER_BUFFER, paNoFlag,
+		paCallback, &data);
 
-	sprintf_s(data.message, "No Message");
-	err = Pa_SetStreamFinishedCallback(stream, &StreamFinished);
-	if (err != paNoError) goto error;
+	if (err != paNoError) {
+		printf("PortAudio error: open stream: %s\n", Pa_GetErrorText(err));
+	}
 
+	/* Start audio stream */
 	err = Pa_StartStream(stream);
-	if (err != paNoError) goto error;
+	if (err != paNoError) {
+		printf("PortAudio error: start stream: %s\n", Pa_GetErrorText(err));
+	}
 
+	/*Sov i specificeret tid*/
 	printf("Play for %d seconds.\n", NUM_SECONDS);
 	Pa_Sleep(NUM_SECONDS * 1000);
 
-	err = Pa_StopStream(stream);
-	if (err != paNoError) goto error;
+	// test -----------------------------------------------------------------------------//|
+	for (i = 0; i < TABLE_SIZE; i++) {													 //|
+		t = (double)i / (double)SAMPLE_RATE;											 //|
+		data.sine[i] = (0.5 * sin(2 * PI * 1209 * t) + 0.5 * sin(2 * PI * 852 * t));     //|
+	}																					 //|
+																						 //|
+	/* Start audio stream */															 //|
+	err = Pa_StartStream(stream);														 //|
+	if (err != paNoError) {																 //|
+		printf("PortAudio error: start stream: %s\n", Pa_GetErrorText(err));             //|
+	}																					 //|
+																						 //|
+	/*Sov i specificeret tid*/															 //|
+	printf("Play for %d seconds.\n", NUM_SECONDS);                                       //|
+	Pa_Sleep(NUM_SECONDS * 1000);														 //|
+	//test slut -------------------------------------------------------------------------//|
 
+	/* Stop audio stream */
+	if (err != paNoError) {
+		printf("PortAudio error: stop stream: %s\n", Pa_GetErrorText(err));
+	}
+	/* Close audio stream */
 	err = Pa_CloseStream(stream);
-	if (err != paNoError) goto error;
+	if (err != paNoError) {
+		printf("PortAudio error: close stream: %s\n", Pa_GetErrorText(err));
+	}
+	/* Terminate audio stream */
+	err = Pa_Terminate();
+	if (err != paNoError) {
+		printf("PortAudio error: terminate: %s\n", Pa_GetErrorText(err));
+	}
 
-	Pa_Terminate();
-	printf("Test finished.\n");
+	return 0;
+}
 
-	return err;
-error:
-	Pa_Terminate();
-	fprintf(stderr, "An error occured while using the portaudio stream\n");
-	fprintf(stderr, "Error number: %d\n", err);
-	fprintf(stderr, "Error message: %s\n", Pa_GetErrorText(err));
-	return err;
+
+static int paCallback(const void *inputBuffer,
+	void *outputBuffer, unsigned long framesPerBuffer,
+	const PaStreamCallbackTimeInfo* timeInfo,
+	PaStreamCallbackFlags statusFlags, void *userData)
+{
+	TestData *data = (TestData*)userData;
+	float *out = (float*)outputBuffer;
+	float sample;
+	int i;
+
+	for (i = 0; i < framesPerBuffer; i++) {
+		sample = data->sine[data->phase++];
+		*out++ = sample; /* left */
+		*out++ = sample; /* right */
+		if (data->phase >= TABLE_SIZE)
+			data->phase -= TABLE_SIZE;
+	}
+	return paContinue;
 }
