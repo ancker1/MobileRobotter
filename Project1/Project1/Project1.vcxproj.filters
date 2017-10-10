@@ -24,12 +24,18 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BehandlData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Besked.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DTMF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BehandlData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
