@@ -11,7 +11,7 @@
 * Demonstrates real-time audio output (sine wave)
 */
 
-double PI = 3.14159265358979323846264338327950288;
+double PI = 3.14159265;
 double FREQUENCY = 1477;
 double LOW_FREQUENCY = 852;
 int SAMPLE_RATE = 44100;
