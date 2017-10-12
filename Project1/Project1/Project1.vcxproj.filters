@@ -21,10 +21,13 @@
     <ClCompile Include="DTMF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp">
+    <ClCompile Include="BehandlData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BehandlData.cpp">
+    <ClCompile Include="paPlay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

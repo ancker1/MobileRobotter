@@ -141,6 +141,7 @@
     <ClCompile Include="BehandlData.cpp" />
     <ClCompile Include="Besked.cpp" />
     <ClCompile Include="DTMF.cpp" />
+    <ClCompile Include="paPlay.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
