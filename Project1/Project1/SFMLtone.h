@@ -2,14 +2,16 @@
 #include <SFML\Audio.hpp>
 #include <iostream>
 
-class DTMFtone
+class SFMLtone
 {
 public:
-	DTMFtone(double, double);
+	SFMLtone();
+	SFMLtone(double, double);
 
+	void setFrequencies(double, double);
 	void play(int);
 
-	~DTMFtone();
+	~SFMLtone();
 protected:
 	const unsigned SAMPLE_RATE = 44100;
 	const unsigned SAMPLES = 44100;

@@ -6,6 +6,10 @@ DTMF::DTMF(int lowfrequency, int highfrequency)
 {
 	low_frequency = lowfrequency;
 	high_frequency = highfrequency;
+
+	double f1 = low_frequency;
+	double f2 = high_frequency;
+	tone.setFrequencies(f1, f2);
 }
 
 DTMF::DTMF(char dtmfChar)
@@ -46,6 +50,10 @@ DTMF::DTMF(char dtmfChar)
 		cout << "invalid character" << endl;
 		break;
 	}
+
+	double f1 = low_frequency;
+	double f2 = high_frequency;
+	tone.setFrequencies(f1, f2);
 }
 
 string DTMF::checkDTMF()
@@ -53,14 +61,18 @@ string DTMF::checkDTMF()
 	return "The low-tone frequency is: " + to_string(low_frequency) + ", The high-tone frequency is: " + to_string(high_frequency) + ".";
 }
 
-int DTMF::getHigh()
-{
-	return high_frequency;
+SFMLtone DTMF::getTone() {
+	return tone;
 }
 
 int DTMF::getLow()
 {
 	return low_frequency;
+}
+
+int DTMF::getHigh()
+{
+	return high_frequency;
 }
 
 DTMF::~DTMF()

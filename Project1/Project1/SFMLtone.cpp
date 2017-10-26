@@ -1,8 +1,14 @@
-#include "DTMFtone.h"
+#include "SFMLtone.h"
 
+SFMLtone::SFMLtone() {}
 
+SFMLtone::SFMLtone(double f1, double f2) {
+	this->f1 = f1;
+	this->f2 = f2;
+	setFrequencies(f1, f2);
+}
 
-DTMFtone::DTMFtone(double f1, double f2) {
+void SFMLtone::setFrequencies(double f1, double f2) {
 	double x1n = 0.;
 	double x2n = 0.;
 	for (int n = 0; n < SAMPLES; n++) {
@@ -16,13 +22,14 @@ DTMFtone::DTMFtone(double f1, double f2) {
 	Sound.setLoop(true);
 }
 
-void DTMFtone::play(int seconds) {
+void SFMLtone::play(int seconds) {
 	Sound.play();
 	for (int i = 0; i < seconds; i++) {
 		sf::sleep(sf::milliseconds(1000));
 	}
+	Sound.stop();
 }
 
-DTMFtone::~DTMFtone()
+SFMLtone::~SFMLtone()
 {
 }
