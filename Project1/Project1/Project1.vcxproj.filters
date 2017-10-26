@@ -30,10 +30,7 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Receiver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sender.cpp">
+    <ClCompile Include="SFMLtone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,10 +44,7 @@
     <ClInclude Include="BehandlData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Receiver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sender.h">
+    <ClInclude Include="SFMLtone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
