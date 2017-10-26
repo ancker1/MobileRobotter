@@ -19,38 +19,34 @@ string Sender::getCrc()
 	return crc;
 }
 
-string Sender::makeRemainder()
+string Sender::makeCodeword()
 {
 	// data
 	int m = msg.length();
 	int n = crc.length();
 	encoded = msg;
 
-	// add zeroes to dataword (one less the length of CRC)
+	// add zeroes to dataword
 	for (int i = 1; i < n; i++)
 	{
 		encoded += '0';
 	}
+	int e = encoded.length();
 
 	// loop
-	for (int i = 0; i < msg.length(); )
+	for (int i = 0; i < m; ) //
 	{
 		for (int j = 0; j < n; j++) // loop as long as CRC
 		{
 			encoded[i + j] = encoded[i + j] == crc[j] ? '0' : '1'; // XOR if encoded == crc => 0 else 1
 		}
-		while ((i < encoded.length()) && (encoded[i] != '1')) // if [i] == 0 => next character
+		while ((i < e) && (encoded[i] != '1')) // increment i as long as encoded = 0
 		{
 			i++;
 		}
 	}
 
-	return (encoded.substr(encoded.length() - n + 1));
-}
-
-string Sender::makeCodeword()
-{
-	return msg + makeRemainder();
+	return getMessage() + (encoded.substr(e - n + 1));
 }
 
 Sender::~Sender()

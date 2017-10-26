@@ -10,7 +10,6 @@ public:
 	Sender(string, string);
 	string getMessage();
 	string getCrc();
-	string makeRemainder();
 	string makeCodeword();
 	~Sender();
 protected:
