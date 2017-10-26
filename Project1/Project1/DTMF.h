@@ -5,10 +5,12 @@ using namespace std;
 class DTMF
 {
 public:
+	DTMF();
 	DTMF(int, int);
 	DTMF(char dtmfChar);
 	string checkDTMF();
 	SFMLtone getTone();
+	void setFrequenciesFromChar(char Char);
 	int getLow();
 	int getHigh();
 	~DTMF();

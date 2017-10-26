@@ -23,9 +23,10 @@ void SFMLtone::setFrequencies(double f1, double f2) {
 }
 
 void SFMLtone::play(int seconds) {
+	int time = 1000; //kan ændre på 'time' for at indstille 'wait-time'
 	Sound.play();
 	for (int i = 0; i < seconds; i++) {
-		sf::sleep(sf::milliseconds(1000));
+		sf::sleep(sf::milliseconds(time)); 
 	}
 	Sound.stop();
 }

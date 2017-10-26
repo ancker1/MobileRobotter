@@ -9,11 +9,14 @@ public:
 	char nextChar();
 	void createDTMFS(char);
 	char checkDTMF(int);
-	//playDTMFS her skal hele stringen loopes igennem, hvor der char's laves til DTMF objekter og herefter afspilles en efter en.
+	void playMessage();
+	//isMoreChars - skal tjekke om der er flere chars i stringen
 	~Besked();
 
 private:
 	string message;
 	int index;
+	DTMF currentHighDTMF;
+	DTMF currentLowDTMF;
 };
 
