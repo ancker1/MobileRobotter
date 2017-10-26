@@ -10,9 +10,10 @@ int main()
 	cout << "test" << endl;
 
 	// CRC TEST
-	Sender testS("1001", "1011");
+	Sender testS("101010101", "100000111");
 	cout << "The message: " << testS.getMessage() << endl;
 	cout << "The CRC generator polynomial: " << testS.getCrc() << endl;
+	cout << "The remainder: " << testS.makeRemainder() << endl;
 	cout << "The codeword: " << testS.makeCodeword() << endl;
 	cout << endl;
 
