@@ -145,6 +145,8 @@
     <ClCompile Include="BehandlData.cpp" />
     <ClCompile Include="Besked.cpp" />
     <ClCompile Include="DTMF.cpp" />
+    <ClCompile Include="Receiver.cpp" />
+    <ClCompile Include="Sender.cpp" />
     <ClCompile Include="SFMLtone.cpp" />
     <ClCompile Include="paPlay.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -153,6 +155,8 @@
     <ClInclude Include="BehandlData.h" />
     <ClInclude Include="Besked.h" />
     <ClInclude Include="DTMF.h" />
+    <ClInclude Include="Receiver.h" />
+    <ClInclude Include="Sender.h" />
     <ClInclude Include="SFMLtone.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
