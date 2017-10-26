@@ -14,7 +14,6 @@ char Besked::nextChar()
 {
 	if (message.length() == index)
 		index = 0;
-
 	return message[index++];
 }
 
@@ -25,13 +24,28 @@ void Besked::createDTMFS(char charIn)
 	int higher_nibble = test & 0b11110000;
 	higher_nibble = higher_nibble >> 4;
 
-	DTMF higher_dtmf(checkDTMF(higher_nibble));
-	DTMF lower_dtmf(checkDTMF(lower_nibble));
+	//DTMF higher_dtmf(checkDTMF(higher_nibble));
+	//DTMF lower_dtmf(checkDTMF(lower_nibble));
+
+	currentHighDTMF.setFrequenciesFromChar(checkDTMF(higher_nibble));
+	currentLowDTMF.setFrequenciesFromChar(checkDTMF(lower_nibble));
+
 	cout << "Character is: " << charIn << endl;
 	cout << "----------High DTMF---------|" << endl;
-	cout << "High freq.: " << higher_dtmf.getHigh()  << endl << "Low Freq.: " << higher_dtmf.getLow() << endl;
+	cout << "High freq.: " << currentHighDTMF.getHigh()  << endl << "Low Freq.: " << currentHighDTMF.getLow() << endl;
 	cout << "----------Low DTMF----------|" << endl;
-	cout << "High freq.: " << lower_dtmf.getHigh() << endl << "Low Freq.: " << lower_dtmf.getLow() <<  endl;
+	cout << "High freq.: " << currentLowDTMF.getHigh() << endl << "Low Freq.: " << currentLowDTMF.getLow() <<  endl;
+}
+
+void Besked::playMessage()
+{
+	for (int i = 0; i < message.length(); i++)
+	{
+		createDTMFS(nextChar());
+		currentHighDTMF.getTone().play(1);
+		currentLowDTMF.getTone().play(1);
+	}
+	
 }
 
 char Besked::checkDTMF(int intIn)
