@@ -3,6 +3,8 @@
 SFMLtone::SFMLtone() {}
 
 SFMLtone::SFMLtone(double f1, double f2) {
+	this->f1 = f1;
+	this->f2 = f2;
 	setFrequencies(f1, f2);
 }
 
@@ -25,6 +27,7 @@ void SFMLtone::play(int seconds) {
 	for (int i = 0; i < seconds; i++) {
 		sf::sleep(sf::milliseconds(1000));
 	}
+	Sound.stop();
 }
 
 SFMLtone::~SFMLtone()

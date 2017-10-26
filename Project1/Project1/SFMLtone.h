@@ -9,7 +9,6 @@ public:
 	SFMLtone(double, double);
 
 	void setFrequencies(double, double);
-
 	void play(int);
 
 	~SFMLtone();

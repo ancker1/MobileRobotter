@@ -5,7 +5,7 @@ using namespace std;
 class DTMF
 {
 public:
-	DTMF(int ,int);
+	DTMF(int, int);
 	DTMF(char dtmfChar);
 	string checkDTMF();
 	SFMLtone getTone();

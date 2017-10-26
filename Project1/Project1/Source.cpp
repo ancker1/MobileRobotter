@@ -11,6 +11,7 @@ int main()
 						'*', '0', '#', 'D' };
 
 	for (int i = 0; i < sizeof(buttons); i++) {
+		cout << "Playing " << buttons[i] << endl;
 		DTMF tone(buttons[i]);
 		tone.getTone().play(1);
 	}
