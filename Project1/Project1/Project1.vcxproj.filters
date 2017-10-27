@@ -39,10 +39,7 @@
     <ClCompile Include="Sender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DataTilStringBinary.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Frame.cpp">
+    <ClCompile Include="AudioRecord.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,10 +62,7 @@
     <ClInclude Include="Sender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DataTilStringBinary.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Frame.h">
+    <ClInclude Include="AudioRecord.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
