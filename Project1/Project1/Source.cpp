@@ -4,6 +4,7 @@
 #include "Receiver.h"
 #include "Sender.h"
 #include "DataTilStringBinary.h"
+#include "Frame.h"
 #include <iostream>
 
 //for at afspille besked
@@ -39,6 +40,8 @@ int main()
 	Sender testS(testString.konverterStringTilBitString(), "1011");
 	cout << "The message: " << testS.getMessage() << endl;
 	cout << "The CRC generator polynomial: " << testS.getCrc() << endl;
+	cout << "The remainder: " << testS.makeRemainder() << endl;
+	cout << "The trailer: " << testS.makeTrailer() << endl;
 	cout << "The codeword: " << testS.makeCodeword() << endl;
 	cout << endl;
 
@@ -48,6 +51,12 @@ int main()
 	cout << "The CRC generator polynomial: " << testR.getCrc() << endl;
 	cout << "The syndrome: " << testR.getSyndrome() << endl;
 	cout << "Check for error: " << testR.checkForError() << endl;
+	cout << endl;
+
+	// TEST frame
+	Frame testF('j', testS.makeTrailer());
+	cout << "The frame: " << endl;
+	testF.makeFrame();
 
 
 
