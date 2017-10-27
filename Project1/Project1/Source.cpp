@@ -27,25 +27,29 @@ int main()
 	//test.playMessage();
 
 	// TEST CRC
-	/*
-	Sender testS("01111111111111111111000000000001111111111", "1011");
+
+	//Test DataTilStringBinary
+	DataTilStringBinary testChar(' ');
+	cout << testChar.konverterCharTilBitString() << endl;
+	DataTilStringBinary testString("j");
+	cout << "Binary text string: " << testString.konverterStringTilBitString() << endl;
+	cout << endl;
+
+	// TEST sender
+	Sender testS(testString.konverterStringTilBitString(), "1011");
 	cout << "The message: " << testS.getMessage() << endl;
 	cout << "The CRC generator polynomial: " << testS.getCrc() << endl;
 	cout << "The codeword: " << testS.makeCodeword() << endl;
 	cout << endl;
 
+	// TEST receiver
 	Receiver testR(testS.makeCodeword(), testS.getCrc());
 	cout << "The codeword: " << testR.getCodeword() << endl;
 	cout << "The CRC generator polynomial: " << testR.getCrc() << endl;
 	cout << "The syndrome: " << testR.getSyndrome() << endl;
 	cout << "Check for error: " << testR.checkForError() << endl;
-	*/
-	/*
-	//Test DataTilStringBinary
-	DataTilStringBinary testChar(' ');
-	cout << testChar.konverterCharTilBitString() << endl;
-	DataTilStringBinary testString("Hej med dig, din lækre steg");
-	cout << testString.konverterStringTilBitString() << endl;
-	*/
+
+
+
 	return 0;
 }
