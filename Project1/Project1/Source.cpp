@@ -1,5 +1,8 @@
 #include "BehandlData.h"
 #include "AudioRecord.h"
+#include "Sender.h"
+#include "DataTilStringBinary.h"
+#include "Frame.h"
 #include <iostream>
 
 //for at afspille besked
@@ -14,7 +17,7 @@
 
 int main()
 {
-
+	/*
 	//Besked test("Wubba dub a dub dub");
 	//test.playMessage();
 	AudioRecord test(1);
@@ -26,6 +29,14 @@ int main()
 		testData.recognizeDTMF();
 
 	cout << "Stop." << endl;
+	*/
+
+	// TEST frame
+	Sender test(DataTilStringBinary("j"), "100000111");
+	cout << test.getMessage() << endl;
+	cout << test.makeRemainder() << endl;
+	cout << test.makeTrailer() << endl;
+	cout << test.makeCodeword() << endl;
 
 	return 0;
 }

@@ -6,10 +6,9 @@ Frame::Frame()
 {
 }
 
-Frame::Frame(int d, int t)
+Frame::Frame(int d)
 {
 	data = d;
-	trailer = t;
 
 	// count data in bits
 	int oldData = data;
@@ -49,14 +48,14 @@ int Frame::getData()
 
 int Frame::getTrailer() // get the CRC remainder for the hole string
 {
-	return trailer;
+	return trailer.makeTrailer();
 }
 
 void Frame::makeFrame()
 {
 	flag = 0b00000001; // find ascii value to asgined to flag
 
-	int frame[] = {flag, data, trailer, flag};
+	int frame[] = {flag, data, getTrailer(), flag};
 
 	for (int i = 0; i < 4; i++)
 	{

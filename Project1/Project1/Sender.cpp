@@ -4,7 +4,7 @@ Sender::Sender()
 {
 }
 
-Sender::Sender(string message, string c)
+Sender::Sender(DataTilStringBinary(message), string c)
 {
 	msg = message;
 	crc = c;
@@ -13,7 +13,7 @@ Sender::Sender(string message, string c)
 
 string Sender::getMessage()
 {
-	return msg;
+	return msg.konverterStringTilBitString();
 }
 
 string Sender::getCrc()
@@ -24,7 +24,7 @@ string Sender::getCrc()
 string Sender::makeRemainder()
 {
 	// data
-	encoded = msg;
+	encoded = getMessage();
 
 	// add zeroes to dataword
 	for (size_t i = 1; i < crc.length(); i++)
@@ -33,7 +33,7 @@ string Sender::makeRemainder()
 	}
 
 	// loop
-	for (size_t i = 0; i < msg.length(); )
+	for (size_t i = 0; i < getMessage().length(); )
 	{
 		for (size_t j = 0; j < crc.length(); j++) // loop as long as CRC
 		{

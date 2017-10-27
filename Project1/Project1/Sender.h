@@ -1,4 +1,5 @@
 #pragma once
+#include "DataTilStringBinary.h"
 #include <iostream>
 #include <string>
 
@@ -8,7 +9,7 @@ class Sender
 {
 public:
 	Sender();
-	Sender(string, string);
+	Sender(DataTilStringBinary(message), string);
 	string getMessage();
 	string getCrc();
 	string makeRemainder();
@@ -16,7 +17,7 @@ public:
 	int makeTrailer();
 	~Sender();
 protected:
-	string msg;
+	DataTilStringBinary msg;
 	string crc;
 	string encoded;
 	int myInt;
