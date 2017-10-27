@@ -21,9 +21,9 @@ string Receiver::getCrc()
 string Receiver::getSyndrome()
 {
 	// same princip as sender
-	for (int i = 0; i < (codeword.length()); ) //kører codeword længde igennem og lægger først i++ til i while
+	for (size_t i = 0; i < (codeword.length()); ) //kører codeword længde igennem og lægger først i++ til i while
 	{
-		for (int j = 0; j < crc.length(); j++) //kører hele crc længde igennem på codeword. j resetes for hver LOOP ovenover. 
+		for (size_t j = 0; j < crc.length(); j++) //kører hele crc længde igennem på codeword. j resetes for hver LOOP ovenover. 
 		{
 			codeword[i + j] = codeword[i + j] == crc[j] ? '0' : '1'; //hvis codeword plads er lig med crc plads så returner 0 eller 1 dvs en XOR operation og læg ind på plads.
 		}

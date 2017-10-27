@@ -22,31 +22,28 @@ string Sender::getCrc()
 string Sender::makeCodeword()
 {
 	// data
-	int m = msg.length();
-	int n = crc.length();
 	encoded = msg;
 
 	// add zeroes to dataword
-	for (int i = 1; i < n; i++)
+	for (size_t i = 1; i < crc.length(); i++)
 	{
 		encoded += '0';
 	}
-	int e = encoded.length();
 
 	// loop
-	for (int i = 0; i < m; ) //
+	for (size_t i = 0; i < msg.length(); ) //
 	{
-		for (int j = 0; j < n; j++) // loop as long as CRC
+		for (size_t j = 0; j < crc.length(); j++) // loop as long as CRC
 		{
 			encoded[i + j] = encoded[i + j] == crc[j] ? '0' : '1'; // XOR if encoded == crc => 0 else 1
 		}
-		while ((i < e) && (encoded[i] != '1')) // increment i as long as encoded = 0
+		while ((i < encoded.length()) && (encoded[i] != '1')) // increment i as long as encoded = 0
 		{
 			i++;
 		}
 	}
 
-	return getMessage() + (encoded.substr(e - n + 1));
+	return getMessage() + (encoded.substr(encoded.length() - crc.length() + 1));
 }
 
 Sender::~Sender()

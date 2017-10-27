@@ -1,6 +1,8 @@
 #include "BehandlData.h"
 #include "Besked.h"
 #include "DTMF.h"
+#include "Receiver.h"
+#include "Sender.h"
 #include <iostream>
 
 //for at afspille besked
@@ -20,8 +22,21 @@ int main()
 		tone.getTone().play(1);
 	}*/
 
-	Besked test("Wubba dub a dub dub");
-	test.playMessage();
+	//Besked test("Wubba dub a dub dub");
+	//test.playMessage();
+
+	// TEST CRC
+	Sender testS("01111111111111111111000000000001111111111", "1011");
+	cout << "The message: " << testS.getMessage() << endl;
+	cout << "The CRC generator polynomial: " << testS.getCrc() << endl;
+	cout << "The codeword: " << testS.makeCodeword() << endl;
+	cout << endl;
+
+	Receiver testR(testS.makeCodeword(), testS.getCrc());
+	cout << "The codeword: " << testR.getCodeword() << endl;
+	cout << "The CRC generator polynomial: " << testR.getCrc() << endl;
+	cout << "The syndrome: " << testR.getSyndrome() << endl;
+	cout << "Check for error: " << testR.checkForError() << endl;
 
 	return 0;
 }
