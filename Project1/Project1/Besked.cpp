@@ -44,6 +44,7 @@ void Besked::playMessage()
 		createDTMFS(nextChar());
 		currentHighDTMF.getTone().play(1);
 		currentLowDTMF.getTone().play(1);
+
 	}
 	
 }

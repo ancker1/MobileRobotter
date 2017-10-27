@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AudioRecord.cpp" />
     <ClCompile Include="BehandlData.cpp" />
     <ClCompile Include="Besked.cpp" />
     <ClCompile Include="DTMF.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioRecord.h" />
     <ClInclude Include="BehandlData.h" />
     <ClInclude Include="Besked.h" />
     <ClInclude Include="DTMF.h" />
