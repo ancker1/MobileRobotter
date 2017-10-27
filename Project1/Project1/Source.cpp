@@ -3,6 +3,7 @@
 #include "DTMF.h"
 #include "Receiver.h"
 #include "Sender.h"
+#include "DataTilStringBinary.h"
 #include <iostream>
 
 //for at afspille besked
@@ -26,6 +27,7 @@ int main()
 	//test.playMessage();
 
 	// TEST CRC
+	/*
 	Sender testS("01111111111111111111000000000001111111111", "1011");
 	cout << "The message: " << testS.getMessage() << endl;
 	cout << "The CRC generator polynomial: " << testS.getCrc() << endl;
@@ -37,6 +39,13 @@ int main()
 	cout << "The CRC generator polynomial: " << testR.getCrc() << endl;
 	cout << "The syndrome: " << testR.getSyndrome() << endl;
 	cout << "Check for error: " << testR.checkForError() << endl;
-
+	*/
+	/*
+	//Test DataTilStringBinary
+	DataTilStringBinary testChar(' ');
+	cout << testChar.konverterCharTilBitString() << endl;
+	DataTilStringBinary testString("Hej med dig, din lækre steg");
+	cout << testString.konverterStringTilBitString() << endl;
+	*/
 	return 0;
 }

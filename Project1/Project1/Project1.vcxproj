@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClCompile Include="BehandlData.cpp" />
     <ClCompile Include="Besked.cpp" />
+    <ClCompile Include="DataTilStringBinary.cpp" />
     <ClCompile Include="DTMF.cpp" />
     <ClCompile Include="Receiver.cpp" />
     <ClCompile Include="Sender.cpp" />
@@ -154,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="BehandlData.h" />
     <ClInclude Include="Besked.h" />
+    <ClInclude Include="DataTilStringBinary.h" />
     <ClInclude Include="DTMF.h" />
     <ClInclude Include="Receiver.h" />
     <ClInclude Include="Sender.h" />
