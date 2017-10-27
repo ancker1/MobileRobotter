@@ -146,6 +146,7 @@
     <ClCompile Include="Besked.cpp" />
     <ClCompile Include="DataTilStringBinary.cpp" />
     <ClCompile Include="DTMF.cpp" />
+    <ClCompile Include="Frame.cpp" />
     <ClCompile Include="Receiver.cpp" />
     <ClCompile Include="Sender.cpp" />
     <ClCompile Include="SFMLtone.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Besked.h" />
     <ClInclude Include="DataTilStringBinary.h" />
     <ClInclude Include="DTMF.h" />
+    <ClInclude Include="Frame.h" />
     <ClInclude Include="Receiver.h" />
     <ClInclude Include="Sender.h" />
     <ClInclude Include="SFMLtone.h" />

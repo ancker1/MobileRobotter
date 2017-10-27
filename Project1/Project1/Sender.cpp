@@ -1,6 +1,8 @@
 #include "Sender.h"
 
-
+Sender::Sender()
+{
+}
 
 Sender::Sender(string message, string c)
 {
@@ -19,7 +21,7 @@ string Sender::getCrc()
 	return crc;
 }
 
-string Sender::makeCodeword()
+string Sender::makeRemainder()
 {
 	// data
 	encoded = msg;
@@ -31,7 +33,7 @@ string Sender::makeCodeword()
 	}
 
 	// loop
-	for (size_t i = 0; i < msg.length(); ) //
+	for (size_t i = 0; i < msg.length(); )
 	{
 		for (size_t j = 0; j < crc.length(); j++) // loop as long as CRC
 		{
@@ -43,7 +45,22 @@ string Sender::makeCodeword()
 		}
 	}
 
-	return getMessage() + (encoded.substr(encoded.length() - crc.length() + 1));
+	return (encoded.substr(encoded.length() - crc.length() + 1));
+}
+
+string Sender::makeCodeword()
+{
+	// data + remainder
+	return getMessage() + makeRemainder();
+}
+
+int Sender::makeTrailer()
+{
+	// string to int
+	string str = makeRemainder();
+	myInt = stoi(str);
+
+	return myInt;
 }
 
 Sender::~Sender()
