@@ -1,14 +1,16 @@
 #include "BehandlData.h"
-#include "Besked.h"
-#include "DTMF.h"
-#include "Sender.h"
-#include "Receiver.h"
 #include "AudioRecord.h"
 #include <iostream>
 
 //for at afspille besked
 //(1) besked test("this is a test");
 //(2) test.playMessage();
+
+//for at genkende DTMF tone
+//(1) AudioRecord test(1);
+//(2) test.record();
+//(3) BehandlData testData(test.getAudioVector());
+//(4) testData.recognizeDTMF();
 
 int main()
 {
