@@ -1,14 +1,21 @@
 #include "Besked.h"
 #include "DTMF.h"
+#include "BehandlData.h"
+#include "AudioRecord.h"
 #include <iostream>
 using namespace std;
 
+Besked::Besked()
+{
+
+}
 
 Besked::Besked(string tekst)
 {
 	index = 0;
 	message = tekst;
 }
+
 
 char Besked::nextChar()
 {
@@ -90,6 +97,130 @@ char Besked::checkDTMF(int intIn)
 	}
 }
 
+char Besked::frequenciesToChar(int first_FrequencySum, int second_FrequencySum)
+{
+	int highNibble;
+	int lowNibble;
+	int msgByte;
+	switch (first_FrequencySum)
+	{
+	case 1906:
+		highNibble = 0b0001;
+		break;
+	case 2033:
+		highNibble = 0b0010;
+		break;
+	case 2174:
+		highNibble = 0b0011;
+		break;
+	case 1979:
+		highNibble = 0b0100;
+		break;
+	case 2106:
+		highNibble = 0b0101;
+		break;
+	case 2247:
+		highNibble = 0b0110;
+		break;
+	case 2061:
+		highNibble = 0b0111;
+		break;
+	case 2188:
+		highNibble = 0b1000;
+		break;
+	case 2329:
+		highNibble = 0b1001;
+		break;
+	case 2277:
+		highNibble = 0b1010;
+		break;
+	case 2150:
+		highNibble = 0b1011;
+		break;
+	case 2418:
+		highNibble = 0b1100;
+		break;
+	case 2330:
+		highNibble = 0b1101;
+		break;
+	case 2403:
+		highNibble = 0b1110;
+		break;
+	case 2485:
+		highNibble = 0b1111;
+		break;
+	case 2574:
+		highNibble = 0b0000;
+		break;
+	default:
+		break;
+	}
+	switch (second_FrequencySum)
+	{
+	case 1906:
+		lowNibble = 0b0001;
+		break;
+	case 2033:
+		lowNibble = 0b0010;
+		break;
+	case 2174:
+		lowNibble = 0b0011;
+		break;
+	case 1979:
+		lowNibble = 0b0100;
+		break;
+	case 2106:
+		lowNibble = 0b0101;
+		break;
+	case 2247:
+		lowNibble = 0b0110;
+		break;
+	case 2061:
+		lowNibble = 0b0111;
+		break;
+	case 2188:
+		lowNibble = 0b1000;
+		break;
+	case 2329:
+		lowNibble = 0b1001;
+		break;
+	case 2277:
+		lowNibble = 0b1010;
+		break;
+	case 2150:
+		lowNibble = 0b1011;
+		break;
+	case 2418:
+		lowNibble = 0b1100;
+		break;
+	case 2330:
+		lowNibble = 0b1101;
+		break;
+	case 2403:
+		lowNibble = 0b1110;
+		break;
+	case 2485:
+		lowNibble = 0b1111;
+		break;
+	case 2574:
+		lowNibble = 0b0000;
+		break;
+	default:
+		break;
+	}
+	highNibble = highNibble << 4;
+	msgByte = highNibble + lowNibble;
+	return (char)msgByte;
+}
+
+int Besked::modtagFrequencySum()
+{
+	AudioRecord test(1);
+	cout << "Start." << endl;
+	test.record();
+	BehandlData testData(test.getAudioVector());
+	return testData.recognizeDTMF();
+}
 
 Besked::~Besked()
 {

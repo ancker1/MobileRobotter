@@ -8,8 +8,9 @@ public:
 	BehandlData(vector<float> data);
 	float goertzelFilter(int);
 	void hammingWindow(); //Virker som MATLABs hamming window
+	void hanningWindow();
 	void printToFile();
-	void recognizeDTMF();
+	int recognizeDTMF();
 	~BehandlData();
 protected:
 	vector<float> recordData;

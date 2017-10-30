@@ -1,5 +1,6 @@
 #include "BehandlData.h"
 #include "AudioRecord.h"
+#include "Besked.h"
 #include <iostream>
 
 //for at afspille besked
@@ -17,15 +18,18 @@ int main()
 
 	//Besked test("Wubba dub a dub dub");
 	//test.playMessage();
-	AudioRecord test(1);
+	Besked testBesked("");
+	string x;
 
-	cout << "Start." << endl;
+	cin >> x;
+		int firstSum = testBesked.modtagFrequencySum();
+		cout << "Stop." << endl;
+	cin >> x;
+		int secondSum = testBesked.modtagFrequencySum();
+		cout << "Stop." << endl;
 
-		test.record();
-		BehandlData testData(test.getAudioVector());
-		testData.recognizeDTMF();
-
-	cout << "Stop." << endl;
-
+		cout << "____________________________" << endl;
+		cout << "Modtaget besked: " << testBesked.frequenciesToChar(firstSum, secondSum) << endl;
+		cout << "____________________________" << endl;
 	return 0;
 }

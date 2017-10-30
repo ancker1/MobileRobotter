@@ -61,14 +61,23 @@ void BehandlData::hammingWindow() //Virker som MATLAB's hamming window
 	}
 }
 
-void BehandlData::recognizeDTMF()
+void BehandlData::hanningWindow()
+{
+	double M_PI = 3.14159;
+	for (int n = 0; n < numSamples; n++)
+	{
+		recordData[n] = recordData[n] * (0.5 * (1 - cos(( 2 * M_PI * n)/(numSamples - 1))));
+	}
+}
+
+int BehandlData::recognizeDTMF()
 {
 	int dtmfFrequencies[8] = { 697, 770, 852, 941, 1209, 1336, 1477, 1633 };
 	int highFrequency = 0;
 	int highMagnitude = 0; //Eventuelt indstil threshold
 	int lowFrequency = 0;
 	int lowMagnitude = 0; //Eventuelt indstil threshold
-	hammingWindow();
+	hammingWindow(); //Eventuelt anden vindue funktion
 	for (int i = 0; i < 4; i++)
 	{
 		if (goertzelFilter(dtmfFrequencies[i]) > lowMagnitude)
@@ -94,7 +103,7 @@ void BehandlData::recognizeDTMF()
 	cout << "High frequency: " << highFrequency << endl;
 
 	// COUT TEST
-	/*
+	cout << " ________________________________________ " << endl;
 	cout << "697:   " << goertzelFilter(697) << endl;
 	cout << "770:   " << goertzelFilter(770) << endl;
 	cout << "852:   " << goertzelFilter(852) << endl;
@@ -105,7 +114,8 @@ void BehandlData::recognizeDTMF()
 	cout << "1633:  " << goertzelFilter(1633) << endl;
 	cout << "110:   " << goertzelFilter(110) << endl; //ingen DTMF frekvens på 110
 	cout << "19500: " << goertzelFilter(19500) << endl; //ingen DTMF frekvens på 19500
-	*/
+
+	return lowFrequency + highFrequency;
 }
 
 
@@ -125,7 +135,3 @@ void BehandlData::printToFile()
 BehandlData::~BehandlData()
 {
 }
-
-//float x = record.getvector[i]
-// x * hammingvindue
-// record.getvector[i] = x
