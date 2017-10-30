@@ -15,8 +15,7 @@
 
 int main()
 {
-
-	//Besked test("Wubba dub a dub dub");
+	//Besked test("Wubba lubba dub dub");
 	//test.playMessage();
 	Besked testBesked("");
 	string x;

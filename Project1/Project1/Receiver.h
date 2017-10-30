@@ -7,7 +7,7 @@ using namespace std;
 class Receiver
 {
 public:
-	Receiver(string, string);
+	Receiver(string cw, string c);
 	string getCodeword();
 	string getCrc();
 	string getSyndrome();
