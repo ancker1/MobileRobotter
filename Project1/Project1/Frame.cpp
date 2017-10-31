@@ -6,12 +6,12 @@ Frame::Frame()
 {
 }
 
-Frame::Frame(int d, Sender(m))
+Frame::Frame(string d)
 {
 	data = d;
-	msg = m;
 
 	// count data in bits
+	/*
 	int oldData = data;
 	count = 0;
 	while (oldData != 0)
@@ -23,7 +23,7 @@ Frame::Frame(int d, Sender(m))
 	{
 		count++;
 	}
-
+	*/
 }
 
 int Frame::getCount()
@@ -42,20 +42,34 @@ int Frame::makeHeader() // get the size of the hole text string
 	return 0;
 }
 
-int Frame::getData()
+int Frame::getData()// ligger data ind i charTemp
 {
-	return data;
+
 }
 
 int Frame::getTrailer() // get the CRC remainder for the hole string
 {
-	return msg.makeTrailer();
+	return data.makeTrailer();
 }
 
 void Frame::makeFrame()
 {
+	//Tager et tempChar og ligger ind i array = 1 byte pr plads i array
 	flag = 0b00000001; // find ascii value to asgined to flag
+	int indeks = 2;
+	const int frameSize = 4 + data.size();
+	int* frame;
+	frame = new int[frameSize];
 
+	for (int i = 0; i < data.size(); i++)//lægger hver enkelt char af data i et array.
+	{
+		frame[indeks] = data[i];
+		indeks++;
+	}
+	frame[0] = flag;
+	frame[1] = indeks + 2; //header størrelsen af hele framen
+
+	/*
 	int frame[] = {flag, makeHeader(), getData(), getTrailer(), flag};
 
 	for (int i = 0; i < 5; i++)
@@ -63,6 +77,7 @@ void Frame::makeFrame()
 		cout << frame[i] << " ";
 	}
 	cout << endl;
+	*/
 }
 
 Frame::~Frame()
