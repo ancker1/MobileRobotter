@@ -46,9 +46,8 @@ int main()
 	cout << test2.makeCodeword() << endl; 
 	cout << endl;
 
-	Frame test3('j', Sender(DataTilStringBinary("Hej med dig"), "100000111"));
+	Frame test3("Hej med dig");
 	cout << test3.getTrailer() << endl;
-	test3.makeFrame();
 
 	return 0;
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "Sender.h"
+#include "DataTilStringBinary.h"
 #include <iostream>
 #include <string>
 #include <array>
