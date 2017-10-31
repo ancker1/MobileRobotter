@@ -59,18 +59,31 @@ void Frame::makeFrame()
 	flag = 0b00000001; // find ascii value to asgined to flag
 	int indeks = 2;
 	const int frameSize = 4 + data.size();
+
 	int* frame;
 	frame = new int[frameSize];
+
+	for (int i = 0; i < frameSize; i++)//sætter 0 ind på alle pladser i array.
+	{
+		frame[i] = 0;
+	}
 
 	for (int i = 0; i < data.size(); i++)//lægger hver enkelt char af data i et array.
 	{
 		frame[indeks] = data[i];
 		indeks++;
 	}
+	//indsætter startFlag, header, trailer og slutfalg
 	frame[0] = flag;// sætter start flag ind
 	frame[1] = indeks + 2;// header størrelsen af hele framen
-	frame[indeks + 1] = getTrailer();// sætter vores trailer ind
-	frame[indeks + 2] = flag;// sætter slutflag ind
+	frame[indeks] = getTrailer();// sætter vores trailer ind
+	frame[indeks + 1] = flag;// sætter slutflag ind
+	
+	//udskriver framen
+	for (int i = 0; i < frameSize; i++)
+	{
+		cout << frame[i] << " ";
+	}
 }
 
 Frame::~Frame()
