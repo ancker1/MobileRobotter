@@ -58,9 +58,9 @@ int Sender::makeTrailer()
 {
 	// string to int
 	string str = makeRemainder();
-	myInt = stoi(str);
+	int myInt = stoi(str);
 
-	return myInt;
+	return bitset<8>(myInt).to_ulong();
 }
 
 Sender::~Sender()

@@ -10,7 +10,7 @@ class Frame
 {
 public:
 	Frame();
-	Frame(int d);
+	Frame(int d, Sender(m));
 	int getCount();
 	int makeHeader();
 	int getData();
@@ -22,6 +22,6 @@ protected:
 	int count;
 	int flag;
 	int header;
-	Sender trailer;
+	Sender msg;
 };
 

@@ -2,6 +2,7 @@
 #include "DataTilStringBinary.h"
 #include <iostream>
 #include <string>
+#include <bitset>
 
 using namespace std;
 
@@ -20,6 +21,5 @@ protected:
 	DataTilStringBinary msg;
 	string crc;
 	string encoded;
-	int myInt;
 };
 

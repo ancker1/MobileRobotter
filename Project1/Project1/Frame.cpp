@@ -6,9 +6,10 @@ Frame::Frame()
 {
 }
 
-Frame::Frame(int d)
+Frame::Frame(int d, Sender(m))
 {
 	data = d;
+	msg = m;
 
 	// count data in bits
 	int oldData = data;
@@ -48,7 +49,7 @@ int Frame::getData()
 
 int Frame::getTrailer() // get the CRC remainder for the hole string
 {
-	return trailer.makeTrailer();
+	return msg.makeTrailer();
 }
 
 void Frame::makeFrame()
@@ -57,7 +58,7 @@ void Frame::makeFrame()
 
 	int frame[] = {flag, makeHeader(), getData(), getTrailer(), flag};
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		cout << frame[i] << " ";
 	}
