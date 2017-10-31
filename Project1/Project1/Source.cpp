@@ -47,7 +47,6 @@ int main()
 	cout << endl;
 
 	Frame test3("Hej med dig");
-	cout << test3.getTrailer() << endl;
 	test3.makeFrame();
 
 	return 0;
