@@ -55,15 +55,22 @@ int Frame::getTrailer() // get the CRC remainder for the hole string
 
 void Frame::makeFrame()
 {
+	//Tager et tempChar og ligger ind i array = 1 byte pr plads i array
 	flag = 0b00000001; // find ascii value to asgined to flag
+	int indeks = 2;
+	const int frameSize = 4 + data.size();
+	int* frame;
+	frame = new int[frameSize];
 
-	int frame[] = {flag, makeHeader(), getData(), getTrailer(), flag};
-
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < data.size(); i++)//lægger hver enkelt char af data i et array.
 	{
-		cout << frame[i] << " ";
+		frame[indeks] = data[i];
+		indeks++;
 	}
-	cout << endl;
+	frame[0] = flag;// sætter start flag ind
+	frame[1] = indeks + 2;// header størrelsen af hele framen
+	frame[indeks + 1] = getTrailer();// sætter vores trailer ind
+	frame[indeks + 2] = flag;// sætter slutflag ind
 }
 
 Frame::~Frame()
