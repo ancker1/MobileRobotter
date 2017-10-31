@@ -1,5 +1,6 @@
 #pragma once
 #include "Sender.h"
+#include "DataTilStringBinary.h"
 #include <iostream>
 #include <string>
 #include <array>
@@ -10,7 +11,7 @@ class Frame
 {
 public:
 	Frame();
-	Frame(int d, Sender(m));
+	Frame(string d);
 	int getCount();
 	int makeHeader();
 	int getData();
@@ -18,10 +19,9 @@ public:
 	void makeFrame();
 	~Frame();
 protected:
-	int data;
+	string data;
 	int count;
 	int flag;
 	int header;
-	Sender msg;
 };
 

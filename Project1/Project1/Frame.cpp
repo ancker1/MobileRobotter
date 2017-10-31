@@ -6,11 +6,11 @@ Frame::Frame()
 {
 }
 
-Frame::Frame(int d, Sender(m))
+Frame::Frame(string d)
 {
 	data = d;
-	msg = m;
 
+	/*
 	// count data in bits
 	int oldData = data;
 	count = 0;
@@ -23,6 +23,7 @@ Frame::Frame(int d, Sender(m))
 	{
 		count++;
 	}
+	*/
 
 }
 
@@ -44,12 +45,12 @@ int Frame::makeHeader() // get the size of the hole text string
 
 int Frame::getData()
 {
-	return data;
+	return 0;
 }
 
 int Frame::getTrailer() // get the CRC remainder for the hole string
 {
-	return msg.makeTrailer();
+	return Sender(data, "100000111").makeTrailer();
 }
 
 void Frame::makeFrame()
