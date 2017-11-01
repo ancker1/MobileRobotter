@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include <bitset>
-#include <array>
+#include <vector>
 
 using namespace std;
 
@@ -16,13 +16,15 @@ public:
 	string makeRemainder();
 	string makeCodeword();
 	int getTrailer();
-	void makeFrame();
+	vector <int> makeFrame();
+	int getHeader();
 	~Sender();
 protected:
 	string data;
 	char charData;
 	string dataTilString;
 	int flag;
-	int* frame;
+	vector <int> frame;
+	int header;
 };
 
