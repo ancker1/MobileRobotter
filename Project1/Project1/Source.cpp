@@ -38,8 +38,10 @@ int main()
 	cout << test2.konverterStringTilBitString() << endl;
 	cout << test2.makeRemainder() << endl;
 	cout << test2.makeCodeword() << endl;
-	test2.makeFrame();
-
-
+	cout << endl;
+	for (int i = 0; i < test2.getHeader(); i++)
+	{
+		cout << test2.makeFrame()[i] << endl;
+	}
 	return 0;
 }

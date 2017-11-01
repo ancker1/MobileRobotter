@@ -73,37 +73,27 @@ int Sender::getTrailer()
 	return bitset<8>(myInt).to_ulong();
 }
 
-void Sender::makeFrame()
+vector <int> Sender::makeFrame()
 {
-	//Tager et tempChar og ligger ind i array = 1 byte pr plads i array
 	flag = 0b00000001; // find ascii value to asgined to flag
-	int indeks = 2;
-	const int frameSize = 4 + data.size();
+	header = 4 + data.size();
 
-	frame = new int[frameSize];
-
-	for (int i = 0; i < frameSize; i++)//sætter 0 ind på alle pladser i array.
+	frame.push_back(flag);//indsætter startflag
+	frame.push_back(header);//indsætter header (længden af teksten)
+	for (int i = 0; i < data.size(); i++)//lægger hver enkelt char af data i en vektor.
 	{
-		frame[i] = 0;
+		frame.push_back(data[i]);
 	}
+	frame.push_back(getTrailer());//indsætter trailer
+	frame.push_back(flag);//indsætter slutflag
+	
+	return frame;
+}
 
-	for (int i = 0; i < data.size(); i++)//lægger hver enkelt char af data i et array.
-	{
-		frame[indeks] = data[i];
-		indeks++;
-	}
-
-	//indsætter startFlag, header, trailer og slutfalg
-	frame[0] = flag;// sætter start flag ind
-	frame[1] = indeks + 2;// header størrelsen af hele framen
-	frame[indeks] = getTrailer();// sætter vores trailer ind
-	frame[indeks + 1] = flag;// sætter slutflag ind
-
-							 //udskriver framen
-	for (int i = 0; i < frameSize; i++)
-	{
-		cout << frame[i] << " ";
-	}
+int Sender::getHeader()
+{
+	makeFrame();
+	return header;
 }
 
 Sender::~Sender()
