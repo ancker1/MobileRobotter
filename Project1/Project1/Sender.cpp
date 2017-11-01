@@ -32,12 +32,12 @@ string Sender::getCrc()
 
 string Sender::makeRemainder()
 {
-	string encoded = "";
-	// data
-	encoded = konverterStringTilBitString();
+	// get data
+	string encoded = konverterStringTilBitString();
+	string crc = getCrc(); 
 
 	// add zeroes to dataword
-	for (int i = 1; i < getCrc().length(); i++)
+	for (int i = 1; i < crc.length(); i++)
 	{
 		encoded += '0';
 	}
@@ -45,9 +45,9 @@ string Sender::makeRemainder()
 	// loop
 	for (int i = 0; i < konverterStringTilBitString().length(); )
 	{
-		for (int j = 0; j < getCrc().length(); j++) // loop as long as CRC
+		for (int j = 0; j < crc.length(); j++) // loop as long as CRC
 		{
-			encoded[i + j] = encoded[i + j] == getCrc()[j] ? '0' : '1'; // XOR if encoded == crc => 0 else 1
+			encoded[i + j] = encoded[i + j] == crc[j] ? '0' : '1'; // XOR if encoded == crc => 0 else 1
 		}
 		while ((i < encoded.length()) && (encoded[i] != '1')) // increment i as long as encoded = 0
 		{
@@ -55,7 +55,7 @@ string Sender::makeRemainder()
 		}
 	}
 
-	return (encoded.substr(encoded.length() - getCrc().length() + 1));
+	return (encoded.substr(encoded.size() - crc.length() + 1));
 }
 
 string Sender::makeCodeword()

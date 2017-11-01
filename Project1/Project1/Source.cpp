@@ -3,6 +3,7 @@
 #include "Besked.h"
 #include <iostream>
 #include "Sender.h"
+#include "Receiver.h"
 
 //for at afspille besked
 //(1) besked test("this is a test");
@@ -39,6 +40,11 @@ int main()
 	cout << test2.makeRemainder() << endl;
 	cout << test2.makeCodeword() << endl;
 	test2.makeFrame();
+	cout << endl;
+
+	Receiver test3("Hej med digP");
+	cout << test3.konverterStringTilBitString() << endl;
+	cout << test3.getSyndrome() << endl;
 
 
 	return 0;
