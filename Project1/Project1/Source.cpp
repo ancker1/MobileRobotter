@@ -45,7 +45,11 @@ int main()
 	Receiver test3("Hej med digP");
 	cout << test3.konverterStringTilBitString() << endl;
 	cout << test3.getSyndrome() << endl;
-
+	cout << endl;
+	for (int i = 0; i < test2.getHeader(); i++)
+	{
+		cout << test2.makeFrame()[i] << " ";
+	}
 
 	return 0;
 }
