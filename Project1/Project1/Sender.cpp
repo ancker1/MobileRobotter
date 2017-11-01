@@ -4,40 +4,50 @@ Sender::Sender()
 {
 }
 
-Sender::Sender(DataTilStringBinary(message), string c)
+Sender::Sender(string d)
 {
-	msg = message;
-	crc = c;
-	encoded = "";
+	data = d;
 }
 
-string Sender::getMessage()
+string Sender::konverterStringTilBitString()
 {
-	return msg.konverterStringTilBitString();
+	string heleDataTilString;
+	int indeks = 0;//pegepind til bostav indeks
+	for (int i = 0; i < data.size(); i++)//kører alle pladserne af string data indtastet
+	{
+		charData = data[indeks];//ligger tegn på plads indeks over i charData
+		int dataTilInt = 0;
+		dataTilInt = (int)charData;//tager ascii værdien af char og ligger de ind i dataTilInt
+		dataTilString = bitset<8>(dataTilInt).to_string();//konvertere helt om til 8 bits til en string
+		heleDataTilString += dataTilString;//ligger det konverterede til heleDataTilString
+		indeks++;//tæller indeks en op
+	}
+	return heleDataTilString;
 }
 
 string Sender::getCrc()
 {
-	return crc;
+	return "100000111"; // CRC-8
 }
 
 string Sender::makeRemainder()
 {
+	string encoded = "";
 	// data
-	encoded = getMessage();
+	encoded = konverterStringTilBitString();
 
 	// add zeroes to dataword
-	for (size_t i = 1; i < crc.length(); i++)
+	for (int i = 1; i < getCrc().length(); i++)
 	{
 		encoded += '0';
 	}
 
 	// loop
-	for (size_t i = 0; i < getMessage().length(); )
+	for (int i = 0; i < konverterStringTilBitString().length(); )
 	{
-		for (size_t j = 0; j < crc.length(); j++) // loop as long as CRC
+		for (int j = 0; j < getCrc().length(); j++) // loop as long as CRC
 		{
-			encoded[i + j] = encoded[i + j] == crc[j] ? '0' : '1'; // XOR if encoded == crc => 0 else 1
+			encoded[i + j] = encoded[i + j] == getCrc()[j] ? '0' : '1'; // XOR if encoded == crc => 0 else 1
 		}
 		while ((i < encoded.length()) && (encoded[i] != '1')) // increment i as long as encoded = 0
 		{
@@ -45,22 +55,55 @@ string Sender::makeRemainder()
 		}
 	}
 
-	return (encoded.substr(encoded.length() - crc.length() + 1));
+	return (encoded.substr(encoded.length() - getCrc().length() + 1));
 }
 
 string Sender::makeCodeword()
 {
 	// data + remainder
-	return getMessage() + makeRemainder();
+	return konverterStringTilBitString() + makeRemainder();
 }
 
-int Sender::makeTrailer()
+int Sender::getTrailer()
 {
 	// string to int
 	string str = makeRemainder();
 	int myInt = stoi(str);
 
 	return bitset<8>(myInt).to_ulong();
+}
+
+void Sender::makeFrame()
+{
+	//Tager et tempChar og ligger ind i array = 1 byte pr plads i array
+	flag = 0b00000001; // find ascii value to asgined to flag
+	int indeks = 2;
+	const int frameSize = 4 + data.size();
+
+	frame = new int[frameSize];
+
+	for (int i = 0; i < frameSize; i++)//sætter 0 ind på alle pladser i array.
+	{
+		frame[i] = 0;
+	}
+
+	for (int i = 0; i < data.size(); i++)//lægger hver enkelt char af data i et array.
+	{
+		frame[indeks] = data[i];
+		indeks++;
+	}
+
+	//indsætter startFlag, header, trailer og slutfalg
+	frame[0] = flag;// sætter start flag ind
+	frame[1] = indeks + 2;// header størrelsen af hele framen
+	frame[indeks] = getTrailer();// sætter vores trailer ind
+	frame[indeks + 1] = flag;// sætter slutflag ind
+
+							 //udskriver framen
+	for (int i = 0; i < frameSize; i++)
+	{
+		cout << frame[i] << " ";
+	}
 }
 
 Sender::~Sender()

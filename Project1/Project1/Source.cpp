@@ -2,9 +2,7 @@
 #include "AudioRecord.h"
 #include "Besked.h"
 #include <iostream>
-#include "DataTilStringBinary.h"
 #include "Sender.h"
-#include "Frame.h"
 
 //for at afspille besked
 //(1) besked test("this is a test");
@@ -36,18 +34,12 @@ int main()
 		cout << "____________________________" << endl;
 		*/
 
-	DataTilStringBinary test1("Hej med dig");
-	cout << test1.konverterStringTilBitString() << endl;
-	cout << endl;
-
-	Sender test2(DataTilStringBinary("Hej med dig"), "100000111");
+	Sender test2("Hej med dig");
+	cout << test2.konverterStringTilBitString() << endl;
 	cout << test2.makeRemainder() << endl;
-	cout << test2.makeTrailer() << endl;
-	cout << test2.makeCodeword() << endl; 
-	cout << endl;
+	cout << test2.makeCodeword() << endl;
+	test2.makeFrame();
 
-	Frame test3("Hej med dig");
-	test3.makeFrame();
 
 	return 0;
 }
