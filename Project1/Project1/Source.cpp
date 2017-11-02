@@ -17,9 +17,10 @@
 
 int main()
 {
-	/*
-	//Besked test("Wubba lubba dub dub");
-	//test.playMessage();
+	
+	Besked test("Wubba lubba dub dub");
+	test.playMessage();
+
 	Besked testBesked("");
 	string x;
 
@@ -33,23 +34,8 @@ int main()
 		cout << "____________________________" << endl;
 		cout << "Modtaget besked: " << testBesked.frequenciesToChar(firstSum, secondSum) << endl;
 		cout << "____________________________" << endl;
-		*/
+		
 
-	Sender test2("Hej med dig");
-	cout << test2.konverterStringTilBitString() << endl;
-	cout << test2.makeRemainder() << endl;
-	cout << test2.makeCodeword() << endl;
-	test2.makeFrame();
-	cout << endl;
-
-	Receiver test3("Hej med digP");
-	cout << test3.konverterStringTilBitString() << endl;
-	cout << test3.getSyndrome() << endl;
-	cout << endl;
-	for (int i = 0; i < test2.getHeader(); i++)
-	{
-		cout << test2.makeFrame()[i] << " ";
-	}
 
 	return 0;
 }

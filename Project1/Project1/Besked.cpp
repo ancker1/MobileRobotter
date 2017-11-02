@@ -46,11 +46,14 @@ void Besked::createDTMFS(char charIn)
 
 void Besked::playMessage()
 {
+	int time = 1000;
 	for (int i = 0; i < message.length(); i++)
 	{
 		createDTMFS(nextChar());
 		currentHighDTMF.getTone().play(1);
+		sf::sleep(sf::milliseconds(time));
 		currentLowDTMF.getTone().play(1);
+		sf::sleep(sf::milliseconds(time));
 
 	}
 	
