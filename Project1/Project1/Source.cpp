@@ -8,7 +8,8 @@
 
 //for at afspille besked
 //(1) besked test("this is a test");
-//(2) test.playMessage();
+//(2) test.createDTMFs();
+//(3) test.getDTMFs().play();
 
 //for at genkende DTMF tone
 //(1) AudioRecord test(1);
@@ -18,36 +19,6 @@
 
 int main()
 {
-	/*
-	//Besked test("Wubba lubba dub dub");
-	//test.playMessage();
-	Besked testBesked("");
-	string x;
-
-	cin >> x;
-		int firstSum = testBesked.modtagFrequencySum();
-		cout << "Stop." << endl;
-	cin >> x;
-		int secondSum = testBesked.modtagFrequencySum();
-		cout << "Stop." << endl;
-
-		cout << "____________________________" << endl;
-		cout << "Modtaget besked: " << testBesked.frequenciesToChar(firstSum, secondSum) << endl;
-		cout << "____________________________" << endl;
-		*/
-
-	DataTilStringBinary test1("Hej med dig");
-	cout << test1.konverterStringTilBitString() << endl;
-	cout << endl;
-
-	Sender test2(DataTilStringBinary("Hej med dig"), "100000111");
-	cout << test2.makeRemainder() << endl;
-	cout << test2.makeTrailer() << endl;
-	cout << test2.makeCodeword() << endl; 
-	cout << endl;
-
-	Frame test3("Hej med dig");
-	test3.makeFrame();
 
 	return 0;
 }

@@ -150,7 +150,7 @@
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="Receiver.cpp" />
     <ClCompile Include="Sender.cpp" />
-    <ClCompile Include="SFMLtone.cpp" />
+    <ClCompile Include="SFMLarray.cpp" />
     <ClCompile Include="paPlay.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
@@ -163,7 +163,7 @@
     <ClInclude Include="Frame.h" />
     <ClInclude Include="Receiver.h" />
     <ClInclude Include="Sender.h" />
-    <ClInclude Include="SFMLtone.h" />
+    <ClInclude Include="SFMLarray.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
