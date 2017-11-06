@@ -2,38 +2,51 @@
 
 
 
-Receiver::Receiver(string cw, string c)
+Receiver::Receiver(string d)
 {
-	codeword = cw;
-	crc = c;
+	data = d;
 }
 
-string Receiver::getCodeword()
+string Receiver::konverterStringTilBitString()
 {
-	return codeword;
+	string heleDataTilString;
+	int indeks = 0;//pegepind til bostav indeks
+	for (int i = 0; i < data.size(); i++)//kører alle pladserne af string data indtastet
+	{
+		charData = data[indeks];//ligger tegn på plads indeks over i charData
+		int dataTilInt = 0;
+		dataTilInt = (int)charData;//tager ascii værdien af char og ligger de ind i dataTilInt
+		dataTilString = bitset<8>(dataTilInt).to_string();//konvertere helt om til 8 bits til en string
+		heleDataTilString += dataTilString;//ligger det konverterede til heleDataTilString
+		indeks++;//tæller indeks en op
+	}
+	return heleDataTilString;
 }
 
 string Receiver::getCrc()
 {
-	return crc;
+	return "100000111"; // CRC - 8
 }
 
 string Receiver::getSyndrome()
 {
+	// get data
+	string encoded = konverterStringTilBitString();
+	string crc = getCrc();
 	// same princip as sender
-	for (size_t i = 0; i < (codeword.length()); ) //kører codeword længde igennem og lægger først i++ til i while
+	for (int i = 0; i < (encoded.length()); ) //kører codeword længde igennem og lægger først i++ til i while
 	{
-		for (size_t j = 0; j < crc.length(); j++) //kører hele crc længde igennem på codeword. j resetes for hver LOOP ovenover. 
+		for (int j = 0; j < crc.length(); j++) //kører hele crc længde igennem på codeword. j resetes for hver LOOP ovenover. 
 		{
-			codeword[i + j] = codeword[i + j] == crc[j] ? '0' : '1'; //hvis codeword plads er lig med crc plads så returner 0 eller 1 dvs en XOR operation og læg ind på plads.
+			encoded[i + j] = encoded[i + j] == crc[j] ? '0' : '1'; //hvis codeword plads er lig med crc plads så returner 0 eller 1 dvs en XOR operation og læg ind på plads.
 		}
-		while ((i < codeword.length()) && (codeword[i] == '0')) //rykker hen til næste gang '1' optræder i codeword.
+		while ((i < encoded.length()) && (encoded[i] == '0')) //rykker hen til næste gang '1' optræder i codeword.
 		{
 			i++;
 		}
 	}
 
-	return (codeword.substr(codeword.length() - crc.length()));
+	return (encoded.substr(encoded.length() - crc.length()));
 }
 
 string Receiver::checkForError()
