@@ -1,19 +1,22 @@
 #pragma once
 #include <string>
 #include "DTMF.h"
+#include "SFMLarray.h"
+
 using namespace std;
 class Besked
 {
 public:
 	Besked();
 	Besked(string);
-	char nextChar();
-	void createDTMFS(char);
+
+	void createDTMFS();
+	SFMLarray getDTMFs();
 	char checkDTMF(int);
-	void playMessage();
+
 	char frequenciesToChar(int,int);
 	int modtagFrequencySum();
-	//isMoreChars - skal tjekke om der er flere chars i stringen
+
 	~Besked();
 
 private:
@@ -21,5 +24,6 @@ private:
 	int index;
 	DTMF currentHighDTMF;
 	DTMF currentLowDTMF;
+	SFMLarray allDTMFs;
 };
 
