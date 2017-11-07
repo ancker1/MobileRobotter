@@ -18,11 +18,15 @@
 int main()
 {
 	
-	Besked test("Wubba lubba dub dub");
-	test.playMessage();
-
+	//Besked test("Wubba lubba dub dub");
+	//test.playMessage();
+	/*
 	Besked testBesked("");
 	string x;
+
+		int firstSum = testBesked.modtagFrequencySum();
+		int secondSum = testBesked.modtagFrequencySum();
+		cout << "Modtaget besked: " << testBesked.frequenciesToChar(firstSum, secondSum) << endl;
 
 	cin >> x;
 		int firstSum = testBesked.modtagFrequencySum();
@@ -34,7 +38,27 @@ int main()
 		cout << "____________________________" << endl;
 		cout << "Modtaget besked: " << testBesked.frequenciesToChar(firstSum, secondSum) << endl;
 		cout << "____________________________" << endl;
-		
+	*/
+
+	
+	AudioRecord record;
+	record.setSecondsToRecord(25);
+	string x;
+	cin >> x;
+	cout << "Start" << endl;
+	record.record();
+	BehandlData objectTest(record.getAudioVector());
+	cout << "Stop" << endl;
+	record.printToFile();
+
+	objectTest.findFirstTone();
+	for (int i = 0; i < 20; i++)
+	{
+		objectTest.nextTone(44100); // eventuelt nextTone(integer) - hvor int er antal samples mellemrum mellem toner
+		cout << i << endl;
+	}
+
+
 
 
 	return 0;
