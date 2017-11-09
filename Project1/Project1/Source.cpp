@@ -2,9 +2,7 @@
 #include "AudioRecord.h"
 #include "Besked.h"
 #include <iostream>
-#include "DataTilStringBinary.h"
 #include "Sender.h"
-#include "Frame.h"
 
 //for at afspille besked
 //(1) besked test("this is a test");
@@ -19,6 +17,10 @@
 
 int main()
 {
-
+	Besked test("Dickballs!");
+	test.createDTMFS();
+	string wait = "";
+	cin >> wait;
+	test.getDTMFs().play();
 	return 0;
 }
