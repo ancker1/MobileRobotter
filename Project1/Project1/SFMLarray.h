@@ -19,8 +19,8 @@ private:
 	const unsigned SAMPLE_RATE = 44100;
 	const unsigned AMPLITUDE = 1000;
 	const double PI = 3.14159;
-	const unsigned SAMPLES_PER_TONE = 11025;
-	const unsigned PAUSE_SAMPLES = 0;
+	const unsigned SAMPLES_PER_TONE = 44100;
+	const unsigned PAUSE_SAMPLES = 44100;
 
 	unsigned n;
 	vector<sf::Int16> x;

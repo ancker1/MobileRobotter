@@ -1,4 +1,5 @@
 #include "BehandlData.h"
+#include "Besked.h"
 #include <math.h>
 //TEST
 #include <thread>
@@ -18,15 +19,15 @@ BehandlData::BehandlData(vector<float> data)
 	numSamples = data.size();
 }
 
-float BehandlData::goertzelFilter(int TARGET_FREQUENCY)
+float BehandlData::goertzelFilter(int TARGET_FREQUENCY, int SAMPLE_COUNT, vector<float> data)
 {
 	int SAMPLING_RATE = 44100;
 	double M_PI = 3.14159;
 	int     k, i;
 	float   omega, sine, cosine, coeff, q0, q1, q2, magnitude, real, imag;
-	float   scalingFactor = numSamples / 2.0;
+	float   scalingFactor = SAMPLE_COUNT / 2.0;
 
-	float floatnumSamples = numSamples;
+	float floatnumSamples = SAMPLE_COUNT;
 	k = (int)(0.5 + ((floatnumSamples * TARGET_FREQUENCY) / SAMPLING_RATE));
 	omega = (2.0 * M_PI * k) / floatnumSamples;
 	sine = sin(omega);
@@ -36,9 +37,9 @@ float BehandlData::goertzelFilter(int TARGET_FREQUENCY)
 	q1 = 0;
 	q2 = 0;
 
-	for (i = 0; i<numSamples; i++)
+	for (i = 0; i<SAMPLE_COUNT; i++)
 	{
-		q0 = coeff * q1 - q2 + recordData[i];
+		q0 = coeff * q1 - q2 + data[i];
 		q2 = q1;
 		q1 = q0;
 	}
@@ -61,37 +62,44 @@ void BehandlData::hammingWindow() //Virker som MATLAB's hamming window
 	}
 }
 
-void BehandlData::hanningWindow()
+vector<float> BehandlData::hanningWindow(vector<float> data)
 {
 	double M_PI = 3.14159;
-	for (int n = 0; n < numSamples; n++)
+	for (int n = 0; n < data.size(); n++)
 	{
-		recordData[n] = recordData[n] * (0.5 * (1 - cos(( 2 * M_PI * n)/(numSamples - 1))));
+		data[n] = data[n] * (0.5 * (1 - cos(( 2 * M_PI * n)/(data.size() - 1))));
 	}
+	return data;
 }
 
-int BehandlData::recognizeDTMF()
+int BehandlData::recognizeDTMF(vector<float> data)
 {
+
+	for (int i = 0; i < 500; i++)
+	{
+		data.insert(data.begin(), 0);
+		data.push_back(0);
+	}
 	int dtmfFrequencies[8] = { 697, 770, 852, 941, 1209, 1336, 1477, 1633 };
 	int highFrequency = 0;
-	int highMagnitude = 0; //Eventuelt indstil threshold
+	int highMagnitude = 3; //Eventuelt indstil threshold
 	int lowFrequency = 0;
-	int lowMagnitude = 0; //Eventuelt indstil threshold
-	hammingWindow(); //Eventuelt anden vindue funktion
+	int lowMagnitude = 3; //Eventuelt indstil threshold
+	//data = hanningWindow(data); //Eventuelt anden vindue funktion
 	for (int i = 0; i < 4; i++)
 	{
-		if (goertzelFilter(dtmfFrequencies[i]) > lowMagnitude)
+		if (goertzelFilter(dtmfFrequencies[i], data.size(), data) > lowMagnitude)
 		{
 			lowFrequency = dtmfFrequencies[i];
-			lowMagnitude = goertzelFilter(dtmfFrequencies[i]);
+			lowMagnitude = goertzelFilter(dtmfFrequencies[i], data.size(), data);
 		}
 	}
 	for (int i = 4; i < 8; i++)
 	{
-		if (goertzelFilter(dtmfFrequencies[i]) > highMagnitude)
+		if (goertzelFilter(dtmfFrequencies[i], data.size(), data) > highMagnitude)
 		{
 			highFrequency = dtmfFrequencies[i];
-			highMagnitude = goertzelFilter(dtmfFrequencies[i]);
+			highMagnitude = goertzelFilter(dtmfFrequencies[i], data.size(), data);
 		}
 	}
 
@@ -104,16 +112,14 @@ int BehandlData::recognizeDTMF()
 
 	// COUT TEST
 	cout << " ________________________________________ " << endl;
-	cout << "697:   " << goertzelFilter(697) << endl;
-	cout << "770:   " << goertzelFilter(770) << endl;
-	cout << "852:   " << goertzelFilter(852) << endl;
-	cout << "941:   " << goertzelFilter(941) << endl;
-	cout << "1209:  " << goertzelFilter(1209) << endl;
-	cout << "1336:  " << goertzelFilter(1336) << endl;
-	cout << "1477:  " << goertzelFilter(1477) << endl;
-	cout << "1633:  " << goertzelFilter(1633) << endl;
-	cout << "110:   " << goertzelFilter(110) << endl; //ingen DTMF frekvens på 110
-	cout << "19500: " << goertzelFilter(19500) << endl; //ingen DTMF frekvens på 19500
+	cout << "697:   " << goertzelFilter(697, data.size(), data) << endl;
+	cout << "770:   " << goertzelFilter(770, data.size(), data) << endl;
+	cout << "852:   " << goertzelFilter(852, data.size(), data) << endl;
+	cout << "941:   " << goertzelFilter(941, data.size(), data) << endl;
+	cout << "1209:  " << goertzelFilter(1209, data.size(), data) << endl;
+	cout << "1336:  " << goertzelFilter(1336, data.size(), data) << endl;
+	cout << "1477:  " << goertzelFilter(1477, data.size(), data) << endl;
+	cout << "1633:  " << goertzelFilter(1633, data.size(), data) << endl;
 
 	return lowFrequency + highFrequency;
 }
@@ -130,6 +136,72 @@ void BehandlData::printToFile()
 	}
 
 	audioData.close();
+}
+
+void BehandlData::printTo1File()
+{
+	ofstream audioData;
+	audioData.open("AudioDataFoundFirst.txt");
+
+	for (int i = 0; i < recordData.size(); i++)
+	{
+		audioData << recordData[i] << endl;
+	}
+
+	audioData.close();
+}
+
+void BehandlData::findFirstTone()
+{
+	vector<float> toneVector;
+	for (int i = 0; i < recordData.size(); i++)
+	{
+		if (recordData[i] > 500 || recordData[i] < -500) // Ikke verdens bedste løsning
+		{
+			firstToneAt = i;
+			cout << recordData[firstToneAt] << endl;
+			break;
+		}
+	}
+
+	for (int i = 0; i < 44100; i++)
+	{
+		toneVector.push_back(recordData[firstToneAt + i]);
+	}
+	cout << "First tone: " << endl;
+	frequencySumVector.push_back(recognizeDTMF(toneVector));
+	toneCount++;
+}
+
+/*void BehandlData::nextTone()
+{
+	vector<float> toneVector;
+	int currentlyAt = firstToneAt + toneCount * 44100; 
+	for (int i = 0; i < 44100; i++)
+	{
+		toneVector.push_back(recordData[currentlyAt + i]);
+	}
+	frequencySumVector.push_back(recognizeDTMF(toneVector));
+	toneCount++;
+}*/
+
+void BehandlData::nextTone(int WAIT_SAMPLES) // samme som nextTone() - dog med mulighed for at tilføje wait mellem hver tone
+{
+	cout << firstToneAt << endl; // TETS
+	vector<float> toneVector;
+	int currentlyAt = firstToneAt + toneCount * 44100 + WAIT_SAMPLES * toneCount;
+	cout << currentlyAt << endl; //TEST
+	if (currentlyAt + 44100 < recordData.size())
+	{
+		for (int i = 0; i < 44100; i++)
+		{
+			toneVector.push_back(recordData[currentlyAt + i]);
+		}
+		cout << "Tone: " << toneCount << endl;
+		frequencySumVector.push_back(recognizeDTMF(toneVector));
+		toneCount++;
+	}
+
 }
 
 BehandlData::~BehandlData()

@@ -142,6 +142,7 @@ char Besked::frequenciesToChar(int first_FrequencySum, int second_FrequencySum)
 		highNibble = 0b0000;
 		break;
 	default:
+		highNibble = 0b0000; // TEST
 		break;
 	}
 	switch (second_FrequencySum)
@@ -195,6 +196,7 @@ char Besked::frequenciesToChar(int first_FrequencySum, int second_FrequencySum)
 		lowNibble = 0b0000;
 		break;
 	default:
+		lowNibble = 0b0000; // TEST
 		break;
 	}
 	highNibble = highNibble << 4;
@@ -207,8 +209,10 @@ int Besked::modtagFrequencySum()
 	AudioRecord test(1);
 	cout << "Start." << endl;
 	test.record();
+	cout << test.getAudioVector().size() << endl;
 	BehandlData testData(test.getAudioVector());
-	return testData.recognizeDTMF();
+	//return testData.recognizeDTMF();
+	return 0;
 }
 
 Besked::~Besked()
