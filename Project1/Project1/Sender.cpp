@@ -7,6 +7,18 @@ Sender::Sender()
 Sender::Sender(string d)
 {
 	data = d;
+
+	// acknowledgment
+	char ackbuffer = data[0];
+
+	if (ackbuffer == ackNul)
+	{
+		ackTal = 0;
+	}
+	if (ackbuffer == ackEt)
+	{
+		ackTal = 1;
+	}	
 }
 
 string Sender::konverterStringTilBitString()
@@ -34,7 +46,7 @@ string Sender::makeRemainder()
 {
 	// get data
 	string encoded = konverterStringTilBitString();
-	string crc = getCrc(); 
+	string crc = getCrc();
 
 	// add zeroes to dataword
 	for (int i = 1; i < crc.length(); i++)
@@ -73,6 +85,32 @@ int Sender::getTrailer()
 	return bitset<8>(myInt).to_ulong();
 }
 
+int Sender::makeHeader()
+{
+	//framen længden sidste 7 bits i header
+	header = 4 + data.size();
+	if (header > 127)//hvis headeren er større end 7 bits gør f.eks. fragmentation
+	{
+		return -1;
+	}
+	else
+	{
+		if (header < 5)//beskeden er for kort.
+		{
+			return -1;
+		}
+	}
+
+	//frame når første bit i header
+	if (ackTal == 1)//er det et ulige tal?
+	{
+		header + 128;//svare til 1 i MSB
+	}
+	//ellers lad hver med at ligge noget til svare til 0 i MSB
+
+	return header;
+}
+
 vector <int> Sender::makeFrame()
 {
 	flag = 0b00000001; // find ascii value to asgined to flag
@@ -86,7 +124,7 @@ vector <int> Sender::makeFrame()
 	}
 	frame.push_back(getTrailer());//indsætter trailer
 	frame.push_back(flag);//indsætter slutflag
-	
+
 	return frame;
 }
 

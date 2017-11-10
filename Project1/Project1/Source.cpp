@@ -17,30 +17,30 @@
 
 int main()
 {
-	
+
 	//Besked test("Wubba lubba dub dub");
 	//test.playMessage();
 	/*
 	Besked testBesked("");
 	string x;
 
-		int firstSum = testBesked.modtagFrequencySum();
-		int secondSum = testBesked.modtagFrequencySum();
-		cout << "Modtaget besked: " << testBesked.frequenciesToChar(firstSum, secondSum) << endl;
+	int firstSum = testBesked.modtagFrequencySum();
+	int secondSum = testBesked.modtagFrequencySum();
+	cout << "Modtaget besked: " << testBesked.frequenciesToChar(firstSum, secondSum) << endl;
 
 	cin >> x;
-		int firstSum = testBesked.modtagFrequencySum();
-		cout << "Stop." << endl;
+	int firstSum = testBesked.modtagFrequencySum();
+	cout << "Stop." << endl;
 	cin >> x;
-		int secondSum = testBesked.modtagFrequencySum();
-		cout << "Stop." << endl;
+	int secondSum = testBesked.modtagFrequencySum();
+	cout << "Stop." << endl;
 
-		cout << "____________________________" << endl;
-		cout << "Modtaget besked: " << testBesked.frequenciesToChar(firstSum, secondSum) << endl;
-		cout << "____________________________" << endl;
+	cout << "__________________________" << endl;
+	cout << "Modtaget besked: " << testBesked.frequenciesToChar(firstSum, secondSum) << endl;
+	cout << "__________________________" << endl;
 	*/
 
-	
+
 	AudioRecord record;
 	record.setSecondsToRecord(25);
 	string x;

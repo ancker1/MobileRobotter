@@ -12,11 +12,14 @@ public:
 	string konverterStringTilBitString();
 	string getCrc();
 	string getSyndrome();
-	string checkForError();
+	bool checkForErrorCRC();
+	int acknowledgment();
+	string udpakFrame();
 	~Receiver();
 protected:
+	int ackReakkefoelge = 0;
 	string message;
-	string data;
+	string frame;
 	char charData;
 	string dataTilString;
 };
