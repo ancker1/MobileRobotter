@@ -33,11 +33,9 @@ void Besked::createDTMFS()
 		allDTMFs.addTone(currentHighDTMF.getHigh(), currentHighDTMF.getLow());
 		allDTMFs.addTone(currentLowDTMF.getHigh(), currentLowDTMF.getLow());
 
-		//cout << "Character is: " << charIn << endl;
-		//cout << "----------High DTMF---------|" << endl;
-		//cout << "High freq.: " << currentHighDTMF.getHigh()  << endl << "Low Freq.: " << currentHighDTMF.getLow() << endl;
-		//cout << "----------Low DTMF----------|" << endl;
-		//cout << "High freq.: " << currentLowDTMF.getHigh() << endl << "Low Freq.: " << currentLowDTMF.getLow() <<  endl;
+		cout << "Character is: " << message[i] << endl;
+		cout << i * 2		<< ":	" << currentHighDTMF.getLow() << ", " << currentHighDTMF.getHigh() << endl;
+		cout << i * 2 + 1	<< ":	" << currentLowDTMF.getLow() << ", " << currentLowDTMF.getHigh() <<  endl;
 	}
 
 	allDTMFs.readySound();
