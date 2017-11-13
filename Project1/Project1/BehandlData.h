@@ -15,10 +15,14 @@ public:
 	//void nextTone();
 	void nextTone(int WAIT_SAMPLES);
 	int recognizeDTMF(vector<float> data);
+	void slidingWindow();
+	void printText();
 	~BehandlData();
 protected:
 	vector<float> recordData;
 	vector<float> frequencySumVector;
+	vector<float> printThis; //TEST
+	vector<float> printThis2; //TEST
 	int numSamples;
 	int toneCount = 0;
 	int firstToneAt = 0;

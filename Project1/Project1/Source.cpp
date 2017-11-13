@@ -42,23 +42,22 @@ int main()
 
 	
 	AudioRecord record;
-	record.setSecondsToRecord(25);
+	record.setSecondsToRecord(7);
 	string x;
 	cin >> x;
 	cout << "Start" << endl;
 	record.record();
 	BehandlData objectTest(record.getAudioVector());
 	cout << "Stop" << endl;
-	record.printToFile();
+	//record.printToFile();
 
-	objectTest.findFirstTone();
-	for (int i = 0; i < 20; i++)
+	objectTest.slidingWindow();
+	for (int i = 0; i < 100; i++)
 	{
-		objectTest.nextTone(44100); // eventuelt nextTone(integer) - hvor int er antal samples mellemrum mellem toner
-		cout << i << endl;
+		objectTest.nextTone(50);
 	}
-
-
+	objectTest.printText();
+	//objectTest.printTo1File();
 
 
 	return 0;

@@ -82,24 +82,32 @@ int BehandlData::recognizeDTMF(vector<float> data)
 	}
 	int dtmfFrequencies[8] = { 697, 770, 852, 941, 1209, 1336, 1477, 1633 };
 	int highFrequency = 0;
-	int highMagnitude = 3; //Eventuelt indstil threshold
+	int highMagnitude = 0; //Eventuelt indstil threshold
 	int lowFrequency = 0;
-	int lowMagnitude = 3; //Eventuelt indstil threshold
-	//data = hanningWindow(data); //Eventuelt anden vindue funktion
+	int lowMagnitude = 0; //Eventuelt indstil threshold
+	data = hanningWindow(data); //Eventuelt anden vindue funktion
+	// TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER
+	for (int i = 0; i < data.size(); i++)
+	{
+		printThis2.push_back(data[i]);
+	}
+	// TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER
 	for (int i = 0; i < 4; i++)
 	{
-		if (goertzelFilter(dtmfFrequencies[i], data.size(), data) > lowMagnitude)
+		int currentMagnitude = goertzelFilter(dtmfFrequencies[i], data.size(), data);
+		if (currentMagnitude > lowMagnitude)
 		{
 			lowFrequency = dtmfFrequencies[i];
-			lowMagnitude = goertzelFilter(dtmfFrequencies[i], data.size(), data);
+			lowMagnitude = currentMagnitude;
 		}
 	}
 	for (int i = 4; i < 8; i++)
 	{
-		if (goertzelFilter(dtmfFrequencies[i], data.size(), data) > highMagnitude)
+		int currentMagnitude = goertzelFilter(dtmfFrequencies[i], data.size(), data);
+		if (currentMagnitude > highMagnitude)
 		{
 			highFrequency = dtmfFrequencies[i];
-			highMagnitude = goertzelFilter(dtmfFrequencies[i], data.size(), data);
+			highMagnitude = currentMagnitude;
 		}
 	}
 
@@ -124,6 +132,62 @@ int BehandlData::recognizeDTMF(vector<float> data)
 	return lowFrequency + highFrequency;
 }
 
+void BehandlData::slidingWindow()
+{
+	vector<float> tempData = recordData;
+	tempData.erase(tempData.begin() + 44100, tempData.end()); // Resulterer i tempData.size() = 44100.
+	int windowSize = 2205;
+	int dtmfFrequencies[8] = { 697, 770, 852, 941, 1209, 1336, 1477, 1633 };
+	float highFrequency = 0;
+	int highMagnitude = 0; //Eventuelt indstil threshold
+	float lowFrequency = 0;
+	int lowMagnitude = 0; //Eventuelt indstil threshold
+	int magnitudeSum = 0;
+	int frequencySum = 0;
+	int stepSize = 50; //Bestemmer hop-længden
+	vector<float> currentTempData;
+
+	cout << tempData.size() << endl;
+
+	for (int i = 0; i < (44100 - windowSize) / stepSize; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
+	{
+		currentTempData = tempData;
+		currentTempData.erase(currentTempData.begin(), currentTempData.begin() + i * stepSize);
+		currentTempData.erase(currentTempData.begin() + windowSize, currentTempData.end());
+		currentTempData = hanningWindow(currentTempData);
+
+		for (int i = 0; i < 4; i++)
+		{
+			int currentMagnitude = goertzelFilter(dtmfFrequencies[i], windowSize, currentTempData);
+			if (currentMagnitude > lowMagnitude)
+			{
+				lowFrequency = dtmfFrequencies[i];
+				lowMagnitude = currentMagnitude;
+			}
+		}
+		for (int i = 4; i < 8; i++)
+		{
+			int currentMagnitude = goertzelFilter(dtmfFrequencies[i], windowSize, currentTempData);
+			if (currentMagnitude > highMagnitude)
+			{
+				highFrequency = dtmfFrequencies[i];
+				highMagnitude = currentMagnitude;
+			}
+		}
+		if ((lowMagnitude + highMagnitude) > magnitudeSum)
+		{
+			magnitudeSum = lowMagnitude + highMagnitude;
+			frequencySum = lowFrequency + highFrequency;
+			firstToneAt = i * stepSize;
+		}
+	}
+	toneCount++;
+	cout << "Tonens startpunkt: " << firstToneAt << endl;
+	cout << "Highest magnitude sum: " << magnitudeSum << endl;
+	cout << "Corresponding frequency sum: " << frequencySum << endl;
+	//frequencySumVector.push_back(frequencySum);
+}
+
 
 void BehandlData::printToFile()
 {
@@ -141,17 +205,28 @@ void BehandlData::printToFile()
 void BehandlData::printTo1File()
 {
 	ofstream audioData;
-	audioData.open("AudioDataFoundFirst.txt");
+	audioData.open("MessageWOHann.txt");
 
-	for (int i = 0; i < recordData.size(); i++)
+	for (int i = 0; i < printThis.size(); i++)
 	{
-		audioData << recordData[i] << endl;
+		audioData << printThis[i] << endl;
 	}
 
 	audioData.close();
+
+	ofstream audioData2;
+	audioData2.open("MessageWHann.txt");
+
+	for (int i = 0; i < printThis2.size(); i++)
+	{
+		audioData2 << printThis2[i] << endl;
+	}
+
+	audioData2.close();
 }
 
-void BehandlData::findFirstTone()
+
+void BehandlData::findFirstTone() // OUTDATED
 {
 	vector<float> toneVector;
 	for (int i = 0; i < recordData.size(); i++)
@@ -171,6 +246,7 @@ void BehandlData::findFirstTone()
 	cout << "First tone: " << endl;
 	frequencySumVector.push_back(recognizeDTMF(toneVector));
 	toneCount++;
+
 }
 
 /*void BehandlData::nextTone()
@@ -187,21 +263,37 @@ void BehandlData::findFirstTone()
 
 void BehandlData::nextTone(int WAIT_SAMPLES) // samme som nextTone() - dog med mulighed for at tilføje wait mellem hver tone
 {
-	cout << firstToneAt << endl; // TETS
+	int toneSize = 2205;
+	//cout << firstToneAt << endl; // TEST
 	vector<float> toneVector;
-	int currentlyAt = firstToneAt + toneCount * 44100 + WAIT_SAMPLES * toneCount;
-	cout << currentlyAt << endl; //TEST
-	if (currentlyAt + 44100 < recordData.size())
+	int currentlyAt = firstToneAt + toneCount * toneSize + WAIT_SAMPLES * (toneCount - 1) + 44100; //WAIT_SAMPLES er længere for første tone
+	//cout << currentlyAt << endl; //TEST
+	if (currentlyAt + toneSize < recordData.size())
 	{
-		for (int i = 0; i < 44100; i++)
+		for (int i = 0; i < toneSize; i++)
 		{
 			toneVector.push_back(recordData[currentlyAt + i]);
 		}
-		cout << "Tone: " << toneCount << endl;
-		frequencySumVector.push_back(recognizeDTMF(toneVector));
+		//cout << "Tone: " << toneCount << endl;
+		frequencySumVector.push_back(recognizeDTMF(toneVector)); //Tilføjer frekvens summen til vektor
 		toneCount++;
 	}
 
+	for (int i = 0; i < toneVector.size(); i++)
+	{
+		printThis.push_back(toneVector[i]);
+	}
+}
+
+void BehandlData::printText()
+{
+	Besked testBesked("");
+	string text = "";
+	for (int i = 0; i < 62; i++) //MAX er: frequencySumVector.size() - 1
+	{
+		text += testBesked.frequenciesToChar(frequencySumVector[i++], frequencySumVector[i]);
+	}
+	cout << text << endl;
 }
 
 BehandlData::~BehandlData()

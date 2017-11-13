@@ -203,7 +203,11 @@ char Besked::frequenciesToChar(int first_FrequencySum, int second_FrequencySum)
 	}
 	highNibble = highNibble << 4;
 	msgByte = highNibble + lowNibble;
-	return (char)msgByte;
+	if ((msgByte > 31 && msgByte < 127))
+	{
+		return (char)msgByte;
+	}
+	return ' ';
 }
 
 int Besked::modtagFrequencySum()
