@@ -6,8 +6,9 @@
 #include "Receiver.h"
 
 //for at afspille besked
-//(1) besked test("this is a test");
-//(2) test.playMessage();
+//(1) Besked test("this is a test");
+//(2) test.createDTMFs();
+//(3) test.getDTMFs().play();
 
 //for at genkende DTMF tone
 //(1) AudioRecord test(1);
