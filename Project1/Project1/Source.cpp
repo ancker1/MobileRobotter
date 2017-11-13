@@ -41,7 +41,7 @@ int main()
 	cout << "__________________________" << endl;
 	*/
 
-
+	/*
 	AudioRecord record;
 	record.setSecondsToRecord(25);
 	string x;
@@ -58,7 +58,9 @@ int main()
 		objectTest.nextTone(44100); // eventuelt nextTone(integer) - hvor int er antal samples mellemrum mellem toner
 		cout << i << endl;
 	}
-
+	*/
+	Besked test("\X01");
+	cout << test.frequenciesToChar(2574,1906) << endl;
 
 
 

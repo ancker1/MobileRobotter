@@ -9,16 +9,14 @@ Sender::Sender(string d)
 	data = d;
 
 	// acknowledgment
-	char ackbuffer = data[0];
-
-	if (ackbuffer == ackNul)
+	if (data[0] == '\X06')
 	{
 		ackTal = 0;
 	}
-	if (ackbuffer == ackEt)
+	if (data[0] == '\X15')
 	{
 		ackTal = 1;
-	}	
+	}
 }
 
 string Sender::konverterStringTilBitString()
@@ -126,6 +124,16 @@ vector <int> Sender::makeFrame()
 	frame.push_back(flag);//indsætter slutflag
 
 	return frame;
+}
+
+int Sender::makeHandshake()//synkronisere optagelse med sendingen
+{
+	return '\X16'; // '\X16' = 'SYN'
+}
+
+int Sender::makeHandshakeLength()//synkronisere optagelse længden inden framen sendes.
+{
+	return makeFrame().size();
 }
 
 int Sender::getHeader()

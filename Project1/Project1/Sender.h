@@ -18,6 +18,8 @@ public:
 	int getTrailer();
 	int makeHeader();
 	vector <int> makeFrame();
+	int makeHandshake();
+	int makeHandshakeLength();
 	int getHeader();
 	~Sender();
 protected:

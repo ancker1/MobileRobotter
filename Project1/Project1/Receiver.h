@@ -15,6 +15,8 @@ public:
 	bool checkForErrorCRC();
 	int acknowledgment();
 	string udpakFrame();
+	bool checkHandshake();
+	int checkHandshakeLength();
 	~Receiver();
 protected:
 	int ackReakkefoelge = 0;
