@@ -78,12 +78,12 @@ int Receiver::acknowledgment()
 		if (konverterStringTilBitString()[8] == '1')// hvis det modtaget framenummer er 1 så send ACK0
 		{
 			ackReakkefoelge++;
-			return 0b00010101;
+			return '\X15'; // 'NACK'
 		}
 		if (konverterStringTilBitString()[8] == '0')
 		{
 			ackReakkefoelge--;
-			return 0b00000110;//hvis det modtaget framenummer er 0 så send ACK1
+			return '\X06'; // 'ACK'
 		}
 	}
 
@@ -110,6 +110,28 @@ string Receiver::udpakFrame()
 	return message;
 }
 
+bool Receiver::checkHandshake()
+{
+	if (frame[0] == '\X16') // '\X16' = 0b00010110 = 'SYN'
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+int Receiver::checkHandshakeLength()
+{
+	if (checkHandshake())
+	{
+		return frame[0];//retunere længden af framen for herefter at oprette optagelse længden af den frame som snart bliver modtaget
+	}
+	return 0;
+}
+
 Receiver::~Receiver()
 {
 }
+

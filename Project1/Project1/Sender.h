@@ -11,24 +11,39 @@ class Sender
 public:
 	Sender();
 	Sender(string d);
+
+	// Konverter til bit streng
 	string konverterStringTilBitString();
+
+	// CRC
 	string getCrc();
 	string makeRemainder();
 	string makeCodeword();
 	int getTrailer();
+
+	// Frame
 	int makeHeader();
-	vector <int> makeFrame();
 	int getHeader();
+	vector <int> makeFrame();
+
+	// Handshake
+	int makeHandshake();
+	int makeHandshakeLength();
+
 	~Sender();
 protected:
-	int ackTal = 0;
 	string data;
+
+	// Acknowledgment
+	int ackTal;
+
+	// Konverter til bit string
 	char charData;
 	string dataTilString;
+
+	// Frame
 	int flag;
 	vector <int> frame;
 	int header;
-	int ackNul = 0b00010101;
-	int ackEt = 0b00000110;
 };
 
