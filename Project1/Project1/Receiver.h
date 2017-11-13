@@ -9,14 +9,36 @@ class Receiver
 {
 public:
 	Receiver(string msg);
+
+	// Konverter til bit streng
 	string konverterStringTilBitString();
+
+	// CRC
 	string getCrc();
 	string getSyndrome();
-	string checkForError();
+	bool checkForErrorCRC();
+
+	// Acknowledgment
+	int acknowledgment();
+
+	// Frame
+	string udpakFrame();
+
+	// handshake
+	bool checkHandshake();
+	int checkHandshakeLength();
+
 	~Receiver();
 protected:
+	string frame;
+
+	// Acknowledgment
+	int ackReakkefoelge = 0;
+
+	// Frame
 	string message;
-	string data;
+
+	// Konverter til bit streng
 	char charData;
 	string dataTilString;
 };
