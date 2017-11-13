@@ -128,7 +128,7 @@ vector <int> Sender::makeFrame()
 
 int Sender::makeHandshake()//synkronisere optagelse med sendingen
 {
-	return '\X16'; // '\X16' = 'SYN'
+	return 0b00000000; // DTMF tone => DD
 }
 
 int Sender::makeHandshakeLength()//synkronisere optagelse længden inden framen sendes.
