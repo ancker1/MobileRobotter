@@ -86,12 +86,7 @@ int BehandlData::recognizeDTMF(vector<float> data)
 	int lowFrequency = 0;
 	int lowMagnitude = 0; //Eventuelt indstil threshold
 	data = hanningWindow(data); //Eventuelt anden vindue funktion
-	// TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER
-	for (int i = 0; i < data.size(); i++)
-	{
-		printThis2.push_back(data[i]);
-	}
-	// TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER TEST ---- HER
+
 	for (int i = 0; i < 4; i++)
 	{
 		int currentMagnitude = goertzelFilter(dtmfFrequencies[i], data.size(), data);
@@ -111,9 +106,7 @@ int BehandlData::recognizeDTMF(vector<float> data)
 		}
 	}
 
-	//GIV BOGSTAV
-
-
+/*
 	//COUT RESULT
 	cout << "Low frequency: " << lowFrequency << endl;
 	cout << "High frequency: " << highFrequency << endl;
@@ -128,12 +121,127 @@ int BehandlData::recognizeDTMF(vector<float> data)
 	cout << "1336:  " << goertzelFilter(1336, data.size(), data) << endl;
 	cout << "1477:  " << goertzelFilter(1477, data.size(), data) << endl;
 	cout << "1633:  " << goertzelFilter(1633, data.size(), data) << endl;
-
+	*/
 	return lowFrequency + highFrequency;
+}
+
+void BehandlData::findFnM(vector<float> data, int& magnitude, int& frequency, bool findLow)
+{
+	int dtmfFrequencies[8] = { 697, 770, 852, 941, 1209, 1336, 1477, 1633 };
+	int windowSize = 2205;
+	if (findLow)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			int currentMagnitude = goertzelFilter(dtmfFrequencies[i], windowSize, data);
+			if (currentMagnitude > magnitude)
+			{
+				frequency = dtmfFrequencies[i];
+				magnitude = currentMagnitude;
+			}
+		}
+	}
+	else
+	{
+		for (int i = 4; i < 8; i++)
+		{
+			int currentMagnitude = goertzelFilter(dtmfFrequencies[i], windowSize, data);
+			if (currentMagnitude > magnitude)
+			{
+				frequency = dtmfFrequencies[i];
+				magnitude = currentMagnitude;
+			}
+		}
+	}
+}
+
+void BehandlData::slideFirstHalf()
+{
+	vector<float> tempData = recordData;
+	tempData.erase(tempData.begin() + 44100, tempData.end()); // Resulterer i tempData.size() = 44100.
+	int windowSize = 2205;
+	int highFrequency = 0;
+	int highMagnitude = 0; //Eventuelt indstil threshold
+	int lowFrequency = 0;
+	int lowMagnitude = 0; //Eventuelt indstil threshold
+	int stepSize = 50; //Bestemmer hop-længden
+	vector<float> currentTempData;
+
+
+	for (int i = 0; i < (22050 - windowSize) / stepSize; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
+	{
+		currentTempData = tempData;
+		currentTempData.erase(currentTempData.begin(), currentTempData.begin() + i * stepSize);
+		currentTempData.erase(currentTempData.begin() + windowSize, currentTempData.end());
+		currentTempData = hanningWindow(currentTempData);
+
+		findFnM(currentTempData, lowMagnitude, lowFrequency, true);
+		findFnM(currentTempData, highMagnitude, highFrequency, false);
+		if ((lowMagnitude + highMagnitude) > FIRST_mSum)
+		{
+			FIRST_mSum = lowMagnitude + highMagnitude;
+			FIRST_fSum = lowFrequency + highFrequency;
+			FIRST_firstToneAt = i * stepSize;
+		}
+	}
+
+}
+
+void BehandlData::slideSecondHalf()
+{
+	vector<float> tempData = recordData;
+	tempData.erase(tempData.begin() + 44100, tempData.end()); // Resulterer i tempData.size() = 44100.
+	int windowSize = 2205;
+	int highFrequency = 0;
+	int highMagnitude = 0; //Eventuelt indstil threshold
+	int lowFrequency = 0;
+	int lowMagnitude = 0; //Eventuelt indstil threshold
+	int stepSize = 50; //Bestemmer hop-længden
+	vector<float> currentTempData;
+
+
+	for (int i = 0; i < (22050 - windowSize) / stepSize; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
+	{
+		currentTempData = tempData;
+		currentTempData.erase(currentTempData.begin(), currentTempData.begin() + 22050);
+		currentTempData.erase(currentTempData.begin(), currentTempData.begin() + i * stepSize);
+		currentTempData.erase(currentTempData.begin() + windowSize, currentTempData.end());
+		currentTempData = hanningWindow(currentTempData);
+
+		findFnM(currentTempData, lowMagnitude, lowFrequency, true);
+		findFnM(currentTempData, highMagnitude, highFrequency, false);
+
+		if ((lowMagnitude + highMagnitude) > SECOND_mSum)
+		{
+			SECOND_mSum = lowMagnitude + highMagnitude;
+			SECOND_fSum = lowFrequency + highFrequency;
+			SECOND_firstToneAt = i * stepSize + 22050;
+		}
+	}
+}
+
+void BehandlData::slideTWO()
+{
+	cout << "START - WINDOW with 2 threads" << endl;
+	thread slidefirst([this] {slideFirstHalf(); });
+	thread slidesecond([this] {slideSecondHalf(); });
+
+	slidefirst.join();
+	slidesecond.join();
+
+	if (FIRST_mSum > SECOND_mSum)
+	{
+		firstToneAt = FIRST_firstToneAt;
+	}
+	else { firstToneAt = SECOND_firstToneAt; }
+	toneCount++;
+	cout << "STOP" << endl;
+	cout << firstToneAt << endl;
 }
 
 void BehandlData::slidingWindow()
 {
+	cout << "START - WINDOW with 1 threads" << endl;
 	vector<float> tempData = recordData;
 	tempData.erase(tempData.begin() + 44100, tempData.end()); // Resulterer i tempData.size() = 44100.
 	int windowSize = 2205;
@@ -147,7 +255,6 @@ void BehandlData::slidingWindow()
 	int stepSize = 50; //Bestemmer hop-længden
 	vector<float> currentTempData;
 
-	cout << tempData.size() << endl;
 
 	for (int i = 0; i < (44100 - windowSize) / stepSize; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
 	{
@@ -182,10 +289,8 @@ void BehandlData::slidingWindow()
 		}
 	}
 	toneCount++;
-	cout << "Tonens startpunkt: " << firstToneAt << endl;
-	cout << "Highest magnitude sum: " << magnitudeSum << endl;
-	cout << "Corresponding frequency sum: " << frequencySum << endl;
-	//frequencySumVector.push_back(frequencySum);
+	cout << "STOP" << endl;
+
 }
 
 
@@ -200,29 +305,6 @@ void BehandlData::printToFile()
 	}
 
 	audioData.close();
-}
-
-void BehandlData::printTo1File()
-{
-	ofstream audioData;
-	audioData.open("MessageWOHann.txt");
-
-	for (int i = 0; i < printThis.size(); i++)
-	{
-		audioData << printThis[i] << endl;
-	}
-
-	audioData.close();
-
-	ofstream audioData2;
-	audioData2.open("MessageWHann.txt");
-
-	for (int i = 0; i < printThis2.size(); i++)
-	{
-		audioData2 << printThis2[i] << endl;
-	}
-
-	audioData2.close();
 }
 
 
@@ -249,18 +331,6 @@ void BehandlData::findFirstTone() // OUTDATED
 
 }
 
-/*void BehandlData::nextTone()
-{
-	vector<float> toneVector;
-	int currentlyAt = firstToneAt + toneCount * 44100; 
-	for (int i = 0; i < 44100; i++)
-	{
-		toneVector.push_back(recordData[currentlyAt + i]);
-	}
-	frequencySumVector.push_back(recognizeDTMF(toneVector));
-	toneCount++;
-}*/
-
 void BehandlData::nextTone(int WAIT_SAMPLES) // samme som nextTone() - dog med mulighed for at tilføje wait mellem hver tone
 {
 	int toneSize = 2205;
@@ -279,10 +349,6 @@ void BehandlData::nextTone(int WAIT_SAMPLES) // samme som nextTone() - dog med m
 		toneCount++;
 	}
 
-	for (int i = 0; i < toneVector.size(); i++)
-	{
-		printThis.push_back(toneVector[i]);
-	}
 }
 
 void BehandlData::printText()

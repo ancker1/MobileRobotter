@@ -16,30 +16,16 @@
 //(3) BehandlData testData(test.getAudioVector());
 //(4) testData.recognizeDTMF();
 
+//for at modtage sætning
+//(1) AudioRecord test(7);
+//(2) test.record();
+//(3) BehandlData objectTest(test.getAudioVector());
+//(4) objectTest.slideTWO();		//ELLER objectTest.slidingWindow();
+//(5) for (int i = 0; i < 100; i++) { objectTest.nextTone(50); }
+//(6) objectTest.printText();
+
 int main()
 {
-
-	//Besked test("Wubba lubba dub dub");
-	//test.playMessage();
-	/*
-	Besked testBesked("");
-	string x;
-
-	int firstSum = testBesked.modtagFrequencySum();
-	int secondSum = testBesked.modtagFrequencySum();
-	cout << "Modtaget besked: " << testBesked.frequenciesToChar(firstSum, secondSum) << endl;
-
-	cin >> x;
-	int firstSum = testBesked.modtagFrequencySum();
-	cout << "Stop." << endl;
-	cin >> x;
-	int secondSum = testBesked.modtagFrequencySum();
-	cout << "Stop." << endl;
-
-	cout << "__________________________" << endl;
-	cout << "Modtaget besked: " << testBesked.frequenciesToChar(firstSum, secondSum) << endl;
-	cout << "__________________________" << endl;
-	*/
 
 
 	AudioRecord record;
@@ -50,15 +36,16 @@ int main()
 	record.record();
 	BehandlData objectTest(record.getAudioVector());
 	cout << "Stop" << endl;
-	//record.printToFile();
 
-	objectTest.slidingWindow();
+	//objectTest.slidingWindow();
+	objectTest.slideTWO();
+	
 	for (int i = 0; i < 100; i++)
 	{
 		objectTest.nextTone(50);
 	}
 	objectTest.printText();
-	//objectTest.printTo1File();
+	
 
 
 	return 0;
