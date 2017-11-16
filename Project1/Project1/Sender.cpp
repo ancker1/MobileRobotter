@@ -17,53 +17,56 @@ Sender::Sender(string d)
 	{
 		ackTal = 1;
 	}
+
+	konverterStringTilBitString();
 }
 
-string Sender::konverterStringTilBitString()
+void Sender::konverterStringTilBitString()
 {
-	string heleDataTilString;
-	int indeks = 0;//pegepind til bostav indeks
+	char charData;
+	string dataTilString;
 	for (int i = 0; i < data.size(); i++)//kører alle pladserne af string data indtastet
 	{
-		charData = data[indeks];//ligger tegn på plads indeks over i charData
-		int dataTilInt = 0;
-		dataTilInt = (int)charData;//tager ascii værdien af char og ligger de ind i dataTilInt
+		charData = data[i];//ligger tegn på plads indeks over i charData
+		int dataTilInt = (int)charData;//tager ascii værdien af char og ligger de ind i dataTilInt
 		dataTilString = bitset<8>(dataTilInt).to_string();//konvertere helt om til 8 bits til en string
 		heleDataTilString += dataTilString;//ligger det konverterede til heleDataTilString
-		indeks++;//tæller indeks en op
 	}
-	return heleDataTilString;
-}
-
-string Sender::getCrc()
-{
-	return "100000111"; // CRC-8
 }
 
 string Sender::makeRemainder()
 {
 	// get data
-	string encoded = konverterStringTilBitString();
-	string crc = getCrc();
+	string encoded = heleDataTilString;
 
 	// add zeroes to dataword
-	for (int i = 1; i < crc.length(); i++)
+	for (int i = 0; i < crc.length() - 1; i++)
 	{
 		encoded += '0';
 	}
 
 	// loop
-	for (int i = 0; i < konverterStringTilBitString().length(); )
+	for (int i = 0; i < encoded.length(); i++)
 	{
-		for (int j = 0; j < crc.length(); j++) // loop as long as CRC
+		if (stoi(crc, nullptr, 2) <= stoi(encoded, nullptr, 2))
 		{
-			encoded[i + j] = encoded[i + j] == crc[j] ? '0' : '1'; // XOR if encoded == crc => 0 else 1
+			if (encoded[i] != '0')
+			{
+				cout << encoded << endl;
+				for (int j = 0; j < crc.length(); j++) // loop as long as CRC
+				{
+					encoded[i + j] = encoded[i + j] == crc[j] ? '0' : '1'; // XOR if encoded == crc => 0 else 1
+				}
+				for (int a = 0; a < i; a++) {
+					cout << " ";
+				}
+				cout << crc << endl;
+			}
 		}
-		while ((i < encoded.length()) && (encoded[i] != '1')) // increment i as long as encoded = 0
-		{
-			i++;
-		}
+		else break;
 	}
+
+	cout << encoded << endl;
 
 	return (encoded.substr(encoded.size() - crc.length() + 1));
 }
@@ -71,16 +74,16 @@ string Sender::makeRemainder()
 string Sender::makeCodeword()
 {
 	// data + remainder
-	return konverterStringTilBitString() + makeRemainder();
+	return heleDataTilString + makeRemainder();
 }
 
 int Sender::getTrailer()
 {
 	// string to int
 	string str = makeRemainder();
-	int myInt = stoi(str);
+	int myInt = stoi(str, nullptr, 2);
 
-	return bitset<8>(myInt).to_ulong();
+	return myInt;
 }
 
 int Sender::makeHeader()

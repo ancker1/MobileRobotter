@@ -51,15 +51,6 @@ int main()
 	objectTest.printText();
 	
 	*/
-
-	/*
-	Sender test1("h");
-	cout << test1.getTrailer() << endl;
-
-	Receiver test2("hg");
-	cout << test2.checkForErrorCRC() << endl;
-	*/
-
 	/*
 	Sender test1("hej");
 	test1.makeFrame();
@@ -71,7 +62,7 @@ int main()
 	txt += char(104);
 	txt += char(101);
 	txt += char(106);
-	txt += char(177);
+	txt += char(49);
 	txt += char(001);
 
 	Receiver test2(txt);

@@ -13,10 +13,9 @@ public:
 	Sender(string d);
 
 	// Konverter til bit streng
-	string konverterStringTilBitString();
+	void konverterStringTilBitString();
 
 	// CRC
-	string getCrc();
 	string makeRemainder();
 	string makeCodeword();
 	int getTrailer();
@@ -33,13 +32,13 @@ public:
 	~Sender();
 protected:
 	string data;
+	string crc = "100000111";
 
 	// Acknowledgment
 	int ackTal;
 
 	// Konverter til bit string
-	char charData;
-	string dataTilString;
+	string heleDataTilString;
 
 	// Frame
 	int flag;

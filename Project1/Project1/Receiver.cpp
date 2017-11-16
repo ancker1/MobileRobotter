@@ -31,16 +31,27 @@ string Receiver::getSyndrome()
 		codeword += heleDataTilString[i];
 	}
 
+	cout << codeword << endl;
+
 	// same princip as sender
 	for (int i = 0; i < codeword.length(); i++) //kører codeword længde igennem og lægger først i++ til i while
 	{
-		for (int j = 0; j < crc.length(); j++) //kører hele crc længde igennem på codeword. j resetes for hver LOOP ovenover. 
+		if (stoi(crc, nullptr, 2) <= stoi(codeword, nullptr, 2))
 		{
-			if (codeword[i] == '0')
-				break;
-
-			codeword[i + j] = (codeword[i + j] == crc[j] ? '0' : '1'); //hvis codeword plads er lig med crc plads så returner 0 eller 1 dvs en XOR operation og læg ind på plads.
+			if (codeword[i] != '0')
+			{
+				for (int a = 0; a < i; a++) {
+					cout << " ";
+				}
+				cout << crc << endl;
+				for (int j = 0; j < crc.length(); j++) //kører hele crc længde igennem på codeword. j resetes for hver LOOP ovenover. 
+				{
+					codeword[i + j] = (codeword[i + j] == crc[j] ? '0' : '1'); //hvis codeword plads er lig med crc plads så returner 0 eller 1 dvs en XOR operation og læg ind på plads.
+				}
+				cout << codeword << endl;
+			}
 		}
+		else break;
 	}
 
 	return (codeword.substr(codeword.length() - crc.length()));
