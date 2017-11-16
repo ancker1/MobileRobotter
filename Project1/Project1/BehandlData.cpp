@@ -247,7 +247,7 @@ void BehandlData::slide(int& tone_AT, int& m_Sum, int& f_Sum, int slide_Number)
 	vector<float> currentTempData;
 
 
-	for (int i = 0; i < (11050 - windowSize) / stepSize; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
+	for (int i = 0; i < (11050 - windowSize) / stepSize - 1; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
 	{
 		currentTempData = tempData;
 		if (slide_Number > 1)
