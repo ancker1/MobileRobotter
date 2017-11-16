@@ -5,6 +5,8 @@
 Receiver::Receiver(string d)
 {
 	frame = d;
+
+	konverterStringTilBitString();
 }
 
 void Receiver::konverterStringTilBitString()
@@ -21,53 +23,52 @@ void Receiver::konverterStringTilBitString()
 
 string Receiver::getSyndrome()
 {
-	// get codeword
-	string encoded;
+	// dataword + remainder
+	string codeword = "";
 
 	for (int i = 16; i < heleDataTilString.length() - 8; i++)//smider flag, header og flag væk
 	{
-		encoded += heleDataTilString[i];
+		codeword += heleDataTilString[i];
 	}
 
-	
-
 	// same princip as sender
-	for (int i = 0; i < encoded.length(); ) //kører codeword længde igennem og lægger først i++ til i while
+	for (int i = 0; i < codeword.length(); i++) //kører codeword længde igennem og lægger først i++ til i while
 	{
 		for (int j = 0; j < crc.length(); j++) //kører hele crc længde igennem på codeword. j resetes for hver LOOP ovenover. 
 		{
-			encoded[i + j] = (encoded[i + j] == crc[j] ? '0' : '1'); //hvis codeword plads er lig med crc plads så returner 0 eller 1 dvs en XOR operation og læg ind på plads.
-		}
-		while ((i < encoded.length()) && (encoded[i] == '0')) //rykker hen til næste gang '1' optræder i codeword.
-		{
-			i++;
+			if (codeword[i] == '0')
+				break;
+
+			codeword[i + j] = (codeword[i + j] == crc[j] ? '0' : '1'); //hvis codeword plads er lig med crc plads så returner 0 eller 1 dvs en XOR operation og læg ind på plads.
 		}
 	}
 
-	return (encoded.substr(encoded.length() - crc.length()));
+	return (codeword.substr(codeword.length() - crc.length()));
 
 }
 
-bool Receiver::checkForErrorCRC()
+bool Receiver::hasErrorCRC()
 {
 	// convert to int
+	cout << "Kalder funktion" << endl;
 	string str = getSyndrome();
+	cout << "Hentet syndrom" << endl;
 	int myInt = stoi(str);
 
 	// ask if one
 	if (myInt == 0)
 	{
-		return false;
+		return false; // No error
 	}
 	else
 	{
-		return true;
+		return true; // Has error
 	}
 }
 
 int Receiver::acknowledgment()
 {
-	if (!checkForErrorCRC())//hvis der er ingen fejl
+	if (!hasErrorCRC())//hvis der er ingen fejl
 	{
 
 		if (heleDataTilString[8] == '1')// hvis det modtaget framenummer er 1 så send ACK0
@@ -88,7 +89,7 @@ int Receiver::acknowledgment()
 		return 0;
 	}
 	
-	if (checkForErrorCRC())//hvis der er fejl i crc
+	if (hasErrorCRC())//hvis der er fejl i crc
 	{
 		cout << "Fejl" << endl;
 		return 0;
@@ -96,17 +97,36 @@ int Receiver::acknowledgment()
 	
 }
 
-string Receiver::udpakFrame()
+void Receiver::udpakFrame()
 {
-	if (!checkForErrorCRC())
+	if (!hasErrorCRC())
 	{
+		cout << "CRC check is OKAY!" << endl;
 		for (int i = 16; i < heleDataTilString.length() - 16; i++)//smider flag, header, trailer og flag væk
 		{
-			message += heleDataTilString[i];
+			messageAsBits += heleDataTilString[i];
 		}
-		return message;
 	}
-	return "";
+	else { cout << "Error in CRC check!" << endl; }
+}
+
+void Receiver::decodeMessage()
+{
+	string currentChar = "";
+	for (int i = 0; i < messageAsBits.length(); i += 8)
+	{
+		currentChar = "";
+		for (int j = 0; j < 8; j++)
+		{
+			currentChar += messageAsBits[i + j];
+		}
+		message += (char)stoi(currentChar, nullptr, 2);
+	}
+}
+
+string Receiver::getMessage()
+{
+	return message;
 }
 
 bool Receiver::checkHandshake()

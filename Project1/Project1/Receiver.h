@@ -15,13 +15,15 @@ public:
 
 	// CRC
 	string getSyndrome();
-	bool checkForErrorCRC();
+	bool hasErrorCRC();
 
 	// Acknowledgment
 	int acknowledgment();
 
 	// Frame
-	string udpakFrame();
+	void udpakFrame();
+	void decodeMessage();
+	string getMessage();
 
 	// handshake
 	bool checkHandshake();
@@ -36,6 +38,7 @@ protected:
 	int ackReakkefoelge = 0;
 
 	// Frame
+	string messageAsBits;
 	string message;
 
 	// Konverter til bit streng

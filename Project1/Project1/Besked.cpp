@@ -253,10 +253,11 @@ void Besked::modtagFrame()
 		text += frequenciesToChar(freqSumVec[i++], freqSumVec[i]);
 	}
 	cout << text << endl;
-	Receiver recieveOBJ(text);
-	text = recieveOBJ.udpakFrame();
+	Receiver receiveOBJ(text);
+	receiveOBJ.udpakFrame();
+	receiveOBJ.decodeMessage();
 
-	cout << text << endl;
+	cout << receiveOBJ.getMessage() << endl;
 }
 
 Besked::~Besked()

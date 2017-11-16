@@ -123,6 +123,9 @@ vector <int> Sender::makeFrame()
 	frame.push_back(getTrailer());//indsætter trailer
 	frame.push_back(flag);//indsætter slutflag
 
+	for (int i = 0; i < frame.size(); i++)
+		cout << frame[i] << " ";
+
 	return frame;
 }
 
