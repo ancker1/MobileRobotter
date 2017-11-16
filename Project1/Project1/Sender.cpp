@@ -57,7 +57,7 @@ string Sender::makeRemainder()
 					encoded[i + j] = encoded[i + j] == crc[j] ? '0' : '1'; // XOR if encoded == crc => 0 else 1
 				}
 				for (int a = 0; a < i; a++) {
-					cout << " ";
+					//cout << " ";
 				}
 			}
 		}
@@ -123,7 +123,7 @@ vector <int> Sender::makeFrame()
 	frame.push_back(flag);//indsætter slutflag
 
 	for (int i = 0; i < frame.size(); i++)
-		cout << frame[i] << " ";
+		//cout << frame[i] << " ";
 
 	return frame;
 }

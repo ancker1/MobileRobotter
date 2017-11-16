@@ -5,16 +5,15 @@
 #include "Sender.h"
 #include "Receiver.h"
 
-//for at afspille besked
-//(1) Besked test("this is a test");
-//(2) test.createDTMFS();
-//(3) test.getDTMFs().play();
-
 //for at genkende DTMF tone
 //(1) AudioRecord test(1);
 //(2) test.record();
 //(3) BehandlData testData(test.getAudioVector());
 //(4) testData.recognizeDTMF();
+
+//for at afspille besked
+//(1) Besked test("Ohana betyder familie.");
+//(2) test.sendFrame();
 
 //for at modtage sætning
 //(1) Besked receive;
@@ -23,9 +22,9 @@
 int main()
 {
 	Besked lalTe("Ohana betyder familie.");
+	string x;
+	cin >> x;
 	lalTe.sendFrame();
-
-
 
 	return 0;
 }
