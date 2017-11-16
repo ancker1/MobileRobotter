@@ -62,17 +62,17 @@ bool Receiver::checkForErrorCRC()
 	// ask if one
 	if (myInt == 0)
 	{
-		return true;
+		return false;
 	}
 	else
 	{
-		return false;
+		return true;
 	}
 }
 
 int Receiver::acknowledgment()
 {
-	if (checkForErrorCRC())//hvis der er ingen fejl
+	if (!checkForErrorCRC())//hvis der er ingen fejl
 	{
 
 		if (konverterStringTilBitString()[8] == '1')// hvis det modtaget framenummer er 1 så send ACK0
@@ -93,7 +93,7 @@ int Receiver::acknowledgment()
 		return 0;
 	}
 	
-	if (!checkForErrorCRC())//hvis der er fejl i crc
+	if (checkForErrorCRC())//hvis der er fejl i crc
 	{
 		cout << "Fejl" << endl;
 		return 0;
@@ -103,11 +103,15 @@ int Receiver::acknowledgment()
 
 string Receiver::udpakFrame()
 {
-	for (int i = 16; i < konverterStringTilBitString().length() - 16; i++)//smider flag, header, trailer og flag væk
+	if (!checkForErrorCRC())
 	{
-		message += konverterStringTilBitString()[i];
+		for (int i = 16; i < konverterStringTilBitString().length() - 16; i++)//smider flag, header, trailer og flag væk
+		{
+			message += konverterStringTilBitString()[i];
+		}
+		return message;
 	}
-	return message;
+	return "";
 }
 
 bool Receiver::checkHandshake()

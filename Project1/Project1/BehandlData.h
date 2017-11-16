@@ -18,6 +18,7 @@ public:
 	void slideFirstHalf(); //VIRKER 
 	void slideSecondHalf(); //VIRKER
 	void slideTWO();
+	vector<float> getfrequencySumVector();
 	void printText();
 	~BehandlData();
 protected:

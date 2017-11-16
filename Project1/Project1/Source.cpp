@@ -7,7 +7,7 @@
 
 //for at afspille besked
 //(1) Besked test("this is a test");
-//(2) test.createDTMFs();
+//(2) test.createDTMFS();
 //(3) test.getDTMFs().play();
 
 //for at genkende DTMF tone
@@ -26,10 +26,13 @@
 
 int main()
 {
+	 Besked test("this is a test");
+	 test.createDTMFS();
+	 test.getDTMFs().play();
 
 
 	AudioRecord record;
-	record.setSecondsToRecord(7);
+	record.setSecondsToRecord(12);
 	string x;
 	cin >> x;
 	cout << "Start" << endl;

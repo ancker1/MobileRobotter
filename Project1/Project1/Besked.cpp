@@ -2,6 +2,8 @@
 #include "DTMF.h"
 #include "BehandlData.h"
 #include "AudioRecord.h"
+#include "Sender.h"
+#include "Receiver.h"
 #include <iostream>
 using namespace std;
 
@@ -16,16 +18,21 @@ Besked::Besked(string tekst)
 	message = tekst;
 }
 
+void Besked::encapsulateMSG()
+{
+	Sender createOBJ(message);
+	encapsulatedMSG = createOBJ.makeFrame();
+}
+
+
 void Besked::createDTMFS()
 {
-	for (int i = 0; i < message.length(); i++) {
-		int test = message[i];
+	encapsulateMSG();
+	for (int i = 0; i < encapsulatedMSG.size(); i++) {
+		int test = encapsulatedMSG[i];
 		int lower_nibble = test & 0b00001111;
 		int higher_nibble = test & 0b11110000;
 		higher_nibble = higher_nibble >> 4;
-
-		//DTMF higher_dtmf(checkDTMF(higher_nibble));
-		//DTMF lower_dtmf(checkDTMF(lower_nibble));
 
 		currentHighDTMF.setFrequenciesFromChar(checkDTMF(higher_nibble));
 		currentLowDTMF.setFrequenciesFromChar(checkDTMF(lower_nibble));
@@ -33,7 +40,7 @@ void Besked::createDTMFS()
 		allDTMFs.addTone(currentHighDTMF.getHigh(), currentHighDTMF.getLow());
 		allDTMFs.addTone(currentLowDTMF.getHigh(), currentLowDTMF.getLow());
 
-		cout << "Character is: " << message[i] << endl;
+		cout << "Character is: " << (char)encapsulatedMSG[i] << endl;
 		cout << i * 2		<< ":	" << currentHighDTMF.getLow() << ", " << currentHighDTMF.getHigh() << endl;
 		cout << i * 2 + 1	<< ":	" << currentLowDTMF.getLow() << ", " << currentLowDTMF.getHigh() <<  endl;
 	}
@@ -201,7 +208,7 @@ char Besked::frequenciesToChar(int first_FrequencySum, int second_FrequencySum)
 	}
 	highNibble = highNibble << 4;
 	msgByte = highNibble + lowNibble;
-	if ((msgByte > 31 && msgByte < 127))
+	if ((msgByte >= 0 && msgByte <= 255))
 	{
 		return (char)msgByte;
 	}
@@ -217,6 +224,37 @@ int Besked::modtagFrequencySum()
 	BehandlData testData(test.getAudioVector());
 	//return testData.recognizeDTMF();
 	return 0;
+}
+
+void Besked::modtagHandshake()
+{
+
+	//AMOUNT_TONE = ?
+	//RECORD_LENGTH = ?
+}
+
+void Besked::modtagFrame()
+{
+	AudioRecord record;
+	record.setSecondsToRecord(7); //RECORD_LENGTH
+	cout << "Start" << endl;
+	record.record();
+	BehandlData objectTest(record.getAudioVector());
+	cout << "Stop" << endl;
+	objectTest.slideTWO();
+	for (int i = 0; i < 52; i++) //AMOUNT_TONE
+	{
+		objectTest.nextTone(50);
+	}
+	vector<float> freqSumVec = objectTest.getfrequencySumVector();
+	string text;
+	for (int i = 0; i < freqSumVec.size()-1; i++) //MAX er: frequencySumVector.size() - 1
+	{
+		text += frequenciesToChar(freqSumVec[i++], freqSumVec[i]);
+	}
+	Receiver recieveOBJ(text);
+	text = recieveOBJ.udpakFrame();
+	cout << text << endl;
 }
 
 Besked::~Besked()

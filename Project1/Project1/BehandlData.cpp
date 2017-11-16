@@ -239,6 +239,7 @@ void BehandlData::slideTWO()
 	cout << firstToneAt << endl;
 }
 
+
 void BehandlData::slidingWindow()
 {
 	cout << "START - WINDOW with 1 threads" << endl;
@@ -360,6 +361,11 @@ void BehandlData::printText()
 		text += testBesked.frequenciesToChar(frequencySumVector[i++], frequencySumVector[i]);
 	}
 	cout << text << endl;
+}
+
+vector<float> BehandlData::getfrequencySumVector()
+{
+	return frequencySumVector;
 }
 
 BehandlData::~BehandlData()

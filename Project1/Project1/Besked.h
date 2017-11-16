@@ -9,7 +9,7 @@ class Besked
 public:
 	Besked();
 	Besked(string);
-
+	void encapsulateMSG();
 	void createDTMFS();
 	SFMLarray getDTMFs();
 	char checkDTMF(int);
@@ -17,10 +17,16 @@ public:
 	char frequenciesToChar(int,int);
 	int modtagFrequencySum();
 
+	void modtagHandshake();
+	void modtagFrame();
+
 	~Besked();
 
 private:
+	int RECORD_LENGTH = 0;
+	int AMOUNT_TONE = 0;
 	string message;
+	vector<int> encapsulatedMSG;
 	int index;
 	DTMF currentHighDTMF;
 	DTMF currentLowDTMF;
