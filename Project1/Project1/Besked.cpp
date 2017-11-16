@@ -236,7 +236,7 @@ void Besked::modtagHandshake()
 void Besked::modtagFrame()
 {
 	AudioRecord record;
-	record.setSecondsToRecord(7); //RECORD_LENGTH
+	record.setSecondsToRecord(5); //RECORD_LENGTH
 	cout << "Start" << endl;
 	record.record();
 	BehandlData objectTest(record.getAudioVector());
@@ -252,8 +252,10 @@ void Besked::modtagFrame()
 	{
 		text += frequenciesToChar(freqSumVec[i++], freqSumVec[i]);
 	}
+	cout << text << endl;
 	Receiver recieveOBJ(text);
 	text = recieveOBJ.udpakFrame();
+
 	cout << text << endl;
 }
 

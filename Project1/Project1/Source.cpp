@@ -26,11 +26,13 @@
 
 int main()
 {
-	 Besked test("this is a test");
-	 test.createDTMFS();
-	 test.getDTMFs().play();
+	string x;
+	cin >> x;
+	Besked recieve;
+	//recieve.modtagFrame();
+	//Receiver tstOB("");
 
-
+/*
 	AudioRecord record;
 	record.setSecondsToRecord(12);
 	string x;
@@ -49,7 +51,7 @@ int main()
 	}
 	objectTest.printText();
 	
-
+	*/
 
 	return 0;
 }

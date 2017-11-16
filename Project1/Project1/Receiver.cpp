@@ -10,15 +10,11 @@ Receiver::Receiver(string d)
 string Receiver::konverterStringTilBitString()
 {
 	string heleDataTilString;
-	int indeks = 0;//pegepind til bostav indeks
 	for (int i = 0; i < frame.size(); i++)//kører alle pladserne af string data indtastet
 	{
-		charData = frame[indeks];//ligger tegn på plads indeks over i charData
 		int dataTilInt = 0;
-		dataTilInt = (int)charData;//tager ascii værdien af char og ligger de ind i dataTilInt
-		dataTilString = bitset<8>(dataTilInt).to_string();//konvertere helt om til 8 bits til en string
+		dataTilString = bitset<8>((int)frame[i]).to_string();//konvertere helt om til 8 bits til en string
 		heleDataTilString += dataTilString;//ligger det konverterede til heleDataTilString
-		indeks++;//tæller indeks en op
 	}
 	return heleDataTilString;
 }
@@ -32,17 +28,20 @@ string Receiver::getSyndrome()
 {
 	// get codeword
 	string encoded;
+
 	for (int i = 16; i < konverterStringTilBitString().length() - 8; i++)//smider flag, header og flag væk
 	{
 		encoded += konverterStringTilBitString()[i];
 	}
+
+	
 
 	// same princip as sender
 	for (int i = 0; i < encoded.length(); ) //kører codeword længde igennem og lægger først i++ til i while
 	{
 		for (int j = 0; j < getCrc().length(); j++) //kører hele crc længde igennem på codeword. j resetes for hver LOOP ovenover. 
 		{
-			encoded[i + j] = encoded[i + j] == getCrc()[j] ? '0' : '1'; //hvis codeword plads er lig med crc plads så returner 0 eller 1 dvs en XOR operation og læg ind på plads.
+			encoded[i + j] = (encoded[i + j] == getCrc()[j] ? '0' : '1'); //hvis codeword plads er lig med crc plads så returner 0 eller 1 dvs en XOR operation og læg ind på plads.
 		}
 		while ((i < encoded.length()) && (encoded[i] == '0')) //rykker hen til næste gang '1' optræder i codeword.
 		{
@@ -51,6 +50,7 @@ string Receiver::getSyndrome()
 	}
 
 	return (encoded.substr(encoded.length() - getCrc().length()));
+
 }
 
 bool Receiver::checkForErrorCRC()
