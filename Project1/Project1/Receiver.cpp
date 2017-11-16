@@ -31,7 +31,7 @@ string Receiver::getSyndrome()
 		codeword += heleDataTilString[i];
 	}
 
-	cout << codeword << endl;
+
 	bool cont = false;
 
 	// same princip as sender
@@ -45,7 +45,7 @@ string Receiver::getSyndrome()
 				{
 					codeword[i + j] = (codeword[i + j] == crc[j] ? '0' : '1'); //hvis codeword plads er lig med crc plads så returner 0 eller 1 dvs en XOR operation og læg ind på plads.
 				}
-				cout << codeword << endl;
+		
 			}
 		}
 		else break;
@@ -58,9 +58,7 @@ string Receiver::getSyndrome()
 bool Receiver::hasErrorCRC()
 {
 	// convert to int
-	cout << "Kalder funktion" << endl;
 	string str = getSyndrome();
-	cout << "Hentet syndrom" << endl;
 	int myInt = stoi(str);
 
 	// ask if one

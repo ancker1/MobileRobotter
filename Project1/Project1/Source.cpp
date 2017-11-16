@@ -17,57 +17,22 @@
 //(4) testData.recognizeDTMF();
 
 //for at modtage sætning
-//(1) AudioRecord test(7);
-//(2) test.record();
-//(3) BehandlData objectTest(test.getAudioVector());
-//(4) objectTest.slideTWO();		//ELLER objectTest.slidingWindow();
-//(5) for (int i = 0; i < 100; i++) { objectTest.nextTone(50); }
-//(6) objectTest.printText();
+//(1) Besked receive;
+//(2) receive.modtagFrame();
 
 int main()
 {
-	Besked receive;
+	Besked receive("Ohana betyder familie.");
 	string x;
+	receive.createDTMFS();
 	cin >> x;
-	receive.modtagFrame();
-
-/*
-	AudioRecord record;
-	record.setSecondsToRecord(12);
-	string x;
-	cin >> x;
-	cout << "Start" << endl;
-	record.record();
-	BehandlData objectTest(record.getAudioVector());
-	cout << "Stop" << endl;
-
-	//objectTest.slidingWindow();
-	objectTest.slideTWO();
-	
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		objectTest.nextTone(50);
+		receive.getDTMFs().play();
+		cin >> x;
 	}
-	objectTest.printText();
-	
-	*/
-	/*
-	Sender test1("hej");
-	test1.makeFrame();
-	cout << endl;
 
-	string txt = "";
-	txt += char(001);
-	txt += char(007);
-	txt += char(104);
-	txt += char(101);
-	txt += char(106);
-	txt += char(49);
-	txt += char(001);
 
-	Receiver test2(txt);
-	cout << test2.hasErrorCRC() << endl;
-	*/
 
 	return 0;
 }

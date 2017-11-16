@@ -223,6 +223,7 @@ void BehandlData::slideSecondHalf()
 void BehandlData::slideTWO()
 {
 	cout << "START - WINDOW with 2 threads" << endl;
+	auto start = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
 	thread slidefirst([this] {slideFirstHalf(); });
 	thread slidesecond([this] {slideSecondHalf(); });
 
@@ -235,7 +236,9 @@ void BehandlData::slideTWO()
 	}
 	else { firstToneAt = SECOND_firstToneAt; }
 	toneCount++;
-	cout << "STOP" << endl;
+	auto finish = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
+	double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double> >(finish - start).count();		//ANTAL SEKUNDER I DOUBLE
+	cout << "STOP.... Time spent: " << elapsed_seconds << endl;
 	cout << firstToneAt << endl;
 }
 
@@ -243,6 +246,7 @@ void BehandlData::slideTWO()
 void BehandlData::slidingWindow()
 {
 	cout << "START - WINDOW with 1 threads" << endl;
+	auto start = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
 	vector<float> tempData = recordData;
 	tempData.erase(tempData.begin() + 44100, tempData.end()); // Resulterer i tempData.size() = 44100.
 	int windowSize = 2205;
@@ -290,7 +294,9 @@ void BehandlData::slidingWindow()
 		}
 	}
 	toneCount++;
-	cout << "STOP" << endl;
+	auto finish = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
+	double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double> >(finish - start).count();		//ANTAL SEKUNDER I DOUBLE
+	cout << "STOP.... Time spent: " << elapsed_seconds << endl;
 
 }
 
