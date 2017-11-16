@@ -15,8 +15,11 @@ public:
 	int recognizeDTMF(vector<float> data);
 	void findFnM(vector<float> data, int& mag, int& freq, bool findLow);
 	void slidingWindow();
-	void slideFirstHalf(); //VIRKER 
-	void slideSecondHalf(); //VIRKER
+	void slideFirst(); //VIRKER 
+	void slideSecond(); //VIRKER
+	void slideThird();
+	void slideFourth();
+	void slide(int& firstToneAt, int& mSum, int& fSum, int slideNumber);
 	void slideTWO();
 	vector<float> getfrequencySumVector();
 	void printText();
@@ -24,14 +27,22 @@ public:
 protected:
 	vector<float> recordData;
 	vector<float> frequencySumVector;
+	int windowSize = 2205;
+	int stepSize = 50;
 	int numSamples;
 	int toneCount = 0;
 	int firstToneAt = 0;
 	int FIRST_firstToneAt = 0;
-	int SECOND_firstToneAt = 0;
 	int FIRST_mSum = 0;
-	int SECOND_mSum = 0;
 	int FIRST_fSum = 0;
+	int SECOND_firstToneAt = 0;
+	int SECOND_mSum = 0;
 	int SECOND_fSum = 0;
+	int THIRD_firstToneAt = 0;
+	int THIRD_mSum = 0;
+	int THIRD_fSum = 0;
+	int FOURTH_firstToneAt = 0;
+	int FOURTH_mSum = 0;
+	int FOURTH_fSum = 0;
 };
 

@@ -128,7 +128,6 @@ int BehandlData::recognizeDTMF(vector<float> data)
 void BehandlData::findFnM(vector<float> data, int& magnitude, int& frequency, bool findLow)
 {
 	int dtmfFrequencies[8] = { 697, 770, 852, 941, 1209, 1336, 1477, 1633 };
-	int windowSize = 2205;
 	if (findLow)
 	{
 		for (int i = 0; i < 4; i++)
@@ -155,16 +154,15 @@ void BehandlData::findFnM(vector<float> data, int& magnitude, int& frequency, bo
 	}
 }
 
-void BehandlData::slideFirstHalf()
+/*
+void BehandlData::slideFirst()
 {
 	vector<float> tempData = recordData;
 	tempData.erase(tempData.begin() + 44100, tempData.end()); // Resulterer i tempData.size() = 44100.
-	int windowSize = 2205;
 	int highFrequency = 0;
 	int highMagnitude = 0; //Eventuelt indstil threshold
 	int lowFrequency = 0;
 	int lowMagnitude = 0; //Eventuelt indstil threshold
-	int stepSize = 50; //Bestemmer hop-længden
 	vector<float> currentTempData;
 
 
@@ -187,16 +185,14 @@ void BehandlData::slideFirstHalf()
 
 }
 
-void BehandlData::slideSecondHalf()
+void BehandlData::slideSecond()
 {
 	vector<float> tempData = recordData;
 	tempData.erase(tempData.begin() + 44100, tempData.end()); // Resulterer i tempData.size() = 44100.
-	int windowSize = 2205;
 	int highFrequency = 0;
 	int highMagnitude = 0; //Eventuelt indstil threshold
 	int lowFrequency = 0;
 	int lowMagnitude = 0; //Eventuelt indstil threshold
-	int stepSize = 50; //Bestemmer hop-længden
 	vector<float> currentTempData;
 
 
@@ -219,13 +215,65 @@ void BehandlData::slideSecondHalf()
 		}
 	}
 }
+*/
+void BehandlData::slideFirst()
+{
+	slide(FIRST_firstToneAt, FIRST_mSum, FIRST_fSum, 1);
+}
+
+void BehandlData::slideSecond()
+{
+	slide(SECOND_firstToneAt, SECOND_mSum, SECOND_fSum, 2);
+}
+
+void BehandlData::slideThird()
+{
+	slide(THIRD_firstToneAt, THIRD_mSum, THIRD_fSum, 3);
+}
+
+void BehandlData::slideFourth()
+{
+	slide(FOURTH_firstToneAt, FOURTH_mSum, FOURTH_fSum, 4);
+}
+
+void BehandlData::slide(int& tone_AT, int& m_Sum, int& f_Sum, int slide_Number)
+{
+	vector<float> tempData = recordData;
+	tempData.erase(tempData.begin() + 44100, tempData.end()); // Resulterer i tempData.size() = 44100.
+	int highFrequency = 0;
+	int highMagnitude = 0; //Eventuelt indstil threshold
+	int lowFrequency = 0;
+	int lowMagnitude = 0; //Eventuelt indstil threshold
+	vector<float> currentTempData;
+
+
+	for (int i = 0; i < (22050 - windowSize) / stepSize; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
+	{
+		currentTempData = tempData;
+		if (slide_Number > 1)
+			currentTempData.erase(currentTempData.begin(), currentTempData.begin() + 22050 * (slide_Number - 1));
+		currentTempData.erase(currentTempData.begin(), currentTempData.begin() + i * stepSize);
+		currentTempData.erase(currentTempData.begin() + windowSize, currentTempData.end());
+		currentTempData = hanningWindow(currentTempData);
+
+		findFnM(currentTempData, lowMagnitude, lowFrequency, true);
+		findFnM(currentTempData, highMagnitude, highFrequency, false);
+
+		if ((lowMagnitude + highMagnitude) > m_Sum)
+		{
+			m_Sum = lowMagnitude + highMagnitude;
+			f_Sum = lowFrequency + highFrequency;
+			tone_AT = i * stepSize + 22050 * (slide_Number - 1);
+		}
+	}
+}
 
 void BehandlData::slideTWO()
 {
 	cout << "START - WINDOW with 2 threads" << endl;
 	auto start = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
-	thread slidefirst([this] {slideFirstHalf(); });
-	thread slidesecond([this] {slideSecondHalf(); });
+	thread slidefirst([this] {slideFirst(); });
+	thread slidesecond([this] {slideSecond(); });
 
 	slidefirst.join();
 	slidesecond.join();
@@ -249,7 +297,6 @@ void BehandlData::slidingWindow()
 	auto start = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
 	vector<float> tempData = recordData;
 	tempData.erase(tempData.begin() + 44100, tempData.end()); // Resulterer i tempData.size() = 44100.
-	int windowSize = 2205;
 	int dtmfFrequencies[8] = { 697, 770, 852, 941, 1209, 1336, 1477, 1633 };
 	float highFrequency = 0;
 	int highMagnitude = 0; //Eventuelt indstil threshold
@@ -257,7 +304,6 @@ void BehandlData::slidingWindow()
 	int lowMagnitude = 0; //Eventuelt indstil threshold
 	int magnitudeSum = 0;
 	int frequencySum = 0;
-	int stepSize = 50; //Bestemmer hop-længden
 	vector<float> currentTempData;
 
 
