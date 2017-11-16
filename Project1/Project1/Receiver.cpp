@@ -7,21 +7,16 @@ Receiver::Receiver(string d)
 	frame = d;
 }
 
-string Receiver::konverterStringTilBitString()
+void Receiver::konverterStringTilBitString()
 {
-	string heleDataTilString;
+	char charData;
+	string dataTilString;
+
 	for (int i = 0; i < frame.size(); i++)//kører alle pladserne af string data indtastet
 	{
-		int dataTilInt = 0;
 		dataTilString = bitset<8>((int)frame[i]).to_string();//konvertere helt om til 8 bits til en string
 		heleDataTilString += dataTilString;//ligger det konverterede til heleDataTilString
 	}
-	return heleDataTilString;
-}
-
-string Receiver::getCrc()
-{
-	return "100000111"; // CRC - 8
 }
 
 string Receiver::getSyndrome()
@@ -29,9 +24,9 @@ string Receiver::getSyndrome()
 	// get codeword
 	string encoded;
 
-	for (int i = 16; i < konverterStringTilBitString().length() - 8; i++)//smider flag, header og flag væk
+	for (int i = 16; i < heleDataTilString.length() - 8; i++)//smider flag, header og flag væk
 	{
-		encoded += konverterStringTilBitString()[i];
+		encoded += heleDataTilString[i];
 	}
 
 	
@@ -39,9 +34,9 @@ string Receiver::getSyndrome()
 	// same princip as sender
 	for (int i = 0; i < encoded.length(); ) //kører codeword længde igennem og lægger først i++ til i while
 	{
-		for (int j = 0; j < getCrc().length(); j++) //kører hele crc længde igennem på codeword. j resetes for hver LOOP ovenover. 
+		for (int j = 0; j < crc.length(); j++) //kører hele crc længde igennem på codeword. j resetes for hver LOOP ovenover. 
 		{
-			encoded[i + j] = (encoded[i + j] == getCrc()[j] ? '0' : '1'); //hvis codeword plads er lig med crc plads så returner 0 eller 1 dvs en XOR operation og læg ind på plads.
+			encoded[i + j] = (encoded[i + j] == crc[j] ? '0' : '1'); //hvis codeword plads er lig med crc plads så returner 0 eller 1 dvs en XOR operation og læg ind på plads.
 		}
 		while ((i < encoded.length()) && (encoded[i] == '0')) //rykker hen til næste gang '1' optræder i codeword.
 		{
@@ -49,7 +44,7 @@ string Receiver::getSyndrome()
 		}
 	}
 
-	return (encoded.substr(encoded.length() - getCrc().length()));
+	return (encoded.substr(encoded.length() - crc.length()));
 
 }
 
@@ -75,12 +70,12 @@ int Receiver::acknowledgment()
 	if (!checkForErrorCRC())//hvis der er ingen fejl
 	{
 
-		if (konverterStringTilBitString()[8] == '1')// hvis det modtaget framenummer er 1 så send ACK0
+		if (heleDataTilString[8] == '1')// hvis det modtaget framenummer er 1 så send ACK0
 		{
 			ackReakkefoelge++;
 			return '\X15'; // 'NACK'
 		}
-		if (konverterStringTilBitString()[8] == '0')
+		if (heleDataTilString[8] == '0')
 		{
 			ackReakkefoelge--;
 			return '\X06'; // 'ACK'
@@ -105,9 +100,9 @@ string Receiver::udpakFrame()
 {
 	if (!checkForErrorCRC())
 	{
-		for (int i = 16; i < konverterStringTilBitString().length() - 16; i++)//smider flag, header, trailer og flag væk
+		for (int i = 16; i < heleDataTilString.length() - 16; i++)//smider flag, header, trailer og flag væk
 		{
-			message += konverterStringTilBitString()[i];
+			message += heleDataTilString[i];
 		}
 		return message;
 	}

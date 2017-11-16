@@ -11,10 +11,9 @@ public:
 	Receiver(string msg);
 
 	// Konverter til bit streng
-	string konverterStringTilBitString();
+	void konverterStringTilBitString();
 
 	// CRC
-	string getCrc();
 	string getSyndrome();
 	bool checkForErrorCRC();
 
@@ -31,6 +30,7 @@ public:
 	~Receiver();
 protected:
 	string frame;
+	string crc = "100000111";
 
 	// Acknowledgment
 	int ackReakkefoelge = 0;
@@ -39,7 +39,6 @@ protected:
 	string message;
 
 	// Konverter til bit streng
-	char charData;
-	string dataTilString;
+	string heleDataTilString;
 };
 
