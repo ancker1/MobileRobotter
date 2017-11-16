@@ -247,11 +247,11 @@ void BehandlData::slide(int& tone_AT, int& m_Sum, int& f_Sum, int slide_Number)
 	vector<float> currentTempData;
 
 
-	for (int i = 0; i < (22050 - windowSize) / stepSize; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
+	for (int i = 0; i < (11050 - windowSize) / stepSize; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
 	{
 		currentTempData = tempData;
 		if (slide_Number > 1)
-			currentTempData.erase(currentTempData.begin(), currentTempData.begin() + 22050 * (slide_Number - 1));
+			currentTempData.erase(currentTempData.begin(), currentTempData.begin() + 11050 * (slide_Number - 1));
 		currentTempData.erase(currentTempData.begin(), currentTempData.begin() + i * stepSize);
 		currentTempData.erase(currentTempData.begin() + windowSize, currentTempData.end());
 		currentTempData = hanningWindow(currentTempData);
@@ -263,7 +263,7 @@ void BehandlData::slide(int& tone_AT, int& m_Sum, int& f_Sum, int slide_Number)
 		{
 			m_Sum = lowMagnitude + highMagnitude;
 			f_Sum = lowFrequency + highFrequency;
-			tone_AT = i * stepSize + 22050 * (slide_Number - 1);
+			tone_AT = i * stepSize + 11050 * (slide_Number - 1);
 		}
 	}
 }
@@ -274,15 +274,21 @@ void BehandlData::slideTWO()
 	auto start = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
 	thread slidefirst([this] {slideFirst(); });
 	thread slidesecond([this] {slideSecond(); });
+	thread slidethird([this] {slideThird(); });
+	thread slidefourth([this] {slideFourth(); });
 
 	slidefirst.join();
 	slidesecond.join();
+	slidethird.join();
+	slidefourth.join();
 
-	if (FIRST_mSum > SECOND_mSum)
+	if ((FIRST_mSum > SECOND_mSum) && (FIRST_mSum > THIRD_mSum) && (FIRST_mSum > FOURTH_mSum))
 	{
 		firstToneAt = FIRST_firstToneAt;
 	}
-	else { firstToneAt = SECOND_firstToneAt; }
+	else if ((SECOND_mSum > FIRST_mSum) && (SECOND_mSum > THIRD_mSum) && (SECOND_mSum > FOURTH_mSum)) { firstToneAt = SECOND_firstToneAt; }
+	else if ((THIRD_mSum > FIRST_mSum) && (THIRD_mSum > SECOND_mSum) && (THIRD_mSum > FOURTH_mSum)) { firstToneAt = THIRD_firstToneAt; }
+	else { firstToneAt = FOURTH_firstToneAt; }
 	toneCount++;
 	auto finish = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
 	double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double> >(finish - start).count();		//ANTAL SEKUNDER I DOUBLE
