@@ -233,6 +233,12 @@ void Besked::modtagHandshake()
 	//RECORD_LENGTH = ?
 }
 
+void Besked::sendFrame()
+{
+	createDTMFS();
+	getDTMFs().play();
+}
+
 void Besked::modtagFrame()
 {
 	AudioRecord record;

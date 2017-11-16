@@ -22,15 +22,8 @@
 
 int main()
 {
-	Besked receive("Ohana betyder familie.");
-	string x;
-	receive.createDTMFS();
-	cin >> x;
-	for (int i = 0; i < 10; i++)
-	{
-		receive.getDTMFs().play();
-		cin >> x;
-	}
+	Besked lalTe("Ohana betyder familie.");
+	lalTe.sendFrame();
 
 
 

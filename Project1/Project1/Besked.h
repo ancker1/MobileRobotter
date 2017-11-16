@@ -18,6 +18,7 @@ public:
 	int modtagFrequencySum();
 
 	void modtagHandshake();
+	void sendFrame();
 	void modtagFrame();
 
 	~Besked();

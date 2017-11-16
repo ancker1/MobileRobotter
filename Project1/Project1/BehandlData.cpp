@@ -87,6 +87,9 @@ int BehandlData::recognizeDTMF(vector<float> data)
 	int lowMagnitude = 0; //Eventuelt indstil threshold
 	data = hanningWindow(data); //Eventuelt anden vindue funktion
 
+	findFnM(data, lowMagnitude, lowFrequency, true);
+	findFnM(data, highMagnitude, highFrequency, false);
+	/*								KAN FJERNES, HVIS DET VIRKER
 	for (int i = 0; i < 4; i++)
 	{
 		int currentMagnitude = goertzelFilter(dtmfFrequencies[i], data.size(), data);
@@ -105,6 +108,7 @@ int BehandlData::recognizeDTMF(vector<float> data)
 			highMagnitude = currentMagnitude;
 		}
 	}
+	*/
 
 /*
 	//COUT RESULT
@@ -247,7 +251,7 @@ void BehandlData::slide(int& tone_AT, int& m_Sum, int& f_Sum, int slide_Number)
 	vector<float> currentTempData;
 
 
-	for (int i = 0; i < (11050 - windowSize) / stepSize - 1; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
+	for (int i = 0; i < (11050 - windowSize) / stepSize - 1; i++) //EVENTUELT: ændr således vinduerne kører over i hinanden.
 	{
 		currentTempData = tempData;
 		if (slide_Number > 1)
