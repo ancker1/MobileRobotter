@@ -254,7 +254,9 @@ void Besked::modtagFrame()
 	}
 	cout << text << endl;
 	Receiver receiveOBJ(text);
+	cout << "Udpakker" << endl;
 	receiveOBJ.udpakFrame();
+	cout << "Decoder" << endl;
 	receiveOBJ.decodeMessage();
 
 	cout << receiveOBJ.getMessage() << endl;

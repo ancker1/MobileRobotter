@@ -26,10 +26,6 @@
 
 int main()
 {
-	Besked test("HEJ");
-	test.createDTMFS();
-	test.getDTMFs().play();
-	/*
 	Besked receive;
 	string x;
 	cin >> x;

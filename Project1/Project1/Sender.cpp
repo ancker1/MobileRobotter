@@ -48,11 +48,10 @@ string Sender::makeRemainder()
 	// loop
 	for (int i = 0; i < encoded.length(); i++)
 	{
-		if (stoi(crc, nullptr, 2) <= stoi(encoded, nullptr, 2))
+		if (10 < encoded.length() - i || stoi(crc, nullptr, 2) <= stoi(encoded, nullptr, 2))
 		{
 			if (encoded[i] != '0')
 			{
-				cout << encoded << endl;
 				for (int j = 0; j < crc.length(); j++) // loop as long as CRC
 				{
 					encoded[i + j] = encoded[i + j] == crc[j] ? '0' : '1'; // XOR if encoded == crc => 0 else 1
@@ -60,13 +59,10 @@ string Sender::makeRemainder()
 				for (int a = 0; a < i; a++) {
 					cout << " ";
 				}
-				cout << crc << endl;
 			}
 		}
 		else break;
 	}
-
-	cout << encoded << endl;
 
 	return (encoded.substr(encoded.size() - crc.length() + 1));
 }
