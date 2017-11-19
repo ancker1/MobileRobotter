@@ -135,9 +135,9 @@ string Receiver::getMessage()
 	return message;
 }
 
-bool Receiver::checkHandshake()
+bool Receiver::checkForHandshake()
 {
-	if (frame[0] == '\X16') // '\X16' = 0b00010110 = 'SYN'
+	if (frame[0] == handshake) // '\X16' = 0b00010110 = 'SYN'
 	{
 		return true;
 	}
@@ -149,7 +149,7 @@ bool Receiver::checkHandshake()
 
 int Receiver::checkHandshakeLength()
 {
-	if (checkHandshake())
+	if (checkForHandshake())
 	{
 		return frame[0];//retunere længden af framen for herefter at oprette optagelse længden af den frame som snart bliver modtaget
 	}
