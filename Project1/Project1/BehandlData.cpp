@@ -274,7 +274,7 @@ void BehandlData::slide(int& tone_AT, int& m_Sum, int& f_Sum, int slide_Number)
 
 void BehandlData::slideTWO()
 {
-	cout << "START - WINDOW with 2 threads" << endl;
+	cout << "START - WINDOW with 4 threads" << endl;
 	auto start = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
 	thread slidefirst([this] {slideFirst(); });
 	thread slidesecond([this] {slideSecond(); });
@@ -286,12 +286,12 @@ void BehandlData::slideTWO()
 	slidethird.join();
 	slidefourth.join();
 
-	if ((FIRST_mSum > SECOND_mSum) && (FIRST_mSum > THIRD_mSum) && (FIRST_mSum > FOURTH_mSum))
+	if ((FIRST_mSum >= SECOND_mSum) && (FIRST_mSum >= THIRD_mSum) && (FIRST_mSum >= FOURTH_mSum))
 	{
 		firstToneAt = FIRST_firstToneAt;
 	}
-	else if ((SECOND_mSum > FIRST_mSum) && (SECOND_mSum > THIRD_mSum) && (SECOND_mSum > FOURTH_mSum)) { firstToneAt = SECOND_firstToneAt; }
-	else if ((THIRD_mSum > FIRST_mSum) && (THIRD_mSum > SECOND_mSum) && (THIRD_mSum > FOURTH_mSum)) { firstToneAt = THIRD_firstToneAt; }
+	else if ((SECOND_mSum >= FIRST_mSum) && (SECOND_mSum >= THIRD_mSum) && (SECOND_mSum >= FOURTH_mSum)) { firstToneAt = SECOND_firstToneAt; }
+	else if ((THIRD_mSum >= FIRST_mSum) && (THIRD_mSum >= SECOND_mSum) && (THIRD_mSum >= FOURTH_mSum)) { firstToneAt = THIRD_firstToneAt; }
 	else { firstToneAt = FOURTH_firstToneAt; }
 	toneCount++;
 	auto finish = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING

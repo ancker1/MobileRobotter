@@ -21,10 +21,13 @@
 
 int main()
 {
-	Besked lalTe("Ohana betyder familie.");
+	Besked test;
 	string x;
-	cin >> x;
-	lalTe.sendFrame();
+	for (int i = 0; i < 10; i++)
+	{
+		cin >> x;
+		test.modtagFrame();
+	}
 
 	return 0;
 }
