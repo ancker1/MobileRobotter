@@ -25,21 +25,23 @@ void Besked::encapsulateMSG()
 	encapsulatedMSG = createOBJ.makeFrame();
 }
 
+void Besked::createSFMLarray(char byte, SFMLarray& arraySFML)
+{
+	int lower_nibble = byte & 0b00001111;
+	int higher_nibble = byte & 0b11110000;
+	higher_nibble = higher_nibble >> 4;
+	currentHighDTMF.setFrequenciesFromChar(checkDTMF(higher_nibble));
+	currentLowDTMF.setFrequenciesFromChar(checkDTMF(lower_nibble));
+	arraySFML.addTone(currentHighDTMF.getHigh(), currentHighDTMF.getLow());
+	arraySFML.addTone(currentLowDTMF.getHigh(), currentLowDTMF.getLow());
+}
+
 
 void Besked::createDTMFS()
 {
 	encapsulateMSG();
 	for (int i = 0; i < encapsulatedMSG.size(); i++) {
-		int test = encapsulatedMSG[i];
-		int lower_nibble = test & 0b00001111;
-		int higher_nibble = test & 0b11110000;
-		higher_nibble = higher_nibble >> 4;
-
-		currentHighDTMF.setFrequenciesFromChar(checkDTMF(higher_nibble));
-		currentLowDTMF.setFrequenciesFromChar(checkDTMF(lower_nibble));
-
-		allDTMFs.addTone(currentHighDTMF.getHigh(), currentHighDTMF.getLow());
-		allDTMFs.addTone(currentLowDTMF.getHigh(), currentLowDTMF.getLow());
+		createSFMLarray(encapsulatedMSG[i], allDTMFs);
 
 		/*
 		cout << "Character is: " << (char)encapsulatedMSG[i] << endl;
@@ -250,16 +252,8 @@ void Besked::modtagHandshake()
 void Besked::sendHandshake()
 {
 	Sender createOBJ(message);
-	int byte = createOBJ.makeHandshake();
-	int lower_nibble = byte & 0b00001111;
-	int higher_nibble = byte & 0b11110000;
-	higher_nibble = higher_nibble >> 4;
-	currentHighDTMF.setFrequenciesFromChar(checkDTMF(higher_nibble));
-	currentLowDTMF.setFrequenciesFromChar(checkDTMF(lower_nibble));
 	SFMLarray handshakeDTMFs;
-	handshakeDTMFs.addTone(currentHighDTMF.getHigh(), currentHighDTMF.getLow());
-	handshakeDTMFs.addTone(currentLowDTMF.getHigh(), currentLowDTMF.getLow());
-	handshakeDTMFs.readySound();
+	createSFMLarray(createOBJ.makeHandshake(), handshakeDTMFs);
 	handshakeDTMFs.play();
 }
 

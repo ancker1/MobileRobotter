@@ -10,6 +10,9 @@ public:
 	Besked();
 	Besked(string);
 	void encapsulateMSG();
+
+	void createSFMLarray(char input, SFMLarray& arraySFML);
+
 	void createDTMFS();
 	SFMLarray getDTMFs();
 	char checkDTMF(int);
