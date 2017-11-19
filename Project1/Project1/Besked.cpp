@@ -42,7 +42,6 @@ void Besked::createDTMFS()
 	encapsulateMSG();
 	for (int i = 0; i < encapsulatedMSG.size(); i++) {
 		createSFMLarray(encapsulatedMSG[i], allDTMFs);
-
 		/*
 		cout << "Character is: " << (char)encapsulatedMSG[i] << endl;
 		cout << i * 2		<< ":	" << currentHighDTMF.getLow() << ", " << currentHighDTMF.getHigh() << endl;
@@ -254,6 +253,7 @@ void Besked::sendHandshake()
 	Sender createOBJ(message);
 	SFMLarray handshakeDTMFs;
 	createSFMLarray(createOBJ.makeHandshake(), handshakeDTMFs);
+	handshakeDTMFs.readySound();
 	handshakeDTMFs.play();
 }
 

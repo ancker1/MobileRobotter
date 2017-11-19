@@ -14,7 +14,6 @@ public:
 	void nextTone(int WAIT_SAMPLES);
 	int recognizeDTMF(vector<float> data);
 	void findFnM(vector<float> data, int& mag, int& freq, bool findLow);
-	void slidingWindow();
 	void slideFirst(); //VIRKER 
 	void slideSecond(); //VIRKER
 	void slideThird();

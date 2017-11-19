@@ -158,68 +158,6 @@ void BehandlData::findFnM(vector<float> data, int& magnitude, int& frequency, bo
 	}
 }
 
-/*
-void BehandlData::slideFirst()
-{
-	vector<float> tempData = recordData;
-	tempData.erase(tempData.begin() + 44100, tempData.end()); // Resulterer i tempData.size() = 44100.
-	int highFrequency = 0;
-	int highMagnitude = 0; //Eventuelt indstil threshold
-	int lowFrequency = 0;
-	int lowMagnitude = 0; //Eventuelt indstil threshold
-	vector<float> currentTempData;
-
-
-	for (int i = 0; i < (22050 - windowSize) / stepSize; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
-	{
-		currentTempData = tempData;
-		currentTempData.erase(currentTempData.begin(), currentTempData.begin() + i * stepSize);
-		currentTempData.erase(currentTempData.begin() + windowSize, currentTempData.end());
-		currentTempData = hanningWindow(currentTempData);
-
-		findFnM(currentTempData, lowMagnitude, lowFrequency, true);
-		findFnM(currentTempData, highMagnitude, highFrequency, false);
-		if ((lowMagnitude + highMagnitude) > FIRST_mSum)
-		{
-			FIRST_mSum = lowMagnitude + highMagnitude;
-			FIRST_fSum = lowFrequency + highFrequency;
-			FIRST_firstToneAt = i * stepSize;
-		}
-	}
-
-}
-
-void BehandlData::slideSecond()
-{
-	vector<float> tempData = recordData;
-	tempData.erase(tempData.begin() + 44100, tempData.end()); // Resulterer i tempData.size() = 44100.
-	int highFrequency = 0;
-	int highMagnitude = 0; //Eventuelt indstil threshold
-	int lowFrequency = 0;
-	int lowMagnitude = 0; //Eventuelt indstil threshold
-	vector<float> currentTempData;
-
-
-	for (int i = 0; i < (22050 - windowSize) / stepSize; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
-	{
-		currentTempData = tempData;
-		currentTempData.erase(currentTempData.begin(), currentTempData.begin() + 22050);
-		currentTempData.erase(currentTempData.begin(), currentTempData.begin() + i * stepSize);
-		currentTempData.erase(currentTempData.begin() + windowSize, currentTempData.end());
-		currentTempData = hanningWindow(currentTempData);
-
-		findFnM(currentTempData, lowMagnitude, lowFrequency, true);
-		findFnM(currentTempData, highMagnitude, highFrequency, false);
-
-		if ((lowMagnitude + highMagnitude) > SECOND_mSum)
-		{
-			SECOND_mSum = lowMagnitude + highMagnitude;
-			SECOND_fSum = lowFrequency + highFrequency;
-			SECOND_firstToneAt = i * stepSize + 22050;
-		}
-	}
-}
-*/
 void BehandlData::slideFirst()
 {
 	slide(FIRST_firstToneAt, FIRST_mSum, FIRST_fSum, 1);
@@ -300,61 +238,6 @@ void BehandlData::slideTWO()
 	cout << firstToneAt << endl;
 }
 
-
-void BehandlData::slidingWindow()
-{
-	cout << "START - WINDOW with 1 threads" << endl;
-	auto start = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
-	vector<float> tempData = recordData;
-	tempData.erase(tempData.begin() + 44100, tempData.end()); // Resulterer i tempData.size() = 44100.
-	int dtmfFrequencies[8] = { 697, 770, 852, 941, 1209, 1336, 1477, 1633 };
-	float highFrequency = 0;
-	int highMagnitude = 0; //Eventuelt indstil threshold
-	float lowFrequency = 0;
-	int lowMagnitude = 0; //Eventuelt indstil threshold
-	int magnitudeSum = 0;
-	int frequencySum = 0;
-	vector<float> currentTempData;
-
-
-	for (int i = 0; i < (44100 - windowSize) / stepSize; i++) //HARDCODED til 44 SKAL ændres i forhold til SAMPLE_RATE
-	{
-		currentTempData = tempData;
-		currentTempData.erase(currentTempData.begin(), currentTempData.begin() + i * stepSize);
-		currentTempData.erase(currentTempData.begin() + windowSize, currentTempData.end());
-		currentTempData = hanningWindow(currentTempData);
-
-		for (int i = 0; i < 4; i++)
-		{
-			int currentMagnitude = goertzelFilter(dtmfFrequencies[i], windowSize, currentTempData);
-			if (currentMagnitude > lowMagnitude)
-			{
-				lowFrequency = dtmfFrequencies[i];
-				lowMagnitude = currentMagnitude;
-			}
-		}
-		for (int i = 4; i < 8; i++)
-		{
-			int currentMagnitude = goertzelFilter(dtmfFrequencies[i], windowSize, currentTempData);
-			if (currentMagnitude > highMagnitude)
-			{
-				highFrequency = dtmfFrequencies[i];
-				highMagnitude = currentMagnitude;
-			}
-		}
-		if ((lowMagnitude + highMagnitude) > magnitudeSum)
-		{
-			magnitudeSum = lowMagnitude + highMagnitude;
-			frequencySum = lowFrequency + highFrequency;
-			firstToneAt = i * stepSize;
-		}
-	}
-	toneCount++;
-	auto finish = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
-	double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double> >(finish - start).count();		//ANTAL SEKUNDER I DOUBLE
-	cout << "STOP.... Time spent: " << elapsed_seconds << endl;
-
-}
 
 
 void BehandlData::printToFile()
