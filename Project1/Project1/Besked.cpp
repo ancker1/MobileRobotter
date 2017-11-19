@@ -245,14 +245,16 @@ void Besked::modtagHandshake()
 	vector<float> freqSumVec = objectTest.getfrequencySumVector();
 	char length;
 	length = frequenciesToChar(freqSumVec[0], freqSumVec[1]); //Antal characters
-	AMOUNT_TONE = length * 2; //Antal toner
+	AMOUNT_TONE = (int)length * 2; //Antal toner
+	cout << "Antal chars i næste besked: " << (int)length << endl;
+	cout << "Antal toner i næste bsked: " << AMOUNT_TONE << endl;
 }
 
 void Besked::sendHandshake()
 {
 	Sender createOBJ(message);
 	int byte = createOBJ.makeHandshake();
-
+	cout << "Antal bytes i frame: " << byte << endl;
 	int lower_nibble = byte & 0b00001111;
 	int higher_nibble = byte & 0b11110000;
 	higher_nibble = higher_nibble >> 4;
