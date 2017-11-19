@@ -26,7 +26,7 @@ public:
 	string getMessage();
 
 	// handshake
-	bool checkHandshake();
+	bool checkForHandshake();
 	int checkHandshakeLength();
 
 	~Receiver();
@@ -43,5 +43,8 @@ protected:
 
 	// Konverter til bit streng
 	string heleDataTilString;
+
+	//handshake
+	int handshake = '\X16';
 };
 
