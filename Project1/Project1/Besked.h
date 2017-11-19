@@ -22,6 +22,9 @@ public:
 	void sendFrame();
 	void modtagFrame();
 
+	void modtagBesked();
+	void sendBesked();
+
 	~Besked();
 
 private:

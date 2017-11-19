@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Sender.h"
 #include "Receiver.h"
+#include <chrono>
 
 //for at genkende DTMF tone
 //(1) AudioRecord test(1);
@@ -13,21 +14,20 @@
 
 //for at afspille besked
 //(1) Besked test("Ohana betyder familie.");
-//(2) test.sendFrame();
+//(2) test.sendBesked();
 
 //for at modtage sætning
 //(1) Besked receive;
-//(2) receive.modtagFrame();
+//(2) receive.modtagBesked();
 
 int main()
 {
-	Besked test("WOOOOOAOOASSODASD");
-	test.sendHandshake();
+	Besked test;
 	string x;
 	for (int i = 0; i < 10; i++)
 	{
 		cin >> x;
-		test.modtagFrame();
+		test.modtagBesked();
 	}
 
 	return 0;

@@ -5,6 +5,7 @@
 #include "Sender.h"
 #include "Receiver.h"
 #include <iostream>
+#include <thread>
 using namespace std;
 
 Besked::Besked()
@@ -233,10 +234,8 @@ void Besked::modtagHandshake()
 {
 	AudioRecord record;
 	record.setSecondsToRecord(2); //RECORD_LENGTH
-	cout << "Start" << endl;
 	record.record();
 	BehandlData objectTest(record.getAudioVector());
-	cout << "Stop" << endl;
 	objectTest.slideTWO();
 	for (int i = 0; i < 2; i++) //AMOUNT_TONE
 	{
@@ -246,15 +245,12 @@ void Besked::modtagHandshake()
 	char length;
 	length = frequenciesToChar(freqSumVec[0], freqSumVec[1]); //Antal characters
 	AMOUNT_TONE = (int)length * 2; //Antal toner
-	cout << "Antal chars i næste besked: " << (int)length << endl;
-	cout << "Antal toner i næste bsked: " << AMOUNT_TONE << endl;
 }
 
 void Besked::sendHandshake()
 {
 	Sender createOBJ(message);
 	int byte = createOBJ.makeHandshake();
-	cout << "Antal bytes i frame: " << byte << endl;
 	int lower_nibble = byte & 0b00001111;
 	int higher_nibble = byte & 0b11110000;
 	higher_nibble = higher_nibble >> 4;
@@ -276,7 +272,9 @@ void Besked::sendFrame()
 void Besked::modtagFrame()
 {
 	AudioRecord record;
-	record.setSecondsToRecord(5); //RECORD_LENGTH
+	int recordLength = (2255 * AMOUNT_TONE + 3 * 44100) / 44100;
+	cout << "Antal sekunder til optagelse: " << recordLength << endl;
+	record.setSecondsToRecord(recordLength); //RECORD_LENGTH
 	cout << "Start" << endl;
 	record.record();
 	BehandlData objectTest(record.getAudioVector());
@@ -297,6 +295,19 @@ void Besked::modtagFrame()
 	receiveOBJ.udpakFrame();
 	receiveOBJ.decodeMessage();
 	cout << receiveOBJ.getMessage() << endl;
+}
+
+void Besked::modtagBesked()
+{
+	modtagHandshake();
+	modtagFrame();
+}
+
+void Besked::sendBesked()
+{
+	sendHandshake();
+	this_thread::sleep_for(1.7s);
+	sendFrame();
 }
 
 Besked::~Besked()
