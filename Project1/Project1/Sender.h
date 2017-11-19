@@ -27,7 +27,6 @@ public:
 
 	// Handshake
 	int makeHandshake();
-	int makeHandshakeLength();
 
 	~Sender();
 protected:

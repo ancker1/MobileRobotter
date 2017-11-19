@@ -128,14 +128,9 @@ vector <int> Sender::makeFrame()
 	return frame;
 }
 
-int Sender::makeHandshake()//synkronisere optagelse med sendingen
+int Sender::makeHandshake()//synkronisere optagelse længden inden framen sendes.
 {
-	return 0b00000000; // DTMF tone => DD
-}
-
-int Sender::makeHandshakeLength()//synkronisere optagelse længden inden framen sendes.
-{
-	return makeFrame().size();
+	return makeFrame().size(); // Antal DTMF-toner der sendes
 }
 
 int Sender::getHeader()

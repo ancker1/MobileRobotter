@@ -21,7 +21,8 @@
 
 int main()
 {
-	Besked test;
+	Besked test("WOOOOOAOOASSODASD");
+	test.sendHandshake();
 	string x;
 	for (int i = 0; i < 10; i++)
 	{

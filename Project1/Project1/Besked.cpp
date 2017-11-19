@@ -50,7 +50,8 @@ void Besked::createDTMFS()
 	allDTMFs.readySound();
 }
 
-SFMLarray Besked::getDTMFs() {
+SFMLarray Besked::getDTMFs() 
+{
 	return allDTMFs;
 }
 
@@ -230,9 +231,38 @@ int Besked::modtagFrequencySum()
 
 void Besked::modtagHandshake()
 {
+	AudioRecord record;
+	record.setSecondsToRecord(2); //RECORD_LENGTH
+	cout << "Start" << endl;
+	record.record();
+	BehandlData objectTest(record.getAudioVector());
+	cout << "Stop" << endl;
+	objectTest.slideTWO();
+	for (int i = 0; i < 2; i++) //AMOUNT_TONE
+	{
+		objectTest.nextTone(50);
+	}
+	vector<float> freqSumVec = objectTest.getfrequencySumVector();
+	char length;
+	length = frequenciesToChar(freqSumVec[0], freqSumVec[1]); //Antal characters
+	AMOUNT_TONE = length * 2; //Antal toner
+}
 
-	//AMOUNT_TONE = ?
-	//RECORD_LENGTH = ?
+void Besked::sendHandshake()
+{
+	Sender createOBJ(message);
+	int byte = createOBJ.makeHandshake();
+
+	int lower_nibble = byte & 0b00001111;
+	int higher_nibble = byte & 0b11110000;
+	higher_nibble = higher_nibble >> 4;
+	currentHighDTMF.setFrequenciesFromChar(checkDTMF(higher_nibble));
+	currentLowDTMF.setFrequenciesFromChar(checkDTMF(lower_nibble));
+	SFMLarray handshakeDTMFs;
+	handshakeDTMFs.addTone(currentHighDTMF.getHigh(), currentHighDTMF.getLow());
+	handshakeDTMFs.addTone(currentLowDTMF.getHigh(), currentLowDTMF.getLow());
+	handshakeDTMFs.readySound();
+	handshakeDTMFs.play();
 }
 
 void Besked::sendFrame()
@@ -250,7 +280,7 @@ void Besked::modtagFrame()
 	BehandlData objectTest(record.getAudioVector());
 	cout << "Stop" << endl;
 	objectTest.slideTWO();
-	for (int i = 0; i < 52; i++) //AMOUNT_TONE
+	for (int i = 0; i < AMOUNT_TONE; i++) //AMOUNT_TONE - SKAL VÆRE 52 FOR "OHANA BETYDER FAMILIE."
 	{
 		objectTest.nextTone(50);
 	}
