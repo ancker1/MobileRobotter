@@ -31,10 +31,10 @@ public:
 	~Sender();
 protected:
 	string data;
-	string crc = "100000111";
+	string crc = "100000111"; // CRC-8
 
 	// Acknowledgment
-	int ackTal;
+	int ackTal = 0; // starter i nul
 
 	// Konverter til bit string
 	string heleDataTilString;

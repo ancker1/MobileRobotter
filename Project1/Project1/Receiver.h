@@ -18,7 +18,7 @@ public:
 	bool hasErrorCRC();
 
 	// Acknowledgment
-	int acknowledgment();
+	void acknowledgment();
 
 	// Frame
 	void udpakFrame();
@@ -35,7 +35,8 @@ protected:
 	string crc = "100000111";
 
 	// Acknowledgment
-	int ackReakkefoelge = 0;
+	int ackModtaget = 0; // optælling af ack
+	int ack;
 
 	// Frame
 	string messageAsBits;
