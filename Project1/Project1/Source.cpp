@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Sender.h"
 #include "Receiver.h"
+#include "LiveRecorder.h"
 #include <chrono>
 
 //for at genkende DTMF tone
@@ -23,6 +24,7 @@
 int main()
 {
 	Besked test;
+	test.sendACK();
 	string x;
 	for (int i = 0; i < 10; i++)
 	{

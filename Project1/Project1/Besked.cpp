@@ -5,6 +5,7 @@
 #include "Sender.h"
 #include "Receiver.h"
 #include <iostream>
+#include "LiveRecorder.h"
 #include <thread>
 using namespace std;
 
@@ -291,16 +292,25 @@ void Besked::modtagFrame()
 	cout << receiveOBJ.getMessage() << endl;
 }
 
+void Besked::sendACK()
+{
+	SFMLarray ackDTMF;
+	ackDTMF.readySound();
+	ackDTMF.play();
+}
+
 void Besked::modtagBesked()
 {
 	modtagHandshake();
+	sendACK();				//SEND ACK
 	modtagFrame();
 }
 
 void Besked::sendBesked()
 {
+	LiveRecorder rTest(50);
 	sendHandshake();
-	this_thread::sleep_for(1.7s);
+	rTest.start(); //MODTAG ACK
 	sendFrame();
 }
 

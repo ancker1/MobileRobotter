@@ -25,9 +25,16 @@ void SFMLarray::addTone(double f1, double f2) {
 }
 
 void SFMLarray::readySound() {
-	for (unsigned n = 0; n < PAUSE_SAMPLES; n++)
-		x.pop_back();
-
+	if (x.size() == SAMPLES_PER_TONE + FIRST_PAUSE)
+	{
+		for (unsigned n = 0; n < FIRST_PAUSE; n++)
+			x.pop_back();
+	}
+	else 
+	{
+		for (unsigned n = 0; n < PAUSE_SAMPLES; n++)
+			x.pop_back();
+	}
 	buffer.loadFromSamples(x.data(), x.size(), 1, SAMPLE_RATE);
 	sound.setBuffer(buffer);
 }

@@ -129,6 +129,32 @@ int BehandlData::recognizeDTMF(vector<float> data)
 	return lowFrequency + highFrequency;
 }
 
+int BehandlData::recognizeDTMF(vector<float> data, int threshold)
+{
+
+	for (int i = 0; i < 500; i++)
+	{
+		data.insert(data.begin(), 0);
+		data.push_back(0);
+	}
+	int dtmfFrequencies[8] = { 697, 770, 852, 941, 1209, 1336, 1477, 1633 };
+	int highFrequency = 0;
+	int highMagnitude = threshold; //Eventuelt indstil threshold
+	int lowFrequency = 0;
+	int lowMagnitude = threshold; //Eventuelt indstil threshold
+	data = hanningWindow(data); //Eventuelt anden vindue funktion
+
+	findFnM(data, lowMagnitude, lowFrequency, true);
+	findFnM(data, highMagnitude, highFrequency, false);
+
+	return lowFrequency + highFrequency;
+}
+
+void BehandlData::setWindowSize(int sampleCount)
+{
+	windowSize = sampleCount;
+}
+
 void BehandlData::findFnM(vector<float> data, int& magnitude, int& frequency, bool findLow)
 {
 	int dtmfFrequencies[8] = { 697, 770, 852, 941, 1209, 1336, 1477, 1633 };

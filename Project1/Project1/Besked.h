@@ -24,6 +24,7 @@ public:
 	void sendHandshake();
 	void sendFrame();
 	void modtagFrame();
+	void sendACK();
 
 	void modtagBesked();
 	void sendBesked();

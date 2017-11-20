@@ -146,6 +146,7 @@
     <ClCompile Include="BehandlData.cpp" />
     <ClCompile Include="Besked.cpp" />
     <ClCompile Include="DTMF.cpp" />
+    <ClCompile Include="LiveRecorder.cpp" />
     <ClCompile Include="Receiver.cpp" />
     <ClCompile Include="Sender.cpp" />
     <ClCompile Include="SFMLarray.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="BehandlData.h" />
     <ClInclude Include="Besked.h" />
     <ClInclude Include="DTMF.h" />
+    <ClInclude Include="LiveRecorder.h" />
     <ClInclude Include="Receiver.h" />
     <ClInclude Include="Sender.h" />
     <ClInclude Include="SFMLarray.h" />
