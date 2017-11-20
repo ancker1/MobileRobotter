@@ -6,6 +6,7 @@
 #include "Receiver.h"
 #include "LiveRecorder.h"
 #include <chrono>
+#include <thread>
 
 //for at genkende DTMF tone
 //(1) AudioRecord test(1);
@@ -24,13 +25,15 @@
 int main()
 {
 	Besked test;
-	test.sendACK();
 	string x;
+	thread idleThread(&Besked::setTekst, &test); //T
+	test.idleState();
+	/*
 	for (int i = 0; i < 10; i++)
 	{
 		cin >> x;
 		test.modtagBesked();
 	}
-
+	*/
 	return 0;
 }

@@ -9,6 +9,8 @@ class Besked
 public:
 	Besked();
 	Besked(string);
+	void setTekst();
+	//void setTekst(string);
 	void encapsulateMSG();
 
 	void createSFMLarray(char input, SFMLarray& arraySFML);
@@ -28,6 +30,8 @@ public:
 
 	void modtagBesked();
 	void sendBesked();
+
+	void idleState();
 
 	~Besked();
 

@@ -20,6 +20,18 @@ Besked::Besked(string tekst)
 	message = tekst;
 }
 
+void Besked::setTekst()
+{
+	string x;
+	cin >> x;
+	message = x;
+}
+/*
+void Besked::setTekst(string inTekst)
+{
+	message = inTekst;
+}
+*/
 void Besked::encapsulateMSG()
 {
 	Sender createOBJ(message);
@@ -311,8 +323,33 @@ void Besked::sendBesked()
 	LiveRecorder rTest(50);
 	sendHandshake();
 	rTest.start(); //MODTAG ACK
+	while (!rTest.dfmtDiscovered())
+	{}
 	sendFrame();
 }
+
+void Besked::idleState()
+{
+	bool shouldReceive = true;
+	LiveRecorder iTest(50);
+	iTest.start();
+	while (!iTest.dfmtDiscovered())
+	{
+		if (message != "")
+		{
+			shouldReceive = false;
+			iTest.stop();
+		}
+	}
+	iTest.stop();
+	if (shouldReceive)
+		modtagBesked();
+	else
+		sendBesked();
+
+}
+
+
 
 Besked::~Besked()
 {

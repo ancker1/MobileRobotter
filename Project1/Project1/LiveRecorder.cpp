@@ -14,7 +14,7 @@ LiveRecorder::LiveRecorder(int timeIn)
 
 bool LiveRecorder::onProcessSamples(const sf::Int16 * samples, std::size_t sampleCount)
 {
-	std::cout << sampleCount << std::endl;
+	//std::cout << sampleCount << std::endl;
 	sampleBuffer.clear();
 	for (int i = 0; i < sampleCount; i++)
 	{
@@ -37,6 +37,11 @@ bool LiveRecorder::onProcessSamples(const sf::Int16 * samples, std::size_t sampl
 bool LiveRecorder::dfmtDiscovered()
 {
 	return foundDtmf;
+}
+
+void LiveRecorder::onStop()
+{
+	foundDtmf = true;
 }
 
 

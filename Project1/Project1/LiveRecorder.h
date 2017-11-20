@@ -11,6 +11,7 @@ public:
 	LiveRecorder(int);
 	virtual bool onProcessSamples(const sf::Int16* samples, std::size_t sampleCount);
 	bool dfmtDiscovered();
+	virtual void onStop();
 	~LiveRecorder();
 
 private:
