@@ -13,6 +13,8 @@ public:
 	void findFirstTone();
 	void nextTone(int WAIT_SAMPLES);
 	int recognizeDTMF(vector<float> data);
+	int recognizeDTMF(vector<float> data, int threshold);
+	void setWindowSize(int sampleCount);
 	void findFnM(vector<float> data, int& mag, int& freq, bool findLow);
 	void slideFirst(); //VIRKER 
 	void slideSecond(); //VIRKER
