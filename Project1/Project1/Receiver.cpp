@@ -72,35 +72,40 @@ bool Receiver::hasErrorCRC()
 	}
 }
 
-int Receiver::acknowledgment()
+void Receiver::acknowledgment()
 {
-	if (!hasErrorCRC())//hvis der er ingen fejl
+	ack = 0; // ascii værdi, som indikere ACK0 eller ACK1.
+
+	if (!hasErrorCRC())// hvis der er ingen fejl
 	{
 
-		if (heleDataTilString[8] == '1')// hvis det modtaget framenummer er 1 så send ACK0
+		if (heleDataTilString[8] == '1')// hvis det modtaget framenummer er 1, så send ACK0.
 		{
-			ackReakkefoelge++;
-			return '\X15'; // 'NACK'
+			// ACK0 = '\X06'
+			ack = '\X06'; // 'NACK' i ascii
+			
+			// Optælling af ACK
+			ackModtaget++;
 		}
-		if (heleDataTilString[8] == '0')
+		if (heleDataTilString[8] == '0') // hvis det modtager framenumemr er 0, så send om ACK1.
 		{
-			ackReakkefoelge--;
-			return '\X06'; // 'ACK'
+			// ACK1 = '\X15'
+			ack = '\X15'; // 'ACK' i ascii
+
+			// optælling af ACK
+			ackModtaget--;
 		}
 	}
 
-	if (ackReakkefoelge >= 2 || ackReakkefoelge <= -1)//hvis der er modtaget dubletter af framen
+	if (ackModtaget >= 2 || ackModtaget <= -1) // hvis der er modtaget dubletter af framen
 	{
 		cout << "dubletter" << endl;
-		return 0;
 	}
 	
-	if (hasErrorCRC())//hvis der er fejl i crc
+	if (hasErrorCRC()) // hvis der er fejl i crc
 	{
 		cout << "Fejl" << endl;
-		return 0;
 	}
-	
 }
 
 void Receiver::udpakFrame()
