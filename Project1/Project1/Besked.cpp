@@ -23,7 +23,7 @@ Besked::Besked(string tekst)
 void Besked::setTekst()
 {
 	string x;
-	cin >> x;
+	getline(cin, x);
 	message = x;
 }
 /*
@@ -320,6 +320,9 @@ void Besked::modtagBesked()
 
 void Besked::sendBesked()
 {
+	SFMLarray sendD;	//TEST
+	sendD.readySound();//TEST
+	sendD.play();		//TEST
 	LiveRecorder rTest(50);
 	sendHandshake();
 	rTest.start(); //MODTAG ACK
