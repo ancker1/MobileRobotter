@@ -322,6 +322,10 @@ void Besked::modtagBesked()
 void Besked::sendBesked()
 {
 	LiveRecorder rTest(50);
+	SFMLarray sendD;		//TEST
+	sendD.readySound();		//TEST
+	sendD.play();			//TEST
+	this_thread::sleep_for(0.5s);	//TEST
 	sendHandshake();
 	rTest.start(); //MODTAG ACK
 	while (!rTest.dtmfDiscovered())
