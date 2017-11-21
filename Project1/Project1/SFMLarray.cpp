@@ -1,7 +1,14 @@
 #include "SFMLarray.h"
 
+#include <iostream>
+
 SFMLarray::SFMLarray() {
-	addTone(941, 1633);
+	addFirstTone();
+}
+
+void SFMLarray::addFirstTone() {
+	if (x.size() == 0)
+		addTone(941, 1633);
 }
 
 void SFMLarray::addTone(double f1, double f2) {
@@ -44,6 +51,12 @@ void SFMLarray::play() {
 	for (unsigned i = 0; i < x.size() / 441; i++)
 		sf::sleep(sf::milliseconds(10));
 	sound.stop();
+}
+
+void SFMLarray::reset()
+{
+	x.clear();
+	addFirstTone();
 }
 
 SFMLarray::~SFMLarray() {}
