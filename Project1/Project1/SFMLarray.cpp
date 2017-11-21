@@ -1,7 +1,5 @@
 #include "SFMLarray.h"
 
-#include <iostream>
-
 SFMLarray::SFMLarray() {
 	addFirstTone();
 }

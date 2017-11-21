@@ -337,6 +337,7 @@ void Besked::sendBesked()
 	{}
 	sendFrame();
 	message.clear();
+	allDTMFs.reset();
 }
 
 void Besked::idleState()
