@@ -24,19 +24,16 @@
 
 int main()
 {
+
 	Besked test;
-	string x;
-	//cin >> x;
-	//test.modtagBesked();
 	thread idleThread(&Besked::setTekst, &test); //T
 	idleThread.detach();
-	test.idleState();
-	/*
-	for (int i = 0; i < 10; i++)
+	while (true)
 	{
-		cin >> x;
-		test.modtagBesked();
+		test.idleState();
 	}
-	*/
+
+	
+
 	return 0;
 }

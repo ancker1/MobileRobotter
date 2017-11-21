@@ -23,8 +23,12 @@ Besked::Besked(string tekst)
 void Besked::setTekst()
 {
 	string x;
-	getline(cin, x);
-	message = x;
+	while (true)
+	{
+		getline(cin, x);
+		message = x;
+		x.clear();
+	}
 }
 /*
 void Besked::setTekst(string inTekst)
@@ -249,7 +253,6 @@ void Besked::modtagHandshake()
 	AudioRecord record;
 	record.setSecondsToRecord(2); //RECORD_LENGTH
 	record.record();
-	record.printToFile();
 	BehandlData objectTest(record.getAudioVector());
 	objectTest.slideTWO();
 	for (int i = 0; i < 2; i++) //AMOUNT_TONE
@@ -331,19 +334,20 @@ void Besked::sendBesked()
 	while (!rTest.dtmfDiscovered())
 	{}
 	sendFrame();
+	message.clear();
 }
 
 void Besked::idleState()
 {
+	cout << message << endl;
 	bool shouldReceive = true;
 	LiveRecorder iTest(50);
 	iTest.start();
-	while (!iTest.dtmfDiscovered())
+	while (!iTest.dtmfDiscovered() && shouldReceive)
 	{
 		if (message != "")
 		{
 			shouldReceive = false;
-			iTest.stop();
 		}
 	}
 	iTest.stop();
