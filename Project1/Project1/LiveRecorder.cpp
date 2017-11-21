@@ -34,7 +34,7 @@ bool LiveRecorder::onProcessSamples(const sf::Int16 * samples, std::size_t sampl
 	return true;
 }
 
-bool LiveRecorder::dfmtDiscovered()
+bool LiveRecorder::dtmfDiscovered()
 {
 	return foundDtmf;
 }

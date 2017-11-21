@@ -249,6 +249,7 @@ void Besked::modtagHandshake()
 	AudioRecord record;
 	record.setSecondsToRecord(2); //RECORD_LENGTH
 	record.record();
+	record.printToFile();
 	BehandlData objectTest(record.getAudioVector());
 	objectTest.slideTWO();
 	for (int i = 0; i < 2; i++) //AMOUNT_TONE
@@ -320,13 +321,10 @@ void Besked::modtagBesked()
 
 void Besked::sendBesked()
 {
-	SFMLarray sendD;	//TEST
-	sendD.readySound();//TEST
-	sendD.play();		//TEST
 	LiveRecorder rTest(50);
 	sendHandshake();
 	rTest.start(); //MODTAG ACK
-	while (!rTest.dfmtDiscovered())
+	while (!rTest.dtmfDiscovered())
 	{}
 	sendFrame();
 }
@@ -336,7 +334,7 @@ void Besked::idleState()
 	bool shouldReceive = true;
 	LiveRecorder iTest(50);
 	iTest.start();
-	while (!iTest.dfmtDiscovered())
+	while (!iTest.dtmfDiscovered())
 	{
 		if (message != "")
 		{

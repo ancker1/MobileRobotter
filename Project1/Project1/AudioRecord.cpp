@@ -42,13 +42,13 @@ vector<float> AudioRecord::getAudioVector()
 void AudioRecord::printToFile()
 {
 	ofstream audioData;
-	audioData.open("AudioData.txt");
-
+	audioData.open("AudioData50.txt");
+	cout << "H" << endl;
 	for (int i = 0; i < audioVector.size(); i++)
 	{
-		audioData << audioVector[i] << endl; //Hvad er audioVector[1, i]?
+		audioData << audioVector[i] << endl;
 	}
-
+	cout << "H" << endl;
 	audioData.close();
 }
 
