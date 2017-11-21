@@ -302,7 +302,6 @@ void Besked::modtagFrame()
 	}
 	objectTesta = NULL;
 	delete objectTesta;
-	cout << text << endl;
 	Receiver receiveOBJ(text);
 	receiveOBJ.udpakFrame();
 	receiveOBJ.decodeMessage();
