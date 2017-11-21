@@ -9,6 +9,7 @@ class SFMLarray
 public:
 	SFMLarray();
 
+	void addFirstTone();
 	void addTone(double, double);
 	void readySound();
 	void play();

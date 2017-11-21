@@ -1,7 +1,13 @@
 #include "SFMLarray.h"
 
 SFMLarray::SFMLarray() {
-	addTone(941, 1633);
+	addFirstTone();
+}
+
+void SFMLarray::addFirstTone()
+{
+	if (x.size() == 0)
+		addTone(941, 1633);
 }
 
 void SFMLarray::addTone(double f1, double f2) {

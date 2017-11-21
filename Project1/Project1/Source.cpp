@@ -25,12 +25,12 @@
 int main()
 {
 
-	Besked test;
-	thread idleThread(&Besked::setTekst, &test); //T
+	Besked* test = new Besked;
+	thread idleThread(&Besked::setTekst, test); //T
 	idleThread.detach();
 	while (true)
 	{
-		test.idleState();
+		test->idleState();
 	}
 
 	

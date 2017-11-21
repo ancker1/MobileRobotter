@@ -40,7 +40,6 @@ private:
 	int AMOUNT_TONE = 0;
 	string message;
 	vector<int> encapsulatedMSG;
-	int index;
 	DTMF currentHighDTMF;
 	DTMF currentLowDTMF;
 	SFMLarray allDTMFs;
