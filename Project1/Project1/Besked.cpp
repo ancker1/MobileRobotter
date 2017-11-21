@@ -16,7 +16,6 @@ Besked::Besked()
 
 Besked::Besked(string tekst)
 {
-	index = 0;
 	message = tekst;
 }
 
@@ -288,19 +287,21 @@ void Besked::modtagFrame()
 	record.setSecondsToRecord(recordLength); //RECORD_LENGTH
 	cout << "Start" << endl;
 	record.record();
-	BehandlData objectTest(record.getAudioVector());
+	BehandlData* objectTesta = new BehandlData(record.getAudioVector());
 	cout << "Stop" << endl;
-	objectTest.slideTWO();
+	objectTesta->slideTWO();
 	for (int i = 0; i < AMOUNT_TONE; i++) //AMOUNT_TONE - SKAL VÆRE 52 FOR "OHANA BETYDER FAMILIE."
 	{
-		objectTest.nextTone(50);
+		objectTesta->nextTone(50);
 	}
-	vector<float> freqSumVec = objectTest.getfrequencySumVector();
+	vector<float> freqSumVec = objectTesta->getfrequencySumVector();
 	string text;
 	for (int i = 0; i < freqSumVec.size()-1; i++) //MAX er: frequencySumVector.size() - 1
 	{
 		text += frequenciesToChar(freqSumVec[i++], freqSumVec[i]);
 	}
+	objectTesta = NULL;
+	delete objectTesta;
 	cout << text << endl;
 	Receiver receiveOBJ(text);
 	receiveOBJ.udpakFrame();
@@ -320,6 +321,7 @@ void Besked::modtagBesked()
 	modtagHandshake();
 	sendACK();				//SEND ACK
 	modtagFrame();
+	encapsulatedMSG.clear();
 }
 
 void Besked::sendBesked()
@@ -339,7 +341,6 @@ void Besked::sendBesked()
 
 void Besked::idleState()
 {
-	cout << message << endl;
 	bool shouldReceive = true;
 	LiveRecorder iTest(50);
 	iTest.start();
@@ -355,7 +356,6 @@ void Besked::idleState()
 		modtagBesked();
 	else
 		sendBesked();
-
 }
 
 

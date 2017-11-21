@@ -10,7 +10,6 @@ public:
 	void hammingWindow(); //Virker som MATLABs hamming window
 	vector<float> hanningWindow(vector<float> data);
 	void printToFile();
-	void findFirstTone();
 	void nextTone(int WAIT_SAMPLES);
 	int recognizeDTMF(vector<float> data);
 	int recognizeDTMF(vector<float> data, int threshold);

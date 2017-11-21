@@ -110,10 +110,13 @@ int BehandlData::recognizeDTMF(vector<float> data)
 	}
 	*/
 
-/*
+	/*
 	//COUT RESULT
+	cout << "Tone: " << toneCount << endl;
 	cout << "Low frequency: " << lowFrequency << endl;
 	cout << "High frequency: " << highFrequency << endl;
+	cout << " ________________________________________ " << endl;
+
 
 	// COUT TEST
 	cout << " ________________________________________ " << endl;
@@ -280,28 +283,6 @@ void BehandlData::printToFile()
 }
 
 
-void BehandlData::findFirstTone() // OUTDATED
-{
-	vector<float> toneVector;
-	for (int i = 0; i < recordData.size(); i++)
-	{
-		if (recordData[i] > 500 || recordData[i] < -500) // Ikke verdens bedste løsning
-		{
-			firstToneAt = i;
-			cout << recordData[firstToneAt] << endl;
-			break;
-		}
-	}
-
-	for (int i = 0; i < 44100; i++)
-	{
-		toneVector.push_back(recordData[firstToneAt + i]);
-	}
-	cout << "First tone: " << endl;
-	frequencySumVector.push_back(recognizeDTMF(toneVector));
-	toneCount++;
-
-}
 
 void BehandlData::nextTone(int WAIT_SAMPLES) // samme som nextTone() - dog med mulighed for at tilføje wait mellem hver tone
 {
@@ -309,7 +290,7 @@ void BehandlData::nextTone(int WAIT_SAMPLES) // samme som nextTone() - dog med m
 	//cout << firstToneAt << endl; // TEST
 	vector<float> toneVector;
 	int currentlyAt = firstToneAt + toneCount * toneSize + WAIT_SAMPLES * (toneCount - 1) + 44100; //WAIT_SAMPLES er længere for første tone
-	//cout << currentlyAt << endl; //TEST
+	//cout << "Currently at: " << currentlyAt << endl; //TEST
 	if (currentlyAt + toneSize < recordData.size())
 	{
 		for (int i = 0; i < toneSize; i++)
