@@ -35,10 +35,8 @@ void Besked::setTekst(string inTekst)
 */
 void Besked::encapsulateMSG()
 {
-	sendingObject.setMessage(message);
-	encapsulatedMSG = sendingObject.makeFrame();
-			//Sender createOBJ(message);
-			//encapsulatedMSG = createOBJ.makeFrame();
+	Sender createOBJ(message);
+	encapsulatedMSG = createOBJ.makeFrame();
 }
 
 void Besked::createSFMLarray(char byte, SFMLarray& arraySFML)
@@ -302,15 +300,16 @@ void Besked::modtagFrame()
 	{
 		text += frequenciesToChar(freqSumVec[i++], freqSumVec[i]);
 	}
+	objectTesta = NULL;
 	delete objectTesta;
 
-	receivingObject.setMessage(text);
-	receivingObject.udpakFrame();
-	receivingObject.decodeMessage();
-		//	Receiver receiveOBJ(text);
-		//	receiveOBJ.udpakFrame();
-		//	receiveOBJ.decodeMessage();
-	cout << receivingObject.getMessage() << endl;
+//	receivingObject.setMessage(text);
+//	receivingObject.udpakFrame();
+//	receivingObject.decodeMessage();
+			Receiver receiveOBJ(text);
+			receiveOBJ.udpakFrame();
+			receiveOBJ.decodeMessage();
+	cout << receiveOBJ.getMessage() << endl;
 }
 
 void Besked::sendACK()

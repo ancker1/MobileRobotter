@@ -8,7 +8,8 @@ Receiver::Receiver()
 
 Receiver::Receiver(string msg)
 {
-	setMessage(msg);
+	frame = msg;
+	konverterStringTilBitString();
 }
 
 void Receiver::setMessage(string msg)
@@ -19,7 +20,6 @@ void Receiver::setMessage(string msg)
 
 	frame = msg;
 	konverterStringTilBitString();
-	//cout << frame << endl;
 }
 
 void Receiver::konverterStringTilBitString()

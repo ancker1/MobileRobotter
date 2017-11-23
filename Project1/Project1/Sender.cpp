@@ -6,7 +6,8 @@ Sender::Sender()
 
 Sender::Sender(string d)
 {
-	setMessage(d);
+	data = d;
+	konverterStringTilBitString();
 }
 
 void Sender::setMessage(string d)
