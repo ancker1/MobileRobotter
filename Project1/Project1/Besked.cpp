@@ -2,8 +2,6 @@
 #include "DTMF.h"
 #include "BehandlData.h"
 #include "AudioRecord.h"
-#include "Sender.h"
-#include "Receiver.h"
 #include <iostream>
 #include "LiveRecorder.h"
 #include <thread>
@@ -309,9 +307,9 @@ void Besked::modtagFrame()
 	receivingObject.setMessage(text);
 	receivingObject.udpakFrame();
 	receivingObject.decodeMessage();
-			//Receiver receiveOBJ(text);
-			//receiveOBJ.udpakFrame();
-			//receiveOBJ.decodeMessage();
+		//	Receiver receiveOBJ(text);
+		//	receiveOBJ.udpakFrame();
+		//	receiveOBJ.decodeMessage();
 	cout << receivingObject.getMessage() << endl;
 }
 

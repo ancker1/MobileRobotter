@@ -2,6 +2,8 @@
 #include <string>
 #include "DTMF.h"
 #include "SFMLarray.h"
+#include "Sender.h"
+#include "Receiver.h"
 
 using namespace std;
 class Besked

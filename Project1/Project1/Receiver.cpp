@@ -13,8 +13,13 @@ Receiver::Receiver(string msg)
 
 void Receiver::setMessage(string msg)
 {
+	message.clear();
+	messageAsBits.clear();
+	heleDataTilString.clear();
+
 	frame = msg;
 	konverterStringTilBitString();
+	//cout << frame << endl;
 }
 
 void Receiver::konverterStringTilBitString()

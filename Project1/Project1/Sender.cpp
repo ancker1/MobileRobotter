@@ -13,6 +13,8 @@ void Sender::setMessage(string d)
 {
 	data = d;
 	konverterStringTilBitString();
+
+	heleDataTilString.clear();
 }
 
 void Sender::konverterStringTilBitString()
@@ -104,7 +106,6 @@ int Sender::makeHeader()
 
 vector <int> Sender::makeFrame()
 {
-	flag = 0b00000001; // find ascii value to asgined to flag
 	header = 4 + data.size();
 
 	frame.push_back(flag);//indsætter startflag

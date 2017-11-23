@@ -44,7 +44,7 @@ protected:
 	string heleDataTilString;
 
 	// Frame
-	int flag;
+	int flag = 0b00000001;
 	vector <int> frame;
 	int header;
 };
