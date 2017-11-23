@@ -8,7 +8,9 @@ using namespace std;
 class Receiver
 {
 public:
+	Receiver();
 	Receiver(string msg);
+	void setMessage(string msg);
 
 	// Konverter til bit streng
 	void konverterStringTilBitString();
@@ -18,7 +20,7 @@ public:
 	bool hasErrorCRC();
 
 	// Acknowledgment
-	void acknowledgment();
+	int nextACK();
 
 	// Frame
 	void udpakFrame();

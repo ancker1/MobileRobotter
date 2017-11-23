@@ -11,6 +11,7 @@ class Sender
 public:
 	Sender();
 	Sender(string d);
+	void setMessage(string d);
 
 	// Konverter til bit streng
 	void konverterStringTilBitString();
@@ -27,6 +28,9 @@ public:
 
 	// Handshake
 	int makeHandshake();
+
+	//ACK
+	void frameNo(int ackNo);
 
 	~Sender();
 protected:

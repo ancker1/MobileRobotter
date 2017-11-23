@@ -2,10 +2,18 @@
 
 
 
-Receiver::Receiver(string d)
+Receiver::Receiver()
 {
-	frame = d;
+}
 
+Receiver::Receiver(string msg)
+{
+	setMessage(msg);
+}
+
+void Receiver::setMessage(string msg)
+{
+	frame = msg;
 	konverterStringTilBitString();
 }
 
@@ -72,40 +80,27 @@ bool Receiver::hasErrorCRC()
 	}
 }
 
-void Receiver::acknowledgment()
+int Receiver::nextACK()
 {
-	ack = 0; // ascii værdi, som indikere ACK0 eller ACK1.
-
 	if (!hasErrorCRC())// hvis der er ingen fejl
 	{
-
 		if (heleDataTilString[8] == '1')// hvis det modtaget framenummer er 1, så send ACK0.
 		{
-			// ACK0 = '\X06'
-			ack = '\X06'; // 'NACK' i ascii
-			
-			// Optælling af ACK
+			ack = '\X06'; 
 			ackModtaget++;
 		}
 		if (heleDataTilString[8] == '0') // hvis det modtager framenumemr er 0, så send om ACK1.
 		{
-			// ACK1 = '\X15'
-			ack = '\X15'; // 'ACK' i ascii
-
-			// optælling af ACK
+			ack = '\X07'; 
 			ackModtaget--;
 		}
 	}
-
 	if (ackModtaget >= 2 || ackModtaget <= -1) // hvis der er modtaget dubletter af framen
-	{
 		cout << "dubletter" << endl;
-	}
 	
 	if (hasErrorCRC()) // hvis der er fejl i crc
-	{
 		cout << "Fejl" << endl;
-	}
+	return ack;
 }
 
 void Receiver::udpakFrame()

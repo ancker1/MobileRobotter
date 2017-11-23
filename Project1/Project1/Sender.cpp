@@ -6,18 +6,12 @@ Sender::Sender()
 
 Sender::Sender(string d)
 {
+	setMessage(d);
+}
+
+void Sender::setMessage(string d)
+{
 	data = d;
-
-	// acknowledgment
-	if (data[0] == '\X06')
-	{
-		ackTal = 0;
-	}
-	if (data[0] == '\X15')
-	{
-		ackTal = 1;
-	}
-
 	konverterStringTilBitString();
 }
 
@@ -137,6 +131,31 @@ int Sender::getHeader()
 {
 	makeFrame();
 	return header;
+}
+
+void Sender::frameNo(int ackNo)
+{
+	switch (ackNo)
+	{
+	case 0:
+		ackTal = 0;
+		break;
+	case 1:
+		ackTal = 1;
+		break;
+	default:
+		break;
+	}
+
+	// acknowledgment
+	if (data[0] == '\X06')  // ACK0
+	{
+		ackTal = 0;
+	}
+	if (data[0] == '\X07')	// ACK1
+	{
+		ackTal = 1;
+	}
 }
 
 Sender::~Sender()

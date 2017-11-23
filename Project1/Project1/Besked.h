@@ -43,5 +43,7 @@ private:
 	DTMF currentHighDTMF;
 	DTMF currentLowDTMF;
 	SFMLarray allDTMFs;
+	Sender sendingObject;
+	Receiver receivingObject;
 };
 
