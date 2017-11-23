@@ -15,6 +15,7 @@ void Sender::setMessage(string d)
 	konverterStringTilBitString();
 
 	heleDataTilString.clear();
+	frame.clear();
 }
 
 void Sender::konverterStringTilBitString()
