@@ -325,8 +325,10 @@ void Besked::modtagFrame()
 		receiveOBJ.udpakFrame();
 		receiveOBJ.decodeMessage();
 		cout << receiveOBJ.getMessage() << endl;
-		sendFrameACK(receiveOBJ);
+		sendFrameACK(receiveOBJ, false);
 	}
+	else
+		sendFrameACK(receiveOBJ, true);
 
 }
 
@@ -337,18 +339,23 @@ void Besked::sendACK()
 	ackDTMF.play();
 }
 
-void Besked::sendFrameACK(Receiver receiver)
+void Besked::sendFrameACK(Receiver receiver, bool shouldNACK)
 {
-	SFMLarray sendD;		//TEST
-	sendD.readySound();		//TEST
-	sendD.play();			//TEST
-	this_thread::sleep_for(0.5s);	//TEST
+
+		SFMLarray sendD;		//TEST
+		sendD.readySound();		//TEST
+		sendD.play();			//TEST
+		this_thread::sleep_for(0.5s);	//TEST
 
 
-	SFMLarray ackFrameDTMF;
-	createSFMLarray(receiver.nextACK(), ackFrameDTMF);
-	ackFrameDTMF.readySound();
-	ackFrameDTMF.play();
+		SFMLarray ackFrameDTMF;
+		if (shouldNACK)
+			createSFMLarray(char(15), ackFrameDTMF);
+		else
+			createSFMLarray(receiver.nextACK(), ackFrameDTMF);
+		ackFrameDTMF.readySound();
+		ackFrameDTMF.play();
+
 }
 
 bool Besked::modtagFrameACK()
@@ -426,7 +433,8 @@ void Besked::idleState()
 		{
 			message = lastMSG;
 			lastMSG = "";
-		}
+		} 
+
 		if (message != "")
 		{
 			shouldReceive = false;

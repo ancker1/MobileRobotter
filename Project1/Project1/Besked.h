@@ -30,7 +30,7 @@ public:
 	void modtagFrame();
 	void sendACK();
 
-	void sendFrameACK(Receiver receiver);
+	void sendFrameACK(Receiver receiver, bool shouldNAK);
 	bool modtagFrameACK();
 
 	void modtagBesked();
