@@ -30,6 +30,9 @@ public:
 	void modtagFrame();
 	void sendACK();
 
+	void sendFrameACK(Receiver receiver);
+	void modtagFrameACK();
+
 	void modtagBesked();
 	void sendBesked();
 
@@ -45,7 +48,5 @@ private:
 	DTMF currentHighDTMF;
 	DTMF currentLowDTMF;
 	SFMLarray allDTMFs;
-	Sender sendingObject;
-	Receiver receivingObject;
 };
 

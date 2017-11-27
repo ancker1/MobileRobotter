@@ -82,25 +82,22 @@ int Sender::getTrailer()
 
 int Sender::makeHeader()
 {
+	ifstream readFrame("Framenr.txt");
+	int Framenr = readFrame.get();
+	Framenr = Framenr - '0';
+	readFrame.close();
+
+	cout << "Framenr: " << Framenr << endl;
+
 	//framen længden sidste 7 bits i header
 	header = 4 + data.size();
-	if (header > 127)//hvis headeren er større end 7 bits gør f.eks. fragmentation
-	{
+	if (header > 127 || header < 5)//hvis headeren er større end 7 bits gør f.eks. fragmentation ELLER beskeden er for kort
 		return -1;
-	}
-	else
-	{
-		if (header < 5)//beskeden er for kort.
-		{
-			return -1;
-		}
-	}
 
 	//frame når første bit i header
-	if (ackTal == 1)//er det et ulige tal?
-	{
+	if (Framenr == 1)//er det et ulige tal?
 		header + 128;//svare til 1 i MSB
-	}
+
 	//ellers lad hver med at ligge noget til svare til 0 i MSB
 
 	return header;

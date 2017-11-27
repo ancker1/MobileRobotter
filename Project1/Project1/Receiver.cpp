@@ -22,6 +22,17 @@ void Receiver::setMessage(string msg)
 	konverterStringTilBitString();
 }
 
+bool Receiver::isLengthOK(int handshakeLength)
+{
+	cout << "FIRST: "<< int(frame[1]) * 2 << endl;
+	cout << "SECOND: " << (int(frame[1])-128) *2<< endl;
+	if (((int(frame[1]) - 128) * 2 == handshakeLength) || (int(frame[1]) * 2 == handshakeLength))
+		return true;
+
+	return false;
+
+}
+
 void Receiver::konverterStringTilBitString()
 {
 	char charData;
@@ -85,9 +96,41 @@ bool Receiver::hasErrorCRC()
 	}
 }
 
-int Receiver::nextACK()
+char Receiver::nextACK()
 {
-	if (!hasErrorCRC())// hvis der er ingen fejl
+	ifstream readACK("ACKnr.txt");
+	int ACKnr = readACK.get();
+	ACKnr = ACKnr - '0';
+	readACK.close();
+	cout << "ACKnr: " << ACKnr << endl;
+	if (!hasErrorCRC())
+	{
+		if ((int(heleDataTilString[8]) - '0') == ACKnr && ACKnr == 1)
+		{
+			ack = '\X06'; // ACK for modtaget frame nr. 1
+			ACKnr = 0;
+		}
+		else if ((int(heleDataTilString[8]) - '0') == ACKnr && ACKnr == 0)
+		{
+			ack = '\X07'; // ACK for modtaget frame nr. 0
+			ACKnr = 1;
+		}
+		else
+		{
+			ack = '\X15'; // Hex for NAK
+			cout << "Dubletter" << endl;
+		}
+	}
+
+	if (ack != '\X15') 
+	{
+		cout << "ACKnr: " << ACKnr << endl;
+		ofstream writeACK("ACKnr.txt");
+		writeACK << ACKnr;
+		writeACK.close();
+	}
+
+	/*if (!hasErrorCRC())// hvis der er ingen fejl
 	{
 		if (heleDataTilString[8] == '1')// hvis det modtaget framenummer er 1, så send ACK0.
 		{
@@ -99,12 +142,8 @@ int Receiver::nextACK()
 			ack = '\X07'; 
 			ackModtaget--;
 		}
-	}
-	if (ackModtaget >= 2 || ackModtaget <= -1) // hvis der er modtaget dubletter af framen
-		cout << "dubletter" << endl;
-	
-	if (hasErrorCRC()) // hvis der er fejl i crc
-		cout << "Fejl" << endl;
+	}*/
+
 	return ack;
 }
 

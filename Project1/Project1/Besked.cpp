@@ -9,7 +9,14 @@ using namespace std;
 
 Besked::Besked()
 {
+	// On startup (programmerne skal startes 'samtidig')
+	ofstream writeACK("ACKnr.txt");
+	writeACK << 0;
+	writeACK.close();
 
+	ofstream writeFrame("Framenr.txt");
+	writeFrame << 0;
+	writeFrame.close();
 }
 
 Besked::Besked(string tekst)
@@ -228,9 +235,7 @@ char Besked::frequenciesToChar(int first_FrequencySum, int second_FrequencySum)
 	highNibble = highNibble << 4;
 	msgByte = highNibble + lowNibble;
 	if ((msgByte >= 0 && msgByte <= 255))
-	{
 		return (char)msgByte;
-	}
 	return ' ';
 }
 
@@ -259,9 +264,14 @@ void Besked::modtagHandshake()
 	vector<float> freqSumVec = objectTest.getfrequencySumVector();
 	char length;
 	length = frequenciesToChar(freqSumVec[0], freqSumVec[1]); //Antal characters
-	if (length && 0b10000000 == 0b10000000)
-		length - 0b10000000;
+	if (length >= 128)
+		length = length - 0b10000000;
+
 	AMOUNT_TONE = (int)length * 2; //Antal toner
+
+	if (AMOUNT_TONE < 5)
+		AMOUNT_TONE = 5;
+
 }
 
 void Besked::sendHandshake()
@@ -277,6 +287,11 @@ void Besked::sendFrame()
 {
 	createDTMFS();
 	getDTMFs().play();
+	LiveRecorder rTest(50);
+	rTest.start(); //MODTAG ACK
+	while (!rTest.dtmfDiscovered())
+	{}
+	modtagFrameACK();
 }
 
 void Besked::modtagFrame()
@@ -303,13 +318,16 @@ void Besked::modtagFrame()
 	objectTesta = NULL;
 	delete objectTesta;
 
-//	receivingObject.setMessage(text);
-//	receivingObject.udpakFrame();
-//	receivingObject.decodeMessage();
-			Receiver receiveOBJ(text);
-			receiveOBJ.udpakFrame();
-			receiveOBJ.decodeMessage();
-	cout << receiveOBJ.getMessage() << endl;
+	Receiver receiveOBJ(text);
+	cout << "AMOUNT_TONE: " << AMOUNT_TONE << endl;
+	if (receiveOBJ.isLengthOK(AMOUNT_TONE))
+	{
+		receiveOBJ.udpakFrame();
+		receiveOBJ.decodeMessage();
+		cout << receiveOBJ.getMessage() << endl;
+		sendFrameACK(receiveOBJ);
+	}
+
 }
 
 void Besked::sendACK()
@@ -317,6 +335,51 @@ void Besked::sendACK()
 	SFMLarray ackDTMF;
 	ackDTMF.readySound();
 	ackDTMF.play();
+}
+
+void Besked::sendFrameACK(Receiver receiver)
+{
+	SFMLarray sendD;		//TEST
+	sendD.readySound();		//TEST
+	sendD.play();			//TEST
+	this_thread::sleep_for(0.5s);	//TEST
+
+
+	SFMLarray ackFrameDTMF;
+	createSFMLarray(receiver.nextACK(), ackFrameDTMF);
+	ackFrameDTMF.readySound();
+	ackFrameDTMF.play();
+}
+
+void Besked::modtagFrameACK()
+{
+	AudioRecord record;
+	record.setSecondsToRecord(2); //RECORD_LENGTH
+	record.record();
+	BehandlData objectTest(record.getAudioVector());
+	objectTest.slideTWO();
+	for (int i = 0; i < 2; i++) //AMOUNT_TONE
+	{
+		objectTest.nextTone(50);
+	}
+	vector<float> freqSumVec = objectTest.getfrequencySumVector();
+	char receivedNr;
+	receivedNr = frequenciesToChar(freqSumVec[0], freqSumVec[1]); //Antal characters
+	
+	ifstream readFramenr("Framenr.txt");
+	int frameNr = readFramenr.get();
+	readFramenr.close();
+
+	if ((receivedNr == '\X06' && frameNr == 1) || (receivedNr == '\X07' && frameNr == 0))
+	{
+		frameNr = frameNr ^ 1;
+
+		ofstream writeFramenr("Framenr.txt");
+		writeFramenr << frameNr;
+		writeFramenr.close();
+	}
+	else
+		cout << "RESEND" << endl;
 }
 
 void Besked::modtagBesked()

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <bitset>
+#include <fstream>
 
 using namespace std;
 
@@ -12,6 +13,9 @@ public:
 	Receiver(string msg);
 	void setMessage(string msg);
 
+	// Additional error check
+	bool isLengthOK(int handshakeLength);
+
 	// Konverter til bit streng
 	void konverterStringTilBitString();
 
@@ -20,7 +24,7 @@ public:
 	bool hasErrorCRC();
 
 	// Acknowledgment
-	int nextACK();
+	char nextACK();
 
 	// Frame
 	void udpakFrame();
@@ -37,8 +41,8 @@ protected:
 	string crc = "100000111";
 
 	// Acknowledgment
-	int ackModtaget = 0; // optælling af ack
-	int ack;
+	//int ackModtaget = 0; // optælling af ack
+	char ack;
 
 	// Frame
 	string messageAsBits;
