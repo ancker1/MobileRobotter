@@ -24,9 +24,11 @@ void Receiver::setMessage(string msg)
 
 bool Receiver::isLengthOK(int handshakeLength)
 {
-	cout << "FIRST: "<< int(frame[1]) * 2 << endl;
-	cout << "SECOND: " << (int(frame[1])-128) *2<< endl;
-	if (((int(frame[1]) - 128) * 2 == handshakeLength) || (int(frame[1]) * 2 == handshakeLength))
+	unsigned char unsignedFrame1 = frame[1];
+	cout << "Header + Frame nr: " << (int)unsignedFrame1 << endl;
+	cout << "FIRST: "<<  int(unsignedFrame1) * 2 << endl;
+	cout << "SECOND: " << (int(unsignedFrame1)-128) *2<< endl;
+	if (((int(unsignedFrame1) - 128) * 2 == handshakeLength) || (int(unsignedFrame1) * 2 == handshakeLength))
 		return true;
 
 	return false;

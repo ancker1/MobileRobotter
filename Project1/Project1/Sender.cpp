@@ -91,8 +91,6 @@ int Sender::makeHeader()
 
 	//framen længden sidste 7 bits i header
 	header = 4 + data.size();
-	if (header > 127 || header < 5)//hvis headeren er større end 7 bits gør f.eks. fragmentation ELLER beskeden er for kort
-		return -1;
 
 	//frame når første bit i header
 	if (Framenr == 1)//er det et ulige tal?
