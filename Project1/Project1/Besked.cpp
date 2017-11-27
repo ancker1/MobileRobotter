@@ -409,39 +409,24 @@ void Besked::sendBesked()
 	sendFrame();
 	if (!modtagFrameACK())
 	{
-		ofstream saveMessage("savedMessage.txt");
-		saveMessage << message;
-		saveMessage.close();
+		lastMSG = message;
 	}
 	message.clear();
 	allDTMFs.reset();
 }
 
-void Besked::checkSavedMessage()
-{
-	ifstream getSavedMessage("savedMessage.txt");
-	string savedMessage = "";
-	while (getSavedMessage.good())
-		savedMessage = getSavedMessage.get();
-	getSavedMessage.close();
-
-	ofstream resetSavedMessage("savedMessage.txt");
-	resetSavedMessage << "";
-	resetSavedMessage.close();
-
-	if (savedMessage.length() > 0)
-		message = savedMessage;
-}
-
 void Besked::idleState()
 {
-	checkSavedMessage();
-
 	bool shouldReceive = true;
 	LiveRecorder iTest(50);
 	iTest.start();
 	while (!iTest.dtmfDiscovered() && shouldReceive)
 	{
+		if (lastMSG != "")
+		{
+			message = lastMSG;
+			lastMSG = "";
+		}
 		if (message != "")
 		{
 			shouldReceive = false;

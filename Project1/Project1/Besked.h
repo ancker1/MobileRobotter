@@ -45,6 +45,7 @@ private:
 	int RECORD_LENGTH = 0;
 	int AMOUNT_TONE = 0;
 	string message;
+	string lastMSG;
 	vector<int> encapsulatedMSG;
 	DTMF currentHighDTMF;
 	DTMF currentLowDTMF;
