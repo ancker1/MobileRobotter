@@ -31,7 +31,7 @@ public:
 	void sendACK();
 
 	void sendFrameACK(Receiver receiver);
-	void modtagFrameACK();
+	bool modtagFrameACK();
 
 	void modtagBesked();
 	void sendBesked();

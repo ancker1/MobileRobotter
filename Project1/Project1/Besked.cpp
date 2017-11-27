@@ -292,7 +292,6 @@ void Besked::sendFrame()
 	while (!rTest.dtmfDiscovered())
 	{}
 	rTest.stop();
-	modtagFrameACK();
 }
 
 void Besked::modtagFrame()
@@ -352,7 +351,7 @@ void Besked::sendFrameACK(Receiver receiver)
 	ackFrameDTMF.play();
 }
 
-void Besked::modtagFrameACK()
+bool Besked::modtagFrameACK()
 {
 	AudioRecord record;
 	record.setSecondsToRecord(2); //RECORD_LENGTH
@@ -379,9 +378,10 @@ void Besked::modtagFrameACK()
 		ofstream writeFramenr("Framenr.txt");
 		writeFramenr << frameNr;
 		writeFramenr.close();
+		return true;
 	}
 	else
-		cout << "RESEND" << endl;
+		return false;
 }
 
 void Besked::modtagBesked()
@@ -394,18 +394,26 @@ void Besked::modtagBesked()
 
 void Besked::sendBesked()
 {
-	LiveRecorder rTest(50);
-	SFMLarray sendD;		//TEST
-	sendD.readySound();		//TEST
-	sendD.play();			//TEST
-	this_thread::sleep_for(0.5s);	//TEST
-	sendHandshake();
-	rTest.start(); //MODTAG ACK
-	while (!rTest.dtmfDiscovered())
-	{}
-	sendFrame();
-	message.clear();
-	allDTMFs.reset();
+	while (true)
+	{
+		LiveRecorder rTest(50);
+		SFMLarray sendD;		//TEST
+		sendD.readySound();		//TEST
+		sendD.play();			//TEST
+		this_thread::sleep_for(0.5s);	//TEST
+		sendHandshake();
+		rTest.start(); //MODTAG ACK
+		while (!rTest.dtmfDiscovered())
+		{
+		}
+		sendFrame();
+		if (modtagFrameACK())
+		{
+			message.clear();
+			allDTMFs.reset();
+			break;
+		}
+	}
 }
 
 void Besked::idleState()
