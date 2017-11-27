@@ -291,6 +291,7 @@ void Besked::sendFrame()
 	rTest.start(); //MODTAG ACK
 	while (!rTest.dtmfDiscovered())
 	{}
+	rTest.stop();
 	modtagFrameACK();
 }
 
@@ -368,6 +369,7 @@ void Besked::modtagFrameACK()
 	
 	ifstream readFramenr("Framenr.txt");
 	int frameNr = readFramenr.get();
+	frameNr = frameNr - '0';
 	readFramenr.close();
 
 	if ((receivedNr == '\X06' && frameNr == 1) || (receivedNr == '\X07' && frameNr == 0))
