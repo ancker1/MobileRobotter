@@ -394,11 +394,13 @@ void Besked::modtagBesked()
 
 void Besked::sendBesked()
 {
+	int count = 0;
 	while (true)
 	{
 		LiveRecorder rTest(50);
 		SFMLarray sendD;		//TEST
-		sendD.readySound();		//TEST
+		if (count != 0)
+			sendD.readySound();		//TEST
 		sendD.play();			//TEST
 		this_thread::sleep_for(0.5s);	//TEST
 		sendHandshake();
@@ -413,6 +415,7 @@ void Besked::sendBesked()
 			allDTMFs.reset();
 			break;
 		}
+		count++;
 	}
 }
 
