@@ -287,11 +287,11 @@ void Besked::sendFrame()
 {
 	createDTMFS();
 	getDTMFs().play();
-	LiveRecorder rTest(50);
-	rTest.start(); //MODTAG ACK
-	while (!rTest.dtmfDiscovered())
+	LiveRecorder dtmfTest(50);
+	dtmfTest.start(); //MODTAG ACK
+	while (!dtmfTest.dtmfDiscovered())
 	{}
-	rTest.stop();
+	dtmfTest.stop();
 }
 
 void Besked::modtagFrame()
@@ -397,27 +397,46 @@ void Besked::sendBesked()
 	LiveRecorder rTest(50);
 	SFMLarray sendD;		//TEST
 	sendD.readySound();		//TEST
-	while (true)
+
+	sendD.play();			//TEST
+	this_thread::sleep_for(0.5s);	//TEST
+	sendHandshake();
+	rTest.start(); //MODTAG ACK
+	while (!rTest.dtmfDiscovered())
 	{
-		sendD.play();			//TEST
-		this_thread::sleep_for(0.5s);	//TEST
-		sendHandshake();
-		rTest.start(); //MODTAG ACK
-		while (!rTest.dtmfDiscovered())
-		{
-		}
-		sendFrame();
-		if (modtagFrameACK())
-		{
-			message.clear();
-			allDTMFs.reset();
-			break;
-		}
 	}
+	rTest.stop();
+	sendFrame();
+	if (!modtagFrameACK())
+	{
+		ofstream saveMessage("savedMessage.txt");
+		saveMessage << message;
+		saveMessage.close();
+	}
+	message.clear();
+	allDTMFs.reset();
+}
+
+void Besked::checkSavedMessage()
+{
+	ifstream getSavedMessage("savedMessage.txt");
+	string savedMessage = "";
+	while (getSavedMessage.good())
+		savedMessage = getSavedMessage.get();
+	getSavedMessage.close();
+
+	ofstream resetSavedMessage("savedMessage.txt");
+	resetSavedMessage << "";
+	resetSavedMessage.close();
+
+	if (savedMessage.length() > 0)
+		message = savedMessage;
 }
 
 void Besked::idleState()
 {
+	checkSavedMessage();
+
 	bool shouldReceive = true;
 	LiveRecorder iTest(50);
 	iTest.start();

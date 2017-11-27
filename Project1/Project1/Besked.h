@@ -36,6 +36,7 @@ public:
 	void modtagBesked();
 	void sendBesked();
 
+	void checkSavedMessage();
 	void idleState();
 
 	~Besked();
