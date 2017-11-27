@@ -91,24 +91,22 @@ int Sender::makeHeader()
 
 	//framen længden sidste 7 bits i header
 	header = 4 + data.size();
-	if (header > 127 || header < 5)//hvis headeren er større end 7 bits gør f.eks. fragmentation ELLER beskeden er for kort
-		return -1;
 
 	//frame når første bit i header
 	if (Framenr == 1)//er det et ulige tal?
-		header + 128;//svare til 1 i MSB
+		header = header + 128;//svare til 1 i MSB
 
 	//ellers lad hver med at ligge noget til svare til 0 i MSB
+	
+	cout << "Header: " << int(header) << endl;
 
 	return header;
 }
 
 vector <int> Sender::makeFrame()
 {
-	header = 4 + data.size();
-
 	frame.push_back(flag);//indsætter startflag
-	frame.push_back(header);//indsætter header (længden af teksten)
+	frame.push_back(makeHeader());//indsætter header (længden af teksten)
 	for (int i = 0; i < data.size(); i++)//lægger hver enkelt char af data i en vektor.
 	{
 		frame.push_back(data[i]);
