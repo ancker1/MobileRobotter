@@ -107,22 +107,22 @@ char Receiver::nextACK()
 	{
 		if ((int(heleDataTilString[8]) - '0') == ACKnr && ACKnr == 1)
 		{
-			ack = '\X06'; // ACK for modtaget frame nr. 1
+			ack = char(6); // ACK for modtaget frame nr. 1
 			ACKnr = 0;
 		}
 		else if ((int(heleDataTilString[8]) - '0') == ACKnr && ACKnr == 0)
 		{
-			ack = '\X07'; // ACK for modtaget frame nr. 0
+			ack = char(7); // ACK for modtaget frame nr. 0
 			ACKnr = 1;
 		}
 		else
 		{
-			ack = '\X15'; // Hex for NAK
+			ack = char(15); // Hex for NAK
 			cout << "Dubletter" << endl;
 		}
 	}
 
-	if (ack != '\X15') 
+	if (ack != char(15)) 
 	{
 		cout << "ACKnr: " << ACKnr << endl;
 		ofstream writeACK("ACKnr.txt");

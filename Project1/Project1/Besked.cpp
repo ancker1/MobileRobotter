@@ -372,7 +372,7 @@ void Besked::modtagFrameACK()
 	frameNr = frameNr - '0';
 	readFramenr.close();
 
-	if ((receivedNr == '\X06' && frameNr == 1) || (receivedNr == '\X07' && frameNr == 0))
+	if ((receivedNr == 6 && frameNr == 1) || (receivedNr == 7 && frameNr == 0))
 	{
 		frameNr = frameNr ^ 1;
 
