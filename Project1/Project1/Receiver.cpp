@@ -117,10 +117,20 @@ char Receiver::nextACK()
 			ack = char(7); // ACK for modtaget frame nr. 0
 			ACKnr = 1;
 		}
+		else if ((int(heleDataTilString[8]) - '0') == 0 && ACKnr == 1)
+		{
+			ack = char(7); // ACK for modtaget frame nr. 0 igen
+			cout << "Dubletter" << endl;
+		}
+		else if ((int(heleDataTilString[8]) - '0') == 1 && ACKnr == 0)
+		{
+			ack = char(6); // ACK for modtaget frame nr. 1 igen
+			cout << "Dubletter" << endl;
+		}
 		else
 		{
 			ack = char(15); // Hex for NAK
-			cout << "Dubletter" << endl;
+			cout << "Fejl" << endl;
 		}
 	}
 
