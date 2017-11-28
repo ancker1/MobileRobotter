@@ -1,6 +1,10 @@
 #pragma once
 #include <SFML\Audio.hpp>
 #include <vector>
+#include <thread>
+#include <chrono>
+#include <fstream>
+#include <iostream>
 using namespace std;
 class AudioRecord
 {

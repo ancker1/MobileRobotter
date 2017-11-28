@@ -4,6 +4,12 @@
 #include "SFMLarray.h"
 #include "Sender.h"
 #include "Receiver.h"
+#include "DTMF.h"
+#include "BehandlData.h"
+#include "AudioRecord.h"
+#include <iostream>
+#include "LiveRecorder.h"
+#include <thread>
 
 using namespace std;
 class Besked

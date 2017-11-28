@@ -1,10 +1,5 @@
 #include "Besked.h"
-#include "DTMF.h"
-#include "BehandlData.h"
-#include "AudioRecord.h"
-#include <iostream>
-#include "LiveRecorder.h"
-#include <thread>
+
 using namespace std;
 
 Besked::Besked()
@@ -256,7 +251,7 @@ void Besked::modtagHandshake()
 	record.setSecondsToRecord(2); //RECORD_LENGTH
 	record.record();
 	BehandlData objectTest(record.getAudioVector());
-	objectTest.slideTWO();
+	objectTest.slideMultiple();
 	for (int i = 0; i < 2; i++) //AMOUNT_TONE
 	{
 		objectTest.nextTone(50);
@@ -304,7 +299,7 @@ void Besked::modtagFrame()
 	record.record();
 	BehandlData* objectTesta = new BehandlData(record.getAudioVector());
 	cout << "Stop" << endl;
-	objectTesta->slideTWO();
+	objectTesta->slideMultiple();
 	for (int i = 0; i < AMOUNT_TONE; i++) //AMOUNT_TONE - SKAL VÆRE 52 FOR "OHANA BETYDER FAMILIE."
 	{
 		objectTesta->nextTone(50);
@@ -364,7 +359,7 @@ bool Besked::modtagFrameACK()
 	record.setSecondsToRecord(2); //RECORD_LENGTH
 	record.record();
 	BehandlData objectTest(record.getAudioVector());
-	objectTest.slideTWO();
+	objectTest.slideMultiple();
 	for (int i = 0; i < 2; i++) //AMOUNT_TONE
 	{
 		objectTest.nextTone(50);

@@ -1,6 +1,5 @@
 #include "LiveRecorder.h"
-#include <iostream>
-#include "BehandlData.h"
+
 
 
 LiveRecorder::LiveRecorder()

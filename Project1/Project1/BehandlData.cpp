@@ -1,13 +1,4 @@
 #include "BehandlData.h"
-#include "Besked.h"
-#include <math.h>
-//TEST
-#include <thread>
-#include <chrono>
-#include <fstream>
-#include <iostream>
-//TEST
-
 
 BehandlData::BehandlData()
 {
@@ -22,103 +13,52 @@ BehandlData::BehandlData(vector<float> data)
 float BehandlData::goertzelFilter(int TARGET_FREQUENCY, int SAMPLE_COUNT, vector<float> data)
 {
 	int SAMPLING_RATE = 44100;
-	double M_PI = 3.14159;
-	int     k, i;
-	float   omega, sine, cosine, coeff, q0, q1, q2, magnitude, real, imag;
-	float   scalingFactor = SAMPLE_COUNT / 2.0;
+	double PI = 3.14159;
+	float  matlab_scaling = SAMPLE_COUNT / 2.0;
+	int k = (int)((SAMPLE_COUNT * TARGET_FREQUENCY) / SAMPLING_RATE);
+	float inner_part = (2.0 * PI * k) / SAMPLE_COUNT;
+	float sin_part = sin(inner_part);
+	float cos_part = cos(inner_part);
+	float v0 = 0;
+	float v1 = 0;
+	float v2 = 0;
 
-	float floatnumSamples = SAMPLE_COUNT;
-	k = (int)(0.5 + ((floatnumSamples * TARGET_FREQUENCY) / SAMPLING_RATE));
-	omega = (2.0 * M_PI * k) / floatnumSamples;
-	sine = sin(omega);
-	cosine = cos(omega);
-	coeff = 2.0 * cosine;
-	q0 = 0;
-	q1 = 0;
-	q2 = 0;
-
-	for (i = 0; i<SAMPLE_COUNT; i++)
+	for (int i = 0; i < SAMPLE_COUNT; i++)
 	{
-		q0 = coeff * q1 - q2 + data[i];
-		q2 = q1;
-		q1 = q0;
+		v0 = 2.0 * cos_part * v1 - v2 + data[i];
+		v2 = v1;
+		v1 = v0;
 	}
 
-	// calculate the real and imaginary results
-	// scaling appropriately
-	real = (q1 - q2 * cosine) / scalingFactor;
-	imag = (q2 * sine) / scalingFactor;
-
-	magnitude = sqrtf(real*real + imag*imag);
-	return magnitude;
+	// Udregner imaginær og reel del + bruger samme scaling som MATLAB
+	float rl_part = (v1 - v2 * cos_part) / matlab_scaling;
+	float img_part = (v2 * sin_part) / matlab_scaling;
+	float mag = sqrtf(rl_part*rl_part + img_part*img_part);
+	return mag;
 }
 
-void BehandlData::hammingWindow() //Virker som MATLAB's hamming window
+void BehandlData::hanningWindow(vector<float>& data)
 {
-	double M_PI = 3.14159;
-	for (int n = 0; n < numSamples; n++)
-	{
-		recordData[n] = recordData[n] * (0.54 - 0.46 * cos((2 * M_PI * n) / (numSamples - 1)));
-	}
-}
-
-vector<float> BehandlData::hanningWindow(vector<float> data)
-{
-	double M_PI = 3.14159;
+	double PI = 3.14159;
 	for (int n = 0; n < data.size(); n++)
-	{
-		data[n] = data[n] * (0.5 * (1 - cos(( 2 * M_PI * n)/(data.size() - 1))));
-	}
-	return data;
+		data[n] = data[n] * (0.5 * (1 - cos(( 2 * PI * n)/(data.size() - 1))));
 }
 
-int BehandlData::recognizeDTMF(vector<float> data)
+int BehandlData::recognizeDTMF(vector<float> data, int threshold = 0)
 {
-
 	for (int i = 0; i < 500; i++)
 	{
 		data.insert(data.begin(), 0);
 		data.push_back(0);
 	}
-	int dtmfFrequencies[8] = { 697, 770, 852, 941, 1209, 1336, 1477, 1633 };
 	int highFrequency = 0;
-	int highMagnitude = 0; //Eventuelt indstil threshold
+	int highMagnitude = threshold; //Eventuelt indstil threshold
 	int lowFrequency = 0;
-	int lowMagnitude = 0; //Eventuelt indstil threshold
-	data = hanningWindow(data); //Eventuelt anden vindue funktion
-
+	int lowMagnitude = threshold; //Eventuelt indstil threshold
+	hanningWindow(data); //Eventuelt anden vindue funktion
 	findFnM(data, lowMagnitude, lowFrequency, true);
 	findFnM(data, highMagnitude, highFrequency, false);
-	/*								KAN FJERNES, HVIS DET VIRKER
-	for (int i = 0; i < 4; i++)
-	{
-		int currentMagnitude = goertzelFilter(dtmfFrequencies[i], data.size(), data);
-		if (currentMagnitude > lowMagnitude)
-		{
-			lowFrequency = dtmfFrequencies[i];
-			lowMagnitude = currentMagnitude;
-		}
-	}
-	for (int i = 4; i < 8; i++)
-	{
-		int currentMagnitude = goertzelFilter(dtmfFrequencies[i], data.size(), data);
-		if (currentMagnitude > highMagnitude)
-		{
-			highFrequency = dtmfFrequencies[i];
-			highMagnitude = currentMagnitude;
-		}
-	}
-	*/
-
 	/*
-	//COUT RESULT
-	cout << "Tone: " << toneCount << endl;
-	cout << "Low frequency: " << lowFrequency << endl;
-	cout << "High frequency: " << highFrequency << endl;
-	cout << " ________________________________________ " << endl;
-
-
-	// COUT TEST
 	cout << " ________________________________________ " << endl;
 	cout << "697:   " << goertzelFilter(697, data.size(), data) << endl;
 	cout << "770:   " << goertzelFilter(770, data.size(), data) << endl;
@@ -129,27 +69,6 @@ int BehandlData::recognizeDTMF(vector<float> data)
 	cout << "1477:  " << goertzelFilter(1477, data.size(), data) << endl;
 	cout << "1633:  " << goertzelFilter(1633, data.size(), data) << endl;
 	*/
-	return lowFrequency + highFrequency;
-}
-
-int BehandlData::recognizeDTMF(vector<float> data, int threshold)
-{
-
-	for (int i = 0; i < 500; i++)
-	{
-		data.insert(data.begin(), 0);
-		data.push_back(0);
-	}
-	int dtmfFrequencies[8] = { 697, 770, 852, 941, 1209, 1336, 1477, 1633 };
-	int highFrequency = 0;
-	int highMagnitude = threshold; //Eventuelt indstil threshold
-	int lowFrequency = 0;
-	int lowMagnitude = threshold; //Eventuelt indstil threshold
-	data = hanningWindow(data); //Eventuelt anden vindue funktion
-
-	findFnM(data, lowMagnitude, lowFrequency, true);
-	findFnM(data, highMagnitude, highFrequency, false);
-
 	return lowFrequency + highFrequency;
 }
 
@@ -216,20 +135,23 @@ void BehandlData::slide(int& tone_AT, int& m_Sum, int& f_Sum, int slide_Number)
 	int lowFrequency = 0;
 	int lowMagnitude = 0; //Eventuelt indstil threshold
 	vector<float> currentTempData;
+	int slideLength;
 
+	if (slide_Number != 4)
+		slideLength = (11050 + 2205 - windowSize) / stepSize - 1;
+	else
+		slideLength = (11050 - windowSize) / stepSize - 1;
 
-	for (int i = 0; i < (11050 - windowSize) / stepSize - 1; i++) //EVENTUELT: ændr således vinduerne kører over i hinanden.
+	for (int i = 0; i < slideLength; i++) //EVENTUELT: ændr således vinduerne kører over i hinanden.
 	{
 		currentTempData = tempData;
 		if (slide_Number > 1)
 			currentTempData.erase(currentTempData.begin(), currentTempData.begin() + 11050 * (slide_Number - 1));
 		currentTempData.erase(currentTempData.begin(), currentTempData.begin() + i * stepSize);
 		currentTempData.erase(currentTempData.begin() + windowSize, currentTempData.end());
-		currentTempData = hanningWindow(currentTempData);
-
+		hanningWindow(currentTempData);
 		findFnM(currentTempData, lowMagnitude, lowFrequency, true);
 		findFnM(currentTempData, highMagnitude, highFrequency, false);
-
 		if ((lowMagnitude + highMagnitude) > m_Sum)
 		{
 			m_Sum = lowMagnitude + highMagnitude;
@@ -239,10 +161,10 @@ void BehandlData::slide(int& tone_AT, int& m_Sum, int& f_Sum, int slide_Number)
 	}
 }
 
-void BehandlData::slideTWO()
+void BehandlData::slideMultiple()
 {
-	cout << "START - WINDOW with 4 threads" << endl;
-	auto start = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
+	//cout << "START - WINDOW with 4 threads" << endl;
+	//auto start = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
 	thread slidefirst([this] {slideFirst(); });
 	thread slidesecond([this] {slideSecond(); });
 	thread slidethird([this] {slideThird(); });
@@ -261,10 +183,10 @@ void BehandlData::slideTWO()
 	else if ((THIRD_mSum >= FIRST_mSum) && (THIRD_mSum >= SECOND_mSum) && (THIRD_mSum >= FOURTH_mSum)) { firstToneAt = THIRD_firstToneAt; }
 	else { firstToneAt = FOURTH_firstToneAt; }
 	toneCount++;
-	auto finish = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
-	double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double> >(finish - start).count();		//ANTAL SEKUNDER I DOUBLE
-	cout << "STOP.... Time spent: " << elapsed_seconds << endl;
-	cout << firstToneAt << endl;
+	//auto finish = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
+	//double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double> >(finish - start).count();		//ANTAL SEKUNDER I DOUBLE
+	//cout << "STOP.... Time spent: " << elapsed_seconds << endl;
+	//cout << firstToneAt << endl;
 }
 
 
@@ -273,12 +195,8 @@ void BehandlData::printToFile()
 {
 	ofstream audioData;
 	audioData.open("AudioDataProcessed.txt");
-
 	for (int i = 0; i < recordData.size(); i++)
-	{
 		audioData << recordData[i] << endl; 
-	}
-
 	audioData.close();
 }
 
@@ -294,25 +212,11 @@ void BehandlData::nextTone(int WAIT_SAMPLES) // samme som nextTone() - dog med m
 	if (currentlyAt + toneSize < recordData.size())
 	{
 		for (int i = 0; i < toneSize; i++)
-		{
 			toneVector.push_back(recordData[currentlyAt + i]);
-		}
 		//cout << "Tone: " << toneCount << endl;
 		frequencySumVector.push_back(recognizeDTMF(toneVector)); //Tilføjer frekvens summen til vektor
 		toneCount++;
 	}
-
-}
-
-void BehandlData::printText()
-{
-	Besked testBesked("");
-	string text = "";
-	for (int i = 0; i < 62; i++) //MAX er: frequencySumVector.size() - 1
-	{
-		text += testBesked.frequenciesToChar(frequencySumVector[i++], frequencySumVector[i]);
-	}
-	cout << text << endl;
 }
 
 vector<float> BehandlData::getfrequencySumVector()

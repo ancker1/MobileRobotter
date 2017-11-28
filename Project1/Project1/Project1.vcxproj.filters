@@ -24,9 +24,6 @@
     <ClCompile Include="BehandlData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="paPlay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

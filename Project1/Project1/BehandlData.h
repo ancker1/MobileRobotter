@@ -1,5 +1,11 @@
 #pragma once
 #include <vector>
+#include "Besked.h"
+#include <math.h>
+#include <thread>
+#include <chrono>
+#include <fstream>
+#include <iostream>
 using namespace std;
 class BehandlData
 {
@@ -7,11 +13,9 @@ public:
 	BehandlData();
 	BehandlData(vector<float> data);
 	float goertzelFilter(int TARGET_FREQUENCY, int SAMPLE_COUNT, vector<float> data);
-	void hammingWindow(); //Virker som MATLABs hamming window
-	vector<float> hanningWindow(vector<float> data);
+	void hanningWindow(vector<float>& data);
 	void printToFile();
 	void nextTone(int WAIT_SAMPLES);
-	int recognizeDTMF(vector<float> data);
 	int recognizeDTMF(vector<float> data, int threshold);
 	void setWindowSize(int sampleCount);
 	void findFnM(vector<float> data, int& mag, int& freq, bool findLow);
@@ -20,9 +24,8 @@ public:
 	void slideThird();
 	void slideFourth();
 	void slide(int& firstToneAt, int& mSum, int& fSum, int slideNumber);
-	void slideTWO();
+	void slideMultiple();
 	vector<float> getfrequencySumVector();
-	void printText();
 	~BehandlData();
 protected:
 	vector<float> recordData;

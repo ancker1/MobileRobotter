@@ -150,7 +150,6 @@
     <ClCompile Include="Receiver.cpp" />
     <ClCompile Include="Sender.cpp" />
     <ClCompile Include="SFMLarray.cpp" />
-    <ClCompile Include="paPlay.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>

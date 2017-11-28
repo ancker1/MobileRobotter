@@ -1,8 +1,5 @@
 #include "AudioRecord.h"
-#include <thread>
-#include <chrono>
-#include <fstream>
-#include <iostream>
+
 
 using namespace std;
 
@@ -19,7 +16,6 @@ AudioRecord::AudioRecord(int seconds)
 void AudioRecord::setSecondsToRecord(int seconds)
 {
 	secondsToRecord = seconds;
-	//Skal senere agere ud fra størrelsen på pakken der modtages (størrelsen på pakken er i headeren).
 }
 
 void AudioRecord::record()
@@ -43,12 +39,10 @@ void AudioRecord::printToFile()
 {
 	ofstream audioData;
 	audioData.open("AudioData50.txt");
-	cout << "H" << endl;
 	for (int i = 0; i < audioVector.size(); i++)
 	{
 		audioData << audioVector[i] << endl;
 	}
-	cout << "H" << endl;
 	audioData.close();
 }
 

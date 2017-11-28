@@ -1,7 +1,8 @@
 #pragma once
 #include <SFML\Audio.hpp>
 #include <vector>
-
+#include <iostream>
+#include "BehandlData.h"
 
 
 class LiveRecorder : public sf::SoundRecorder
