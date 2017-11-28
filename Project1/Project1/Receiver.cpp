@@ -75,7 +75,7 @@ char Receiver::nextACK()
 	ifstream readACK("ACKnr.txt");
 	int ACKnr = readACK.get() - '0';
 	readACK.close();
-	cout << "ACKnr: " << ACKnr << endl;
+	//cout << "ACKnr: " << ACKnr << endl;
 	if (!hasErrorCRC())
 	{
 		if ((int(heleDataTilString[8]) - '0') == ACKnr && ACKnr == 1)

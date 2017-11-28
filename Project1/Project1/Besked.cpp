@@ -158,6 +158,7 @@ char Besked::frequenciesToChar(int first_FrequencySum, int second_FrequencySum)
 		highNibble = 0b0000;
 		break;
 	default:
+		highNibble = 0;
 		break;
 	}
 	switch (second_FrequencySum)
@@ -211,6 +212,7 @@ char Besked::frequenciesToChar(int first_FrequencySum, int second_FrequencySum)
 		lowNibble = 0b0000;
 		break;
 	default:
+		lowNibble = 0;
 		break;
 	}
 	highNibble = highNibble << 4;
