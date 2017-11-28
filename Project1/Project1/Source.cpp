@@ -16,9 +16,7 @@ int main()
 	thread idleThread(&Besked::setTekst, test); //T
 	idleThread.detach();
 	while (true)
-	{
 		test->idleState();
-	}
 
 	
 

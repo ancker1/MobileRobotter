@@ -50,7 +50,6 @@ void DTMF::setFrequenciesFromChar(char dtmfChar)
 		high_frequency = 1633;
 		break;
 	default:
-		cout << "invalid character" << endl;
 		break;
 	}
 }

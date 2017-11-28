@@ -30,9 +30,6 @@ public:
 	// Handshake
 	int makeHandshake();
 
-	//ACK
-	void frameNo(int ackNo);
-
 	~Sender();
 protected:
 	string data;

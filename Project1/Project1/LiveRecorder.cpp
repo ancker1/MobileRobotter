@@ -38,13 +38,6 @@ bool LiveRecorder::dtmfDiscovered()
 	return foundDtmf;
 }
 
-/*
-void LiveRecorder::onStop()
-{
-	foundDtmf = true;
-}
-*/
-
 LiveRecorder::~LiveRecorder()
 {
 }

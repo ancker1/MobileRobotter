@@ -15,8 +15,8 @@ void Sender::setMessage(string d)
 	data = d;
 	konverterStringTilBitString();
 
-	heleDataTilString.clear();
-	frame.clear();
+//	heleDataTilString.clear();
+//	frame.clear();
 }
 
 void Sender::konverterStringTilBitString()
@@ -39,9 +39,7 @@ string Sender::makeRemainder()
 
 	// add zeroes to dataword
 	for (int i = 0; i < crc.length() - 1; i++)
-	{
 		encoded += '0';
-	}
 
 	// loop
 	for (int i = 0; i < encoded.length(); i++)
@@ -51,17 +49,11 @@ string Sender::makeRemainder()
 			if (encoded[i] != '0')
 			{
 				for (int j = 0; j < crc.length(); j++) // loop as long as CRC
-				{
 					encoded[i + j] = encoded[i + j] == crc[j] ? '0' : '1'; // XOR if encoded == crc => 0 else 1
-				}
-				for (int a = 0; a < i; a++) {
-					//cout << " ";
-				}
 			}
 		}
 		else break;
 	}
-
 	return (encoded.substr(encoded.size() - crc.length() + 1));
 }
 
@@ -73,11 +65,7 @@ string Sender::makeCodeword()
 
 int Sender::getTrailer()
 {
-	// string to int
-	string str = makeRemainder();
-	int myInt = stoi(str, nullptr, 2);
-
-	return myInt;
+	return stoi(makeRemainder(), nullptr, 2);
 }
 
 int Sender::makeHeader()
@@ -87,18 +75,18 @@ int Sender::makeHeader()
 	Framenr = Framenr - '0';
 	readFrame.close();
 
-	cout << "Framenr: " << Framenr << endl;
+	//cout << "Framenr: " << Framenr << endl;
 
 	//framen længden sidste 7 bits i header
 	header = 4 + data.size();
 
 	//frame når første bit i header
 	if (Framenr == 1)//er det et ulige tal?
-		header = header + 128;//svare til 1 i MSB
+		header += 128;//svare til 1 i MSB
 
 	//ellers lad hver med at ligge noget til svare til 0 i MSB
 	
-	cout << "Header: " << int(header) << endl;
+	//cout << "Header: " << int(header) << endl;
 
 	return header;
 }
@@ -108,14 +96,9 @@ vector <int> Sender::makeFrame()
 	frame.push_back(flag);//indsætter startflag
 	frame.push_back(makeHeader());//indsætter header (længden af teksten)
 	for (int i = 0; i < data.size(); i++)//lægger hver enkelt char af data i en vektor.
-	{
 		frame.push_back(data[i]);
-	}
 	frame.push_back(getTrailer());//indsætter trailer
 	frame.push_back(flag);//indsætter slutflag
-
-	for (int i = 0; i < frame.size(); i++)
-		//cout << frame[i] << " ";
 
 	return frame;
 }
@@ -129,31 +112,6 @@ int Sender::getHeader()
 {
 	makeFrame();
 	return header;
-}
-
-void Sender::frameNo(int ackNo)
-{
-	switch (ackNo)
-	{
-	case 0:
-		ackTal = 0;
-		break;
-	case 1:
-		ackTal = 1;
-		break;
-	default:
-		break;
-	}
-
-	// acknowledgment
-	if (data[0] == '\X06')  // ACK0
-	{
-		ackTal = 0;
-	}
-	if (data[0] == '\X07')	// ACK1
-	{
-		ackTal = 1;
-	}
 }
 
 Sender::~Sender()
