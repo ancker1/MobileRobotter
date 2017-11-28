@@ -18,7 +18,7 @@ public:
 	Besked();
 	Besked(string);
 	void setTekst();
-	//void setTekst(string);
+
 	void encapsulateMSG();
 
 	void createSFMLarray(char input, SFMLarray& arraySFML);
@@ -28,7 +28,6 @@ public:
 	char checkDTMF(int);
 
 	char frequenciesToChar(int,int);
-	int modtagFrequencySum();
 
 	void modtagHandshake();
 	void sendHandshake();
@@ -42,7 +41,6 @@ public:
 	void modtagBesked();
 	void sendBesked();
 
-	void checkSavedMessage();
 	void idleState();
 
 	~Besked();

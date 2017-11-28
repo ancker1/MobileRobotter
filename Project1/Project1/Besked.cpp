@@ -29,12 +29,7 @@ void Besked::setTekst()
 		x.clear();
 	}
 }
-/*
-void Besked::setTekst(string inTekst)
-{
-	message = inTekst;
-}
-*/
+
 void Besked::encapsulateMSG()
 {
 	Sender createOBJ(message);
@@ -56,15 +51,8 @@ void Besked::createSFMLarray(char byte, SFMLarray& arraySFML)
 void Besked::createDTMFS()
 {
 	encapsulateMSG();
-	for (int i = 0; i < encapsulatedMSG.size(); i++) {
+	for (int i = 0; i < encapsulatedMSG.size(); i++) 
 		createSFMLarray(encapsulatedMSG[i], allDTMFs);
-		/*
-		cout << "Character is: " << (char)encapsulatedMSG[i] << endl;
-		cout << i * 2		<< ":	" << currentHighDTMF.getLow() << ", " << currentHighDTMF.getHigh() << endl;
-		cout << i * 2 + 1	<< ":	" << currentLowDTMF.getLow() << ", " << currentLowDTMF.getHigh() <<  endl;
-		*/
-	}
-
 	allDTMFs.readySound();
 }
 
@@ -170,7 +158,6 @@ char Besked::frequenciesToChar(int first_FrequencySum, int second_FrequencySum)
 		highNibble = 0b0000;
 		break;
 	default:
-		highNibble = 0b0000; // TEST
 		break;
 	}
 	switch (second_FrequencySum)
@@ -224,7 +211,6 @@ char Besked::frequenciesToChar(int first_FrequencySum, int second_FrequencySum)
 		lowNibble = 0b0000;
 		break;
 	default:
-		lowNibble = 0b0000; // TEST
 		break;
 	}
 	highNibble = highNibble << 4;
@@ -232,17 +218,6 @@ char Besked::frequenciesToChar(int first_FrequencySum, int second_FrequencySum)
 	if ((msgByte >= 0 && msgByte <= 255))
 		return (char)msgByte;
 	return ' ';
-}
-
-int Besked::modtagFrequencySum()
-{
-	AudioRecord test(1);
-	cout << "Start." << endl;
-	test.record();
-	cout << test.getAudioVector().size() << endl;
-	BehandlData testData(test.getAudioVector());
-	//return testData.recognizeDTMF();
-	return 0;
 }
 
 void Besked::modtagHandshake()
@@ -253,20 +228,14 @@ void Besked::modtagHandshake()
 	BehandlData objectTest(record.getAudioVector());
 	objectTest.slideMultiple();
 	for (int i = 0; i < 2; i++) //AMOUNT_TONE
-	{
 		objectTest.nextTone(50);
-	}
 	vector<float> freqSumVec = objectTest.getfrequencySumVector();
-	char length;
-	length = frequenciesToChar(freqSumVec[0], freqSumVec[1]); //Antal characters
+	char length = frequenciesToChar(freqSumVec[0], freqSumVec[1]); //Antal characters
 	if (length >= 128)
 		length = length - 0b10000000;
-
 	AMOUNT_TONE = (int)length * 2; //Antal toner
-
 	if (AMOUNT_TONE < 5)
 		AMOUNT_TONE = 5;
-
 }
 
 void Besked::sendHandshake()
@@ -293,28 +262,22 @@ void Besked::modtagFrame()
 {
 	AudioRecord record;
 	int recordLength = (2255 * AMOUNT_TONE + 3 * 44100) / 44100;
-	cout << "Antal sekunder til optagelse: " << recordLength << endl;
+	//cout << "Antal sekunder til optagelse: " << recordLength << endl;
 	record.setSecondsToRecord(recordLength); //RECORD_LENGTH
-	cout << "Start" << endl;
+	//cout << "Start" << endl;
 	record.record();
 	BehandlData* objectTesta = new BehandlData(record.getAudioVector());
-	cout << "Stop" << endl;
+	//cout << "Stop" << endl;
 	objectTesta->slideMultiple();
 	for (int i = 0; i < AMOUNT_TONE; i++) //AMOUNT_TONE - SKAL VÆRE 52 FOR "OHANA BETYDER FAMILIE."
-	{
 		objectTesta->nextTone(50);
-	}
 	vector<float> freqSumVec = objectTesta->getfrequencySumVector();
 	string text;
 	for (int i = 0; i < freqSumVec.size()-1; i++) //MAX er: frequencySumVector.size() - 1
-	{
 		text += frequenciesToChar(freqSumVec[i++], freqSumVec[i]);
-	}
-	objectTesta = NULL;
 	delete objectTesta;
-
 	Receiver receiveOBJ(text);
-	cout << "AMOUNT_TONE: " << AMOUNT_TONE << endl;
+	//cout << "AMOUNT_TONE: " << AMOUNT_TONE << endl;
 	if (receiveOBJ.isLengthOK(AMOUNT_TONE))
 	{
 		receiveOBJ.udpakFrame();
@@ -324,7 +287,6 @@ void Besked::modtagFrame()
 	}
 	else
 		sendFrameACK(receiveOBJ, true);
-
 }
 
 void Besked::sendACK()
@@ -336,13 +298,10 @@ void Besked::sendACK()
 
 void Besked::sendFrameACK(Receiver receiver, bool shouldNACK)
 {
-
-		SFMLarray sendD;		//TEST
-		sendD.readySound();		//TEST
-		sendD.play();			//TEST
-		this_thread::sleep_for(0.5s);	//TEST
-
-
+		SFMLarray sendD;		
+		sendD.readySound();		
+		sendD.play();			
+		this_thread::sleep_for(0.5s);	
 		SFMLarray ackFrameDTMF;
 		if (shouldNACK)
 			createSFMLarray(char(15), ackFrameDTMF);
@@ -350,33 +309,25 @@ void Besked::sendFrameACK(Receiver receiver, bool shouldNACK)
 			createSFMLarray(receiver.nextACK(), ackFrameDTMF);
 		ackFrameDTMF.readySound();
 		ackFrameDTMF.play();
-
 }
 
 bool Besked::modtagFrameACK()
 {
 	AudioRecord record;
-	record.setSecondsToRecord(2); //RECORD_LENGTH
+	record.setSecondsToRecord(2);
 	record.record();
 	BehandlData objectTest(record.getAudioVector());
 	objectTest.slideMultiple();
-	for (int i = 0; i < 2; i++) //AMOUNT_TONE
-	{
+	for (int i = 0; i < 2; i++)
 		objectTest.nextTone(50);
-	}
 	vector<float> freqSumVec = objectTest.getfrequencySumVector();
-	char receivedNr;
-	receivedNr = frequenciesToChar(freqSumVec[0], freqSumVec[1]); //Antal characters
-	
+	char receivedNr = frequenciesToChar(freqSumVec[0], freqSumVec[1]);
 	ifstream readFramenr("Framenr.txt");
-	int frameNr = readFramenr.get();
-	frameNr = frameNr - '0';
+	int frameNr = readFramenr.get() - '0';
 	readFramenr.close();
-
 	if ((receivedNr == 6 && frameNr == 1) || (receivedNr == 7 && frameNr == 0))
 	{
 		frameNr = frameNr ^ 1;
-
 		ofstream writeFramenr("Framenr.txt");
 		writeFramenr << frameNr;
 		writeFramenr.close();
@@ -397,22 +348,18 @@ void Besked::modtagBesked()
 void Besked::sendBesked()
 {
 	LiveRecorder rTest(50);
-	SFMLarray sendD;		//TEST
-	sendD.readySound();		//TEST
-
-	sendD.play();			//TEST
-	this_thread::sleep_for(0.5s);	//TEST
+	SFMLarray sendD;	
+	sendD.readySound();	
+	sendD.play();			
+	this_thread::sleep_for(0.5s);	
 	sendHandshake();
 	rTest.start(); //MODTAG ACK
 	while (!rTest.dtmfDiscovered())
-	{
-	}
+	{}
 	rTest.stop();
 	sendFrame();
 	if (!modtagFrameACK())
-	{
 		lastMSG = message;
-	}
 	message.clear();
 	allDTMFs.reset();
 }
@@ -431,9 +378,7 @@ void Besked::idleState()
 		} 
 
 		if (message != "")
-		{
 			shouldReceive = false;
-		}
 	}
 	iTest.stop();
 	if (shouldReceive)
