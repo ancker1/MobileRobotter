@@ -14,7 +14,7 @@ void SFMLarray::addTone(double f1, double f2) {
 	double x2n = 0.;
 
 	for (unsigned n = 0; n < SAMPLES_PER_TONE; n++) {
-		x.push_back(10000 * (sin(2 * PI * x1n) + sin(2 * PI * x2n)) * (0.5 * (1 - cos((2 * PI * n) / (SAMPLES_PER_TONE - 1)))));
+		x.push_back(16000 * (sin(2 * PI * x1n) + sin(2 * PI * x2n)) * (0.5 * (1 - cos((2 * PI * n) / (SAMPLES_PER_TONE - 1)))));
 		x1n += f1 / SAMPLE_RATE;
 		x2n += f2 / SAMPLE_RATE;
 	}

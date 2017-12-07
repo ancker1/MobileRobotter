@@ -19,6 +19,5 @@ int main()
 		test->idleState();
 
 	
-
 	return 0;
 }

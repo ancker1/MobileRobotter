@@ -14,8 +14,8 @@ float BehandlData::goertzelFilter(int TARGET_FREQUENCY, int SAMPLE_COUNT, vector
 {
 	int SAMPLING_RATE = 44100;
 	double PI = 3.14159;
-	float  matlab_scaling = SAMPLE_COUNT / 2.0;
-	int k = (int)((SAMPLE_COUNT * TARGET_FREQUENCY) / SAMPLING_RATE);
+	float  singleside_scaling = 2.0 / SAMPLE_COUNT;
+	int k = (int)(0.5 + (SAMPLE_COUNT * TARGET_FREQUENCY) / SAMPLING_RATE); //0.5 adderes for at runde til nærmeste int
 	float inner_part = (2.0 * PI * k) / SAMPLE_COUNT;
 	float sin_part = sin(inner_part);
 	float cos_part = cos(inner_part);
@@ -30,10 +30,13 @@ float BehandlData::goertzelFilter(int TARGET_FREQUENCY, int SAMPLE_COUNT, vector
 		v1 = v0;
 	}
 
-	// Udregner imaginær og reel del + bruger samme scaling som MATLAB
-	float rl_part = (v1 - v2 * cos_part) / matlab_scaling;
-	float img_part = (v2 * sin_part) / matlab_scaling;
-	float mag = sqrtf(rl_part*rl_part + img_part*img_part);
+	// Udregner imaginær og reel del
+	//float rl_part = (v1 - v2 * cos_part) / singleside_scaling;
+	//float img_part = (v2 * sin_part) / singleside_scaling;
+	//float mag = sqrtf(rl_part*rl_part + img_part*img_part);
+
+	//MODIFICERET GOERTZEL - Enkelt sidet
+	float mag = sqrt((v1*v1) + (v2*v2) - (2 * cos_part*v1*v2)) * singleside_scaling;
 	return mag;
 }
 

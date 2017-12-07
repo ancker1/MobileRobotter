@@ -9,6 +9,7 @@ Receiver::Receiver()
 Receiver::Receiver(string msg)
 {
 	frame = msg;
+	cout << frame << endl;
 	konverterStringTilBitString();
 }
 
