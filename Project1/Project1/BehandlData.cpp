@@ -16,27 +16,19 @@ float BehandlData::goertzelFilter(int TARGET_FREQUENCY, int SAMPLE_COUNT, vector
 	double PI = 3.14159;
 	float  singleside_scaling = 2.0 / SAMPLE_COUNT;
 	int k = (int)(0.5 + (SAMPLE_COUNT * TARGET_FREQUENCY) / SAMPLING_RATE); //0.5 adderes for at runde til nærmeste int
-	float inner_part = (2.0 * PI * k) / SAMPLE_COUNT;
-	float sin_part = sin(inner_part);
-	float cos_part = cos(inner_part);
+	float cos_part = cos((2.0 * PI * k) / SAMPLE_COUNT);
 	float v0 = 0;
 	float v1 = 0;
 	float v2 = 0;
-
+	data[SAMPLE_COUNT - 1] = 0;
 	for (int i = 0; i < SAMPLE_COUNT; i++)
 	{
-		v0 = 2.0 * cos_part * v1 - v2 + data[i];
 		v2 = v1;
 		v1 = v0;
+		v0 = 2.0 * cos_part * v1 - v2 + data[i];
 	}
-
-	// Udregner imaginær og reel del
-	//float rl_part = (v1 - v2 * cos_part) / singleside_scaling;
-	//float img_part = (v2 * sin_part) / singleside_scaling;
-	//float mag = sqrtf(rl_part*rl_part + img_part*img_part);
-
 	//MODIFICERET GOERTZEL - Enkelt sidet
-	float mag = sqrt((v1*v1) + (v2*v2) - (2 * cos_part*v1*v2)) * singleside_scaling;
+	float mag = sqrt((v0*v0) + (v1*v1) - (2 * cos_part*v0*v1)) * singleside_scaling;
 	return mag;
 }
 
@@ -172,6 +164,10 @@ void BehandlData::slideMultiple()
 	thread slidesecond([this] {slideSecond(); });
 	thread slidethird([this] {slideThird(); });
 	thread slidefourth([this] {slideFourth(); });
+	//thread slidefirst(&BehandlData::slideFirst, this);
+	//thread slidesecond(&BehandlData::slideSecond, this);
+	//thread slidethird(&BehandlData::slideThird, this);
+	//thread slidefourth(&BehandlData::slideFourth, this);
 
 	slidefirst.join();
 	slidesecond.join();
