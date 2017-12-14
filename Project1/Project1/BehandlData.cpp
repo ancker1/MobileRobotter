@@ -17,19 +17,19 @@ float BehandlData::goertzelFilter(int TARGET_FREQUENCY, int SAMPLE_COUNT, vector
 	float  singleside_scaling = 2.0 / SAMPLE_COUNT;
 	int k = (int)(0.5 + (SAMPLE_COUNT * TARGET_FREQUENCY) / SAMPLING_RATE); //0.5 adderes for at runde til nærmeste int
 	float cos_part = cos((2.0 * PI * k) / SAMPLE_COUNT);
-	float v0 = 0;
-	float v1 = 0;
-	float v2 = 0;
+	float y0 = 0;
+	float y1 = 0;
+	float y2 = 0;
 	data[SAMPLE_COUNT - 1] = 0;
 	for (int i = 0; i < SAMPLE_COUNT; i++)
 	{
-		v2 = v1;
-		v1 = v0;
-		v0 = 2.0 * cos_part * v1 - v2 + data[i];
+		y2 = y1;
+		y1 = y0;
+		y0 = 2.0 * cos_part * y1 - y2 + data[i];
 	}
 	//MODIFICERET GOERTZEL - Enkelt sidet
-	float mag = sqrt((v0*v0) + (v1*v1) - (2 * cos_part*v0*v1)) * singleside_scaling;
-	return mag;
+	float mag = sqrt((y0*y0) + (y1*y1) - (2 * cos_part*y0*y1));
+	return mag * singleside_scaling;
 }
 
 void BehandlData::hanningWindow(vector<float>& data)
