@@ -263,7 +263,7 @@ void Besked::sendFrame()
 void Besked::modtagFrame()
 {
 	AudioRecord record;
-	int recordLength = (2255 * AMOUNT_TONE + 3 * 44100) / 44100;
+	int recordLength = (2255 * AMOUNT_TONE + 3 * 44100) / 44100; 
 	//cout << "Antal sekunder til optagelse: " << recordLength << endl;
 	record.setSecondsToRecord(recordLength); //RECORD_LENGTH
 	//cout << "Start" << endl;

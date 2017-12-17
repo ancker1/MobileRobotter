@@ -160,14 +160,10 @@ void BehandlData::slideMultiple()
 {
 	//cout << "START - WINDOW with 4 threads" << endl;
 	//auto start = std::chrono::steady_clock::now();		//AFLÆS CLOCK - TIDSTAGNING
-	thread slidefirst([this] {slideFirst(); });
-	thread slidesecond([this] {slideSecond(); });
-	thread slidethird([this] {slideThird(); });
-	thread slidefourth([this] {slideFourth(); });
-	//thread slidefirst(&BehandlData::slideFirst, this);
-	//thread slidesecond(&BehandlData::slideSecond, this);
-	//thread slidethird(&BehandlData::slideThird, this);
-	//thread slidefourth(&BehandlData::slideFourth, this);
+	thread slidefirst(&BehandlData::slideFirst, this);
+	thread slidesecond(&BehandlData::slideSecond, this);
+	thread slidethird(&BehandlData::slideThird, this);
+	thread slidefourth(&BehandlData::slideFourth, this);
 
 	slidefirst.join();
 	slidesecond.join();

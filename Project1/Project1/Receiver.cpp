@@ -9,7 +9,7 @@ Receiver::Receiver()
 Receiver::Receiver(string msg)
 {
 	frame = msg;
-	cout << frame << endl;
+	//cout << frame << endl;
 	konverterStringTilBitString();
 }
 
@@ -146,7 +146,7 @@ string Receiver::getMessage()
 
 bool Receiver::checkForHandshake()
 {
-	if (frame[0] == handshake) // '\X16' = 0b00010110 = 'SYN'
+	if (frame[0] == handshake) 
 		return true;
 	else
 		return false;
